@@ -264,10 +264,47 @@ A small rotation vector can easily be converted to quaternion, think of a small 
 
 \subsection{The SLAM Problem}
 
-If measurements were exact, mapping of an environment would be easy. This, however is not the case, there is often noise associated with each taken measurement and movement. For example distance measurements and IMU readings are subject both to a noise and a bias (calibration error) which can both be assumed to be Gaussian, noise with 0 mean. This means that no measurement can be trusted exclusively for state-space information. When moving therefore, it was first assumed that errors have a compounding effect. So the position of a bike, would become increasingly unknown as the environment is explored and the bike is displaced from the origin. This, however is not the case as proved by Durrant-Whyte \ref{F_Durr_1} since there is a high degree of correlation between estimates of different landmarks and locations in a map, these correlations also increase with successive observations (Figure ). 
+If measurements were exact, mapping of an environment would be easy. This, however is not the case, there is often noise associated with each taken measurement and movement. For example distance measurements and IMU readings are subject both to a noise and a bias (calibration error) which can both be assumed to be Gaussian distributed.
+
+\begin{equation}
+\begin{aligned}
+\tilde{z} = \textbf{b}_{c} + s\textbf{M}_{z} + \textbf{b} + \textbf{n} + \textbf{o}
+\end{aligned}
+\end{equation}
+
+where $\textbf{z}$ is the correct measurement, $\textbf{b}_{C}$ is a long-term constant bias, $s$ is scaling, $\textbf{M}$- misalignment, $b$- time varying bias, $n$ - noise, and $o$ is other un-modelled influences. Therefore the kinematics of the IMU can be modelled as:
+
+\begin{equation}
+\begin{aligned}
+\label{imu_kin}
+\textbf{\.{p}}_{W}^{WS} = \textbf{v}_{W}^{WS}, \\
+\textbf{\.{q}}_{WS} = \frac{1}{2} \Omega(\tilde{\textbf{$\omega$}}_{S}^{WS},\textbf{w}_{g},\textbf{b}_{g})\textbf{q}_{WS}, \\
+\textbf{\.{v}}_{W}^{WS} = \textbf{C}_{WS}(\tilde{\textbf{a}}_{S}^{WS} + \textbf{w}_{a} - \textbf{b}_{a}) + \textbf{g}_{W}, \\
+\textbf{\.{b}}_{g} = \textbf{w}_{bg}, \\
+\textbf{\.{b}}_{a} = -\frac{1}{\tau}\textbf{b}_{a} + \textbf{w}_{ba}, \\
+\end{aligned}
+\end{equation}
+
+where:
+\begin{equation}
+ \Omega(\tilde{\textbf{$\omega$}}_{S}^{WS},\textbf{w}_{g},\textbf{b}_{g}) = \frac{1}{2}\begin{bmatrix}
+        \tilde{\textbf{$\omega$}}_{S}^{WS} + \textbf{w}_{g} - \textbf{b}_{g} \\[0.3em]
+       0
+     \end{bmatrix} ^{\oplus}
+\end{equation}
+
+The elements $\textbf{{p}}_{W}^{WS}$,$\textbf{{v}}_{W}^{WS}$ are the position and velocity, $\textbf{{\.p}}_{W}^{WS}$ represents the derivative. $\textbf{{q}}_{W}^{WS}$ is the quaternion body orientation, $\textbf{{b}}_{g}$ \& $\textbf{{b}}_{a}$ the accelerometer biases, $\tilde{\textbf{a}}_{S}^{WS}$ accelerometer measurements, $\textbf{g}_{W}$ earth's gravitational acceleration vector, and finally w:= [$w{g}^{T},w{a}^{T},w{bg}^{T},w{ba}^{T}$] are independent Gaussian white noise processes with zero mean. 
+\newline\newline
+
+This means that no measurement can be trusted exclusively for state-space information. When moving therefore, it was first assumed that errors have a compounding effect. So the position of a bike, would become increasingly unknown as the environment is explored and the bike is displaced from the origin. This, however is not the case as proved by Durrant-Whyte \ref{F_Durr_1} since there is a high degree of correlation between estimates of different landmarks and locations in a map, these correlations also increase with successive observations (Figure \ref{slam_prob_fig}). As an example of this (Figure \ref{slam_prob_fig} : Right) displays error in measurements of landmark observation, the mean error is common between all landmarks and so with successive landmark observations the errors in location estimates become highly correlated. This means that although $\textbf{m}_{i}$'s location may be quite uncertain but the relative location between two landmarks $\textbf{m}_{i}-\textbf{m}_{j}$ may be relatively certain.
 
 
-
+\noindent \begin{figure}[h!]
+\includegraphics[width = 0.5\hsize]{figures/convergence_landmark_uncertainty.png}
+\includegraphics[width = 0.5\hsize]{figures/ess_slam.png}
+\caption{Left: Graphical depiction of convergence in landmark uncertainty. Time history of standard deviations of a set of landmark locations. Over time, standard deviations reduce monotonically to a lower bound \cite{F_Durr_Pt1}. Right: Error between estimated and true landmarks is mostly common between landmarks.}
+\label{slam_prob_fig}
+\end{figure}
 
 
 
