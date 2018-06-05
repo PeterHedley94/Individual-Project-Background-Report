@@ -250,7 +250,7 @@ In order to fully understand the bike's location, the environment can be conside
   \caption{World vs Camera Frame \cite{Okvis_1}}
 \end{wrapfigure}
 \fi
-In order to convert between world (${\xrightarrow{F}}_{W}$), camera frame (${\xrightarrow{F}}_{C_{i}}$), and IMU frame (${\xrightarrow{F}}_{S}$), an appropriate method of describing the orientation, and location of an object in 3D space is needed. A Hamiltonian Quaternion is capable of correctly mapping an object in 3D space, it does this by use of a 4D representation of one real part, and 3 imaginary;  
+To convert between world (${\xrightarrow{F}}_{W}$), camera frame (${\xrightarrow{F}}_{C_{i}}$), and IMU frame (${\xrightarrow{F}}_{S}$), an appropriate method of describing the orientation, and location of an object in 3D space is needed. A Hamiltonian Quaternion is capable of correctly mapping an object in 3D space, it does this by use of a 4D representation of one real part, and 3 imaginary;  
 
 \begin{equation}
 \begin{aligned}
@@ -260,7 +260,25 @@ i^{2}=j^{2}=k^{2}=ijk=-1
 \end{aligned}
 \end{equation}
 
-A small rotation vector can easily be converted to quaternion, think of a small step on a 2D plane mapped to a 3D sphere (Figure \ref{quaternion}). Vectors expressed within a frame are denoted as $\textbf{p}_{A}$ or $\textbf{p}_{A}^{BC}$ where B and C are start and end points. A transformation between frames is represented as $\textbf{T}_{BA}$ where B and A represent reference frames, so $\textbf{T}_{WC}$ converts between the world frame and camera frame.
+A small rotation vector can easily be converted to quaternion, think of a small step $\delta textbf{\alpha} \in R^{3}$on a 2D plane mapped to a 3D sphere (Figure \ref{quaternion}, Equation \ref{quat_delta}. The Vectors expressed within a frame are denoted as $\textbf{p}_{A}$ or $\textbf{p}_{A}^{BC}$ where B and C are start and end points. A transformation between frames is represented as $\textbf{T}_{BA}$ where B and A represent reference frames, so $\textbf{T}_{WC}$ converts between the world frame and camera frame. 
+
+\begin{equation}
+\begin{aligned}
+\label{quat_delta}
+\delta textbf{q}(\delta textbf{\alpha}) = \begin{bmatrix}
+        \sin \Vert frac{\delta textbf{\alpha}}{2} \Vert frac{\delta textbf{\alpha}}{2} \\[0.3em]
+       \cos \Vert frac{\delta textbf{\alpha}}{2} \Vert
+     \end{bmatrix} ^{\oplus}
+\end{aligned}
+\end{equation}
+
+\begin{equation}
+\begin{aligned}
+\label{quat_opt}
+textbf{\overline{q}}^{k+1} = \delta textbf{q}(\Delta textbf{\alpha})\bigotimes textbf{\overline{q}}^{k}
+\end{aligned}
+\end{equation}
+
 
 \subsection{The SLAM Problem}
 
@@ -305,6 +323,8 @@ This means that no measurement can be trusted exclusively for state-space inform
 \caption{Left: Graphical depiction of convergence in landmark uncertainty. Time history of standard deviations of a set of landmark locations. Over time, standard deviations reduce monotonically to a lower bound \cite{F_Durr_Pt1}. Right: Error between estimated and true landmarks is mostly common between landmarks.}
 \label{slam_prob_fig}
 \end{figure}
+
+
 
 
 

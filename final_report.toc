@@ -1,0 +1,17 @@
+\contentsline {section}{\numberline {1}Introduction}{3}
+\contentsline {section}{\numberline {2}Background, Computer Vision}{4}
+\contentsline {subsection}{\numberline {2.1}Deep Learning Preliminaries}{4}
+\contentsline {subsection}{\numberline {2.2}Convolutional Networks}{4}
+\contentsline {subsubsection}{\numberline {2.2.1}Convolutional Layers}{5}
+\contentsline {subsubsection}{\numberline {2.2.2}Pooling Layers}{5}
+\contentsline {subsection}{\numberline {2.3}Image Detection}{5}
+\contentsline {subsubsection}{\numberline {2.3.1}R-CNN}{5}
+\contentsline {subsubsection}{\numberline {2.3.2}Fast-RCNN}{6}
+\contentsline {subsubsection}{\numberline {2.3.3}Faster R-CNN}{7}
+\contentsline {subsection}{\numberline {2.4}Image Segmentation}{8}
+\contentsline {subsection}{\numberline {2.5}Instance Segmentation}{9}
+\contentsline {subsubsection}{\numberline {2.5.1}Mask R-CNN}{9}
+\contentsline {section}{\numberline {3}Background, SLAM}{10}
+\contentsline {subsection}{\numberline {3.1}Sensors}{10}
+\contentsline {subsection}{\numberline {3.2}World and Camera Frame}{11}
+\contentsline {subsection}{\numberline {3.3}The SLAM Problem}{11}

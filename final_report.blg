@@ -1,0 +1,55 @@
+This is BibTeX, Version 0.99d (TeX Live 2015/Debian)
+Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
+The top-level auxiliary file: final_report.aux
+The style file: ieeetr.bst
+Database file #1: bibliography.bib.bib
+Warning--entry type for "StanfordCS231_1" isn't style-file defined
+--line 77 of file bibliography.bib.bib
+Warning--entry type for "StanfordCS231_conv_filter" isn't style-file defined
+--line 86 of file bibliography.bib.bib
+Warning--entry type for "StanfordCS231_max_pool" isn't style-file defined
+--line 94 of file bibliography.bib.bib
+Warning--empty journal in GH_CNN
+Warning--empty journal in F_Durr_Pt1
+You've used 25 entries,
+            1876 wiz_defined-function locations,
+            618 strings with 7960 characters,
+and the built_in function-call counts, 5392 in all, are:
+= -- 464
+> -- 300
+< -- 0
++ -- 111
+- -- 86
+* -- 418
+:= -- 856
+add.period$ -- 26
+call.type$ -- 25
+change.case$ -- 27
+chr.to.int$ -- 0
+cite$ -- 27
+duplicate$ -- 255
+empty$ -- 514
+format.name$ -- 86
+if$ -- 1257
+int.to.chr$ -- 0
+int.to.str$ -- 25
+missing$ -- 20
+newline$ -- 79
+num.names$ -- 25
+pop$ -- 87
+preamble$ -- 1
+purify$ -- 0
+quote$ -- 0
+skip$ -- 123
+stack$ -- 0
+substring$ -- 218
+swap$ -- 67
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 0
+warning$ -- 2
+while$ -- 40
+width$ -- 27
+write$ -- 226
+(There were 5 warnings)
