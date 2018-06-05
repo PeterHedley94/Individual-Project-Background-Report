@@ -7,6 +7,7 @@
 \usepackage{graphicx}
 \usepackage{tabularx}
 \usepackage{subcaption}
+\usepackage{wrapfig}
 \usepackage[section]{placeins}
 
 \usepackage[nodayofweek]{datetime}
@@ -227,13 +228,43 @@ The sensors used in this project are an RGBD camera and an IMU. These are both a
 
 \subsection{World and Camera Frame}
 
-In order to fully understand the bike's location, a 
 
 
+In order to fully understand the bike's location, the environment can be considered from two frame's of reference, the world and camera frame. 
+\newline
 
 
+\noindent \begin{figure}[h!]
+\includegraphics[width = 0.5\hsize]{figures/world_to_cam.jpg}
+\includegraphics[width = 0.35\hsize]{figures/quaternions.png}
+\caption{World vs Camera Frame \cite{Okvis_1}}
+\label{quat_wcs}
+\end{figure}
 
 
+\iffalse
+\begin{wrapfigure}{r}{0.5\textwidth}
+  \begin{center}
+    \includegraphics[width=0.48\textwidth]{figures/world_to_cam.jpg}
+  \end{center}
+  \caption{World vs Camera Frame \cite{Okvis_1}}
+\end{wrapfigure}
+\fi
+In order to convert between world (${\xrightarrow{F}}_{W}$), camera frame (${\xrightarrow{F}}_{C_{i}}$), and IMU frame (${\xrightarrow{F}}_{S}$), an appropriate method of describing the orientation, and location of an object in 3D space is needed. A Hamiltonian Quaternion is capable of correctly mapping an object in 3D space, it does this by use of a 4D representation of one real part, and 3 imaginary;  
+
+\begin{equation}
+\begin{aligned}
+\label{quaternion}
+q = q_{w} + q_{x}i + q_{y}j+q_{z}k, \\
+i^{2}=j^{2}=k^{2}=ijk=-1
+\end{aligned}
+\end{equation}
+
+A small rotation vector can easily be converted to quaternion, think of a small step on a 2D plane mapped to a 3D sphere (Figure \ref{quaternion}). Vectors expressed within a frame are denoted as $\textbf{p}_{A}$ or $\textbf{p}_{A}^{BC}$ where B and C are start and end points. A transformation between frames is represented as $\textbf{T}_{BA}$ where B and A represent reference frames, so $\textbf{T}_{WC}$ converts between the world frame and camera frame.
+
+\subsection{The SLAM Problem}
+
+If measurements were exact, mapping of an environment would be easy. This, however is not the case, there is often noise associated with each taken measurement and movement. For example distance measurements and IMU readings are subject both to a noise and a bias (calibration error) which can both be assumed to be Gaussian, noise with 0 mean. This means that no measurement can be trusted exclusively for state-space information. When moving therefore, it was first assumed that errors have a compounding effect. So the position of a bike, would become increasingly unknown as the environment is explored and the bike is displaced from the origin. This, however is not the case as proved by Durrant-Whyte \ref{F_Durr_1} since there is a high degree of correlation between estimates of different landmarks and locations in a map, these correlations also increase with successive observations (Figure ). 
 
 
 

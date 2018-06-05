@@ -317,3 +317,38 @@ Instance Segmentation
   biburl    = {https://dblp.org/rec/bib/journals/corr/HeGDG17},
   bibsource = {dblp computer science bibliography, https://dblp.org}
 }
+
+###############################################################
+SLAM
+
+@article{Okvis_1,
+author = {Stefan Leutenegger and Simon Lynen and Michael Bosse and Roland Siegwart and Paul Furgale},
+title ={Keyframe-based visual–inertial odometry using nonlinear optimization},
+journal = {The International Journal of Robotics Research},
+volume = {34},
+number = {3},
+pages = {314-334},
+year = {2015},
+doi = {10.1177/0278364914554813},
+
+URL = { 
+        https://doi.org/10.1177/0278364914554813
+    
+},
+eprint = { 
+        https://doi.org/10.1177/0278364914554813
+    
+}
+,
+    abstract = { Combining visual and inertial measurements has become popular in mobile robotics, since the two sensing modalities offer complementary characteristics that make them the ideal choice for accurate visual–inertial odometry or simultaneous localization and mapping (SLAM). While historically the problem has been addressed with filtering, advancements in visual estimation suggest that nonlinear optimization offers superior accuracy, while still tractable in complexity thanks to the sparsity of the underlying problem. Taking inspiration from these findings, we formulate a rigorously probabilistic cost function that combines reprojection errors of landmarks and inertial terms. The problem is kept tractable and thus ensuring real-time operation by limiting the optimization to a bounded window of keyframes through marginalization. Keyframes may be spaced in time by arbitrary intervals, while still related by linearized inertial terms. We present evaluation results on complementary datasets recorded with our custom-built stereo visual–inertial hardware that accurately synchronizes accelerometer and gyroscope measurements with imagery. A comparison of both a stereo and monocular version of our algorithm with and without online extrinsics estimation is shown with respect to ground truth. Furthermore, we compare the performance to an implementation of a state-of-the-art stochastic cloning sliding-window filter. This competitive reference implementation performs tightly coupled filtering-based visual–inertial odometry. While our approach declaredly demands more computation, we show its superior performance in terms of accuracy. }
+}
+
+@article{F_Durr_1,
+author = {F. Durrant-Whyte, Hugh},
+year = {1988},
+month = {03},
+pages = {23 - 31},
+title = {Uncertain geometry in robotics},
+volume = {4},
+booktitle = {Robotics and Automation, IEEE Journal of}
+}
