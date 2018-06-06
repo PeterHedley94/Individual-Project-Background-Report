@@ -7,6 +7,7 @@
 \usepackage{graphicx}
 \usepackage{tabularx}
 \usepackage{subcaption}
+\usepackage{amsfonts}
 \usepackage{wrapfig}
 \usepackage[section]{placeins}
 
@@ -260,22 +261,47 @@ i^{2}=j^{2}=k^{2}=ijk=-1
 \end{aligned}
 \end{equation}
 
-A small rotation vector can easily be converted to quaternion, think of a small step $\delta textbf{\alpha} \in R^{3}$on a 2D plane mapped to a 3D sphere (Figure \ref{quaternion}, Equation \ref{quat_delta}. The Vectors expressed within a frame are denoted as $\textbf{p}_{A}$ or $\textbf{p}_{A}^{BC}$ where B and C are start and end points. A transformation between frames is represented as $\textbf{T}_{BA}$ where B and A represent reference frames, so $\textbf{T}_{WC}$ converts between the world frame and camera frame. 
+The Vectors expressed within a frame are denoted as $\textbf{p}_{A}$ or $\textbf{p}_{A}^{BC}$ where B and C are start and end points. A transformation between frames is represented as $\textbf{T}_{BA}$ where B and A represent reference frames, so $\textbf{T}_{WC}$ converts between the world frame and camera frame. A small rotation vector can easily be converted to quaternion, think of a small step $\delta \alpha \in \mathbb{R}^{3}$on a 2D plane mapped to a 3D sphere (Figure \ref{quaternion}, Equation \ref{quat_delta}). This can be altered for optimisation purposes by approximating $\delta \alpha$ as $\Delta \alpha$ (Equation \ref{quat_opt}).
+
 
 \begin{equation}
-\begin{aligned}
 \label{quat_delta}
-\delta textbf{q}(\delta textbf{\alpha}) = \begin{bmatrix}
-        \sin \Vert frac{\delta textbf{\alpha}}{2} \Vert frac{\delta textbf{\alpha}}{2} \\[0.3em]
-       \cos \Vert frac{\delta textbf{\alpha}}{2} \Vert
+\delta \textbf{q} = \exp{ \bigg(
+    \begin{bmatrix}
+        \frac{1}{2}\delta \alpha \\[0.3em]
+       0
+     \end{bmatrix} \bigg) }= \begin{bmatrix}
+        \sin \Vert \frac{\delta \alpha}{2} \Vert \frac{\delta \alpha}{2} \\[0.3em]
+       \cos \Vert \frac{\delta \alpha}{2} \Vert
      \end{bmatrix} ^{\oplus}
-\end{aligned}
 \end{equation}
 
 \begin{equation}
-\begin{aligned}
 \label{quat_opt}
-textbf{\overline{q}}^{k+1} = \delta textbf{q}(\Delta textbf{\alpha})\bigotimes textbf{\overline{q}}^{k}
+\overline{q}^{k+1} = \delta \textbf{q}(\Delta \alpha) \otimes \overline{q}^{k}
+\end{equation}
+
+\subsection{Bicycle States}
+
+At each taken image ($k$) the bike can be assumed to have a set state $\mathcal{X}_{R}^{k}$ and landmarks are contained within $\mathcal{X}_{L}$. $\mathcal{X}_{R}$ contains a set of pose states $\mathcal{X}_{T}$ and speed/bias states $\mathcal{X}_{sb}$, Equation \ref{states}.
+
+\begin{equation}
+\begin{aligned}
+\label{states}
+\mathcal{X}_{T} := [ _{W}r_{S}^{T},q_{WS}^{T} ]^{T} \\
+\mathcal{X}_{sb} := [ _{s}v^{T},b_{g}^{T}, b_{a}^{T} ]^{T} \\
+\mathcal{X}_{R} := [ _{W}r_{S}^{T},q_{WS}^{T},_{s}v^{T},b_{g}^{T}, b_{a}^{T}]^{T}
+\end{aligned}
+\end{equation}
+
+The elements $_{W}\textbf{r}_{S}^{T}$, $\textbf{{q}}_{W}^{T}$ are the position and the quaternion body orientation, $_{s}\textbf{{v}}^{T}$ the velocity, $\textbf{{b}}_{g}$ \& $\textbf{{b}}_{a}$ the accelerometer and gyroscope biases. Since $\delta \textbf{q}$ describes the axis-angle perturbation about the estimate $\overline{q}_{WS}$ it follows that $\textbf{q}_{WS} = \delta \textbf{q} \otimes \overline{q}_{WS}$. Hence the error states combining with (Equation \ref{quat_delta}) are:
+
+\begin{equation}
+\begin{aligned}
+\label{states}
+\delta \mathcal{X}_{T} := [ \delta r^{T}, \delta \alpha^{T} ]^{T} \\
+\delta \mathcal{X}_{sb} := [ \delta v^{T}, \delta b_{g}^{T},\delta b_{a}^{T} ]^{T} \\
+\delta \mathcal{X}_{R} := [ \delta r^{T}, \delta \alpha^{T}, \delta v^{T},b_{g}^{T}, b_{a}^{T}]^{T}
 \end{aligned}
 \end{equation}
 
@@ -290,28 +316,7 @@ If measurements were exact, mapping of an environment would be easy. This, howev
 \end{aligned}
 \end{equation}
 
-where $\textbf{z}$ is the correct measurement, $\textbf{b}_{C}$ is a long-term constant bias, $s$ is scaling, $\textbf{M}$- misalignment, $b$- time varying bias, $n$ - noise, and $o$ is other un-modelled influences. Therefore the kinematics of the IMU can be modelled as:
-
-\begin{equation}
-\begin{aligned}
-\label{imu_kin}
-\textbf{\.{p}}_{W}^{WS} = \textbf{v}_{W}^{WS}, \\
-\textbf{\.{q}}_{WS} = \frac{1}{2} \Omega(\tilde{\textbf{$\omega$}}_{S}^{WS},\textbf{w}_{g},\textbf{b}_{g})\textbf{q}_{WS}, \\
-\textbf{\.{v}}_{W}^{WS} = \textbf{C}_{WS}(\tilde{\textbf{a}}_{S}^{WS} + \textbf{w}_{a} - \textbf{b}_{a}) + \textbf{g}_{W}, \\
-\textbf{\.{b}}_{g} = \textbf{w}_{bg}, \\
-\textbf{\.{b}}_{a} = -\frac{1}{\tau}\textbf{b}_{a} + \textbf{w}_{ba}, \\
-\end{aligned}
-\end{equation}
-
-where:
-\begin{equation}
- \Omega(\tilde{\textbf{$\omega$}}_{S}^{WS},\textbf{w}_{g},\textbf{b}_{g}) = \frac{1}{2}\begin{bmatrix}
-        \tilde{\textbf{$\omega$}}_{S}^{WS} + \textbf{w}_{g} - \textbf{b}_{g} \\[0.3em]
-       0
-     \end{bmatrix} ^{\oplus}
-\end{equation}
-
-The elements $\textbf{{p}}_{W}^{WS}$,$\textbf{{v}}_{W}^{WS}$ are the position and velocity, $\textbf{{\.p}}_{W}^{WS}$ represents the derivative. $\textbf{{q}}_{W}^{WS}$ is the quaternion body orientation, $\textbf{{b}}_{g}$ \& $\textbf{{b}}_{a}$ the accelerometer biases, $\tilde{\textbf{a}}_{S}^{WS}$ accelerometer measurements, $\textbf{g}_{W}$ earth's gravitational acceleration vector, and finally w:= [$w{g}^{T},w{a}^{T},w{bg}^{T},w{ba}^{T}$] are independent Gaussian white noise processes with zero mean. 
+where $\textbf{z}$ is the correct measurement, $\textbf{b}_{C}$ is a long-term constant bias, $s$ is scaling, $\textbf{M}$- misalignment, $\textbf{b}$- time varying bias, $n$ - noise, and $o$ is other un-modelled influences. 
 \newline\newline
 
 This means that no measurement can be trusted exclusively for state-space information. When moving therefore, it was first assumed that errors have a compounding effect. So the position of a bike, would become increasingly unknown as the environment is explored and the bike is displaced from the origin. This, however is not the case as proved by Durrant-Whyte \ref{F_Durr_1} since there is a high degree of correlation between estimates of different landmarks and locations in a map, these correlations also increase with successive observations (Figure \ref{slam_prob_fig}). As an example of this (Figure \ref{slam_prob_fig} : Right) displays error in measurements of landmark observation, the mean error is common between all landmarks and so with successive landmark observations the errors in location estimates become highly correlated. This means that although $\textbf{m}_{i}$'s location may be quite uncertain but the relative location between two landmarks $\textbf{m}_{i}-\textbf{m}_{j}$ may be relatively certain.
@@ -324,8 +329,105 @@ This means that no measurement can be trusted exclusively for state-space inform
 \label{slam_prob_fig}
 \end{figure}
 
+The SLAM problem is therefore formulated using both re-projection error (from the camera measurements) $\textbf{e}_{r}$ and an inertial error term from the IMU $\textbf{e}_{s}$.  
+
+\begin{equation}
+\begin{aligned}
+J(x) := \sum_{i=1}^{I} \sum_{k=1}^{K}\sum_{j \in \mathcal{J}(i,k)} \textbf{e}_{r}^{i,j,k \textnormal{ } T} \textbf{W}_{r}^{i,j,k} \textbf{e}_{r}^{i,j,k} + 
+\sum_{k=1}^{K-1} \textbf{e}_{s}^{k \textnormal{ } T} \textbf{W}_{s}^{k} \textbf{e}_{s}^{k} 
+\end{aligned}
+\end{equation}
+
+where $i$ is the camera index, $k$ the camera frame index, $j$ the landmark index. Indices of landmarks in the $k$th frame and $i$th camera are in the set $\mathcal{J}(i,k)$. In the case of this project the error is only estimated with one camera, and the IMU. Any additional sensors used would also need to be included in this error state. 
+
+\begin{equation}
+\begin{aligned}
+\textbf{e}_{r}^{i,j,k} = \textbf{z}^{i,j,k} - \textbf{h}_{i} (\textbf{T}^{k}_{CiS} \textnormal{ } \textbf{T}^{k}_{SW} \textnormal{ } _{w}\textbf{l}^{j})
+\end{aligned}
+\end{equation}
 
 
+
+
+\subsubsection{IMU Kinematics}
+
+Therefore the kinematics of the IMU can be modelled as:
+
+\begin{equation}
+\begin{aligned}
+\label{imu_kin}
+_{W} \textbf{\.{r}}_{S} = \textbf{C}_{WS} \textnormal{ } _{s}\textbf{v}, \\
+\textbf{\.{q}}_{WS} = \frac{1}{2} \Omega(\tilde{_{S}\textbf{$\omega$}})\textbf{q}_{WS}, \\
+_{S}\textbf{\.{v}}= (_{S}\tilde{\textbf{a}} + \textbf{w}_{a} - \textbf{b}_{a}) + C_{SW} \textnormal{ } _{W}\textbf{g} - (_{S}\textbf{$\omega$}) \times _{S}\textbf{v}, \\
+\textbf{\.{b}}_{g} = \textbf{w}_{bg}, \\
+\textbf{\.{b}}_{a} = -\frac{1}{\tau}\textbf{b}_{a} + \textbf{w}_{ba}, \\
+\end{aligned}
+\end{equation}
+
+where:
+\begin{equation}
+\begin{aligned}
+ \Omega(\tilde{_{s}\textbf{$\omega$}}) = \begin{bmatrix}
+       -_{S}\textbf{$\omega$}  \\[0.3em]
+       0
+     \end{bmatrix} ^{\oplus} \\
+_{S}\textbf{$\omega$} =  _{S}\tilde{\textbf{$\omega$}} + \textbf{w}_{g} - \textbf{b}_{g}
+\end{aligned}
+\end{equation}
+
+ $_{W} \textbf{\.{r}}_{S}$ represents the position derivative likewise $_{S}\textbf{\.{v}}$ for velocity,  $_{S}\tilde{\textbf{a}}$ accelerometer measurements, $_{W}\textbf{g}$ earth's gravitational acceleration vector, and finally w:= [$w_{g}^{T},w_{a}^{T},w_{bg}^{T},w_{ba}^{T}$] are independent Gaussian white noise processes with zero mean.
+ 
+ \subsubsection{IMU Kinematics Linearised}
+ 
+ In order to optimise the cost function, it is important to linearise the IMU kinematics. The error dynamics take the form:
+ 
+\begin{equation}
+\begin{aligned}
+\delta \mathcal{X} \approx  \textbf{F}_{c} (\overline{x}_{R}) \delta \mathcal{X}_{R} + \textbf{G}(\overline{x}_{R})\textbf{w} \\
+\end{aligned}
+\end{equation}
+
+\begin{equation}
+\begin{bmatrix}
+       \delta \textbf{\.r}  \\[0.3em]
+       \delta \textbf{\.a} \\[0.3em]
+       \delta \textbf{\.v} \\[0.3em]
+       \delta \textbf{\.b}_{g} \\[0.3em]
+       \delta \textbf{\.b}_{a}
+\end{bmatrix}
+=
+\begin{bmatrix}
+       0_{3 \times 3} &  [\overline{C}_{WS}\overline{v}]^{\times}
+       & \overline{C}_{WS} &  0_{3 \times 3} &  0_{3 \times 3}\\
+       
+       0_{3 \times 3} & 0_{3 \times 3} 
+       & 0_{3 \times 3} &  -\overline{C}_{WS} &  0_{3 \times 3}\\
+       
+       0_{3 \times 3} & -\overline{C}_{WS}[_{W}\textbf{g}]^{\times}
+       & -[_{S}\overline{\omega}]^{\times} &  -[_{S}\overline{v}]^{\times} &  -I_{3}\\
+       
+       0_{3 \times 3} & 0_{3 \times 3}
+       & 0_{3 \times 3} &  0_{3 \times 3} &  0_{3 \times 3}\\
+       
+       0_{3 \times 3} & 0_{3 \times 3} 
+       & 0_{3 \times 3} &  0_{3 \times 3} &  -\frac{1}{\tau}\textbf{I}_{3}
+\end{bmatrix}
+\begin{bmatrix}
+       \delta \textbf{r}  \\[0.3em]
+       \delta \textbf{a} \\[0.3em]
+       \delta \textbf{v} \\[0.3em]
+       \delta \textbf{b}_{g} \\[0.3em]
+       \delta \textbf{b}_{a}
+\end{bmatrix}
++
+\begin{bmatrix}
+       0_{3 \times 3}  \\[0.3em]
+       \overline{C}_{WS} \textbf{W}_{g} \\[0.3em]
+       \overline{C}_{WS} \textbf{W}_{a} \\[0.3em]
+       \textbf{W}_{bg} \\[0.3em]
+       \textbf{W}_{ba}
+\end{bmatrix}
+\end{equation}
 
 
 
