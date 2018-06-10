@@ -9,6 +9,9 @@
 \usepackage{subcaption}
 \usepackage{amsfonts}
 \usepackage{wrapfig}
+\usepackage[table]{xcolor}
+\usepackage{amssymb}
+\usepackage{longtable}
 \usepackage[section]{placeins}
 
 \usepackage[nodayofweek]{datetime}
@@ -49,15 +52,15 @@ This report will examine state of the art technologies that are used for autonom
 
 \newpage
 \section{Background, Computer Vision}\label{comp_vis_back}
-\subsection{Deep Learning Preliminaries}
-Computer vision and its applications has been revolutionised recently by Deep Learning frameworks. These have led to super-human accuracy in image recognition, for example Inception v3 \cite{Szegedy_2016_CVPR}, release in 2016, reached a 3.46\% error rate on the ImageNet \cite{ILSVRC15} dataset. This is known of as an image classification task; the photo contains one object in the dataset and that object generally occupies the majority of the frame. Similar networks are used with additional features for image detection and segmentation which are integral to detecting moving objects such as pedestrians and vehicles in an urban environment.
+\subsection{Deep Learning Preliminaries} \label{dlp}
+Computer vision and its applications has been revolutionised recently by Deep Learning frameworks. These have led to super-human accuracy in image recognition, for example Inception v3 \cite{Szegedy_2016_CVPR}, release in 2016, reached a 3.46\% error rate on the ImageNet \cite{ILSVRC15} dataset. This is known as an image classification task; the photo contains one object in the dataset and that object generally occupies the majority of the frame. Similar networks are used with additional features for image detection and segmentation which are integral to detecting moving objects such as pedestrians and vehicles in an urban environment.
 \newline\newline
-The current state-of-the-art methods in computer vision use a form of neural network. These networks are characterised by a series of non-linear nodes that are organised in layers. At each layer the network learns progressively abstract and higher-level features of the image to be detected until the final (usually dense layer) at the end which determines the predicted class. Therefore the 'depth' of a neural network often refers to the number of layers and hence the inherent complexity of features that a network can learn. This is, however, only a basic representation of the problem and some clever and shallower architectures are able to outperform deeper networks. It is important to note that the depth and width, more specifically the number of parameters in the model generally reduces speed of prediction and increases the memory required to store/load the model into RAM. This is of little consequence in most applications, however for the limited computational power able to be carried on a bicycle it will be of concern in this report.
+The current state-of-the-art methods in computer vision use a form of neural network. These networks are characterised by a series of non-linear nodes that are organised in layers. At each layer the network learns progressively abstract and higher-level features of the image to be detected until the final (usually dense layer) which determines the predicted class. Therefore the 'depth' of a neural network often refers to the number of layers and hence the inherent complexity of features that a network can learn. This is, however, only a basic representation of the problem and some clever and shallower architectures are able to outperform deeper networks. It is important to note that the depth and width, more specifically the number of parameters in the model generally reduces speed of prediction and increases the memory required to store/load the model into RAM. This is of little consequence in most applications, however for the limited computational power that can be carried on a bicycle it will be of concern in this report.
 
 \subsection{Convolutional Networks} \label{Cnn_section}
-A CNN generally contains convolutional, pooling, fully connected and normalisation layers. This form of network became particularly popular in computer vision after Geoffrey Hinton's 2012 paper \cite{GH_CNN}, with an ImageNet classification error of c.16\%, significantly lower than the state-of-the-art at the time 26\%. Convolutional networks use the assumption that each input is an image and therefore certain properties can be encoded into the architecture of the network. This allows a significant reduction in the number of network parameters to tune.
+A CNN generally contains convolutional, pooling, fully connected and normalisation layers. This form of network became particularly popular in computer vision after Geoffrey Hinton's 2012 paper \cite{GH_CNN}, with an ImageNet classification error of c.16\%, significantly lower than the state-of-the-art at the time which was 26\%. Convolutional networks use the assumption that each input is an image and therefore certain properties can be encoded into the architecture of the network. This allows a significant reduction in the number of tunable network parameters.
 \newline \newline
-A regular neural network, as mentioned earlier, contains a number of fully connected layers i.e. each neuron in a layer is connected to every neuron in the previous and next layers respectively. However convolutional neural networks are arranged in three dimensions: width, height, depth (Figure \ref{CNNvsNN}). In this architecture the neurons in a layer are only connected to some of the layer before unlike in the fully connected case, this significantly reduces the number of parameters \cite{StanfordCS231_1}.
+A regular neural network, as mentioned earlier Section \ref{dlp}, contains a number of fully connected layers i.e. each neuron in a layer is connected to every neuron in the previous and next layers respectively. However convolutional neural networks are arranged in three dimensions: width, height, depth (Figure \ref{CNNvsNN}). In this architecture the neurons in a layer are only connected to some of the layer before, unlike in the fully connected case, this significantly reduces the number of parameters \cite{StanfordCS231_1}.
 
 \noindent \begin{figure}[h!]
 \includegraphics[width = 0.5\hsize]{./figures/neural_net2.jpeg}
@@ -67,7 +70,7 @@ A regular neural network, as mentioned earlier, contains a number of fully conne
 \end{figure}
 
 \subsubsection{Convolutional Layers}
-A convolutional layer learns a set of filters, each filter is compact in size, say ($7 \times 7 \times 3$). This filter slides (convolves) over the image, then a dot product is taken between the filter values and the inputs to that filter (Figure \ref{CNN_filter}. The filter slides across with a respective stride, which is a hyperparameter, a stride of one equates to moving one pixel across at a time. A convolutional layer is therefore able to pick up features such as a corner, or higher level features such as the texture of fur. This process creates a 2D activation map containing the response of the filter at each position on the input volume. A number of filters are passed over and a number of activation maps created, relating to the depth which is a tune-able hyperparameter.
+A convolutional layer learns a set of filters, each filter is compact in size, say ($7 \times 7 \times 3$). This filter slides (convolves) over the image, then a dot product is taken between the filter values and the inputs to that filter (Figure \ref{CNN_filter}). The filter slides across with a respective stride, which is a hyperparameter, a stride of one equates to moving one pixel across at a time. A convolutional layer is therefore able to pick up features such as a corner, or higher level features such as the texture of fur. This process creates a 2D activation map containing the response of the filter at each position on the input volume. A number of filters are passed over and a number of activation maps are created, relating to the layer depth which is a tune-able hyperparameter.
 
 \noindent \begin{figure}[h!]
 \includegraphics[width = 0.5\hsize]{./figures/conv_filter.jpg}
@@ -77,9 +80,9 @@ A convolutional layer learns a set of filters, each filter is compact in size, s
 \end{figure}
 
 \subsubsection{Pooling Layers}
-Pooling layers are used to reduce the number of parameters in a network. This is a much debated topic, Geoffrey Hinton's \cite{DBLP:journals/corr/abs-1710-09829} dicusses the problems of convolutional networks in his 2017 paper and especially focuses on the disadvantages of pooling layers. It is however a current, although fading, method of parameter reduction. For the purposes of optimising network architecture for smaller hardware such as is portable on a bike this is still a recognised and useful method.
+Pooling layers are used to reduce the number of parameters in a network. This is a much debated topic, Geoffrey Hinton's paper \cite{DBLP:journals/corr/abs-1710-09829} dicusses the problems of convolutional networks in his 2017 paper and especially focuses on the disadvantages of pooling layers. It is however a current, although fading, method of parameter reduction. For the purposes of optimising network architecture for smaller hardware such as is portable on a bike this is still a recognised and useful method.
 \newline \newline
-A pooling layer such as that depicted in (Figure \ref{CNN_filter}) passes a kernel over the input (much like in a convolutional layer) and at each spacial location it calculates a metric. For example, max pooling takes the largest value contained within the kernel grid at each consecutive spacial location.
+A pooling layer such as that depicted in (Figure \ref{CNN_filter}) passes a kernel over the input (much like in a convolutional layer) and at each spacial location it calculates a metric. For example, max pooling takes the largest value contained within the kernel grid at each consecutive spacial location. This process reduces the input size with respect to the kernel size and the implemented stride.
 
 \subsection{Image Detection} \label{Image_det}
 Image detection is an area of research that uses the CNN networks described in Section \ref{Cnn_section}. This is, however, a more difficult task as there can be multiple objects/classes of interest within one image. A naive approach to this problem would be to slide a window across an image and classify at each location. When the network classifies, say a cat at a particular window location it is likely that a cat is located in that area.
@@ -88,23 +91,23 @@ Although the aforementioned approach is valid it would be very slow, not only wo
 
 
 \subsubsection{R-CNN} \label{rcnn}
-R-CNN, proposed by Ross Girshick et al. \cite{DBLP:journals/corr/GirshickDDM13} in 2014, incorporates a region proposal method. This process produces 2000 proposals which are then classified by a large CNN classifies each region using class-specific linear SVMs. This process equates to a 53.7\% mean average precision (mAP) compared to 35.1\% by the current state-of-the-art at the time. In addition to this performance gain the system doesn't rely on far more complicated ensemble methods.
+R-CNN, proposed by Ross Girshick et al. \cite{DBLP:journals/corr/GirshickDDM13} in 2014, incorporates a region proposal method. This process produces 2000 proposals which are then passed through a large CNN, and each region is classified using class-specific linear SVMs. This process equates to a 53.7\% mean average precision (mAP) compared to 35.1\% by state-of-the-art methods at the time. In addition to this performance gain the system doesn't rely on far more complicated ensemble methods.
 \newline \newline
-The region proposal method used is called selective search \cite{Uijlings2013} , this uses a fast segmentation algorithm by Felzenszwalb \cite{Felzenszwalb2004} followed by a greedy algorithm to iteratively group regions together using a similarity metrics. The four metrics proposed in the paper are $s_{colour}$, $s_{texture}$, $s_{size}$, $s_{fill}$  the aim is to use a number of metrics to pick up the differences between regions when growing and also limit one region's growth at the expense of others (hence the size metric).
+The region proposal method used is called selective search \cite{Uijlings2013}, this uses a fast segmentation algorithm by Felzenszwalb \cite{Felzenszwalb2004} followed by a greedy algorithm to iteratively group regions together using similarity metrics. The four metrics proposed in the paper are $s_{colour}$, $s_{texture}$, $s_{size}$, $s_{fill}$  the aim is to use a number of metrics to pick up the differences between regions during the growth period and also limit one region's growth at the expense of others (hence the size metric).
 
 \noindent \begin{figure}[h!]
-\label{Selective_search}
 \includegraphics[width = 1.0\hsize]{./figures/region_prop.png}
 \caption{R-CNN Region Proposal \& Architecture \cite{DBLP:journals/corr/GirshickDDM13}}
+\label{Selective_search}
 \end{figure}
 
-The result of the region proposal (Figure \ref{Selective_search}) are a series of windows that are likely to contain an object. These are then simply warped to $227 \times 227$ pixels to fit the input dimensions CNN network that contains five convolutional layers and two fully connected layers. The output of the CNN is then fed as a 4096 dimensional feature vector to a set of trained SVMs, one for each class, that are used to score the likelihood for that class. This approach is slow at 13s/image on a GPU and 53s/image on a CPU, the separation of a CNN and SVM is peculiar and adds to this timescale. A later iteration of this method Fast-RCNN is discussed in Section \ref{Fast_RCNN}.
+The results of the region proposal (Figure \ref{Selective_search}) are a series of windows that are likely to contain an object. These are then simply warped to $227 \times 227$ pixels to fit the input dimension's of the CNN network that follows, containing five convolutional layers and two fully connected layers. The output of the CNN is then fed as a 4096 dimensional feature vector to a set of trained SVMs, one for each class, that are used to score the likelihood for that class. This approach is slow at 13s/image on a GPU and 53s/image on a CPU, the separation of a CNN and SVM is peculiar and adds to this timescale. A later iteration of this method Fast-RCNN is discussed in Section \ref{Fast_RCNN}.
 
 \subsubsection{Fast-RCNN} \label{Fast_RCNN}
 
-R-CNN performs a CNN forward pass for each region proposal and does not share computation \cite{DBLP:journals/corr/Girshick15}. Spacial pyramid pooling networks (SPPnet) \cite{DBLP:journals/corr/HeZR014} are designed to mitigate this problem by creating a feature map (which is always the same shape) from an input image and then classifies each object proposal from a vector extracted from the shared feature map. This paper still uses a multiple-stage classification pipeline but is a marked improvement on R-CNN with regards to speed. 
-
-Fast-RCNN uses the SPPnet concept but also incorporates a single-stage pipeline. The process inputs an image and multiple RoIs into a fully convolutional network (Figure \ref{Fast_RNN}). Each RoI is then pooled into a fixed-size feature map as in SPPnet and then mapped to a feature vector by fully connected layers. As can be seen in Figure \ref{Fast_RNN} the network then branches into 2 separate outputs, one 4-point regression output of the bounding box location and a K-size classification output, where K is the number of object classes. The model therefore must contain a multi-task loss function that accounts for both bounding box and softmax loss (Equation \ref{multi-task_loss}).
+R-CNN performs a CNN forward pass for each region proposal and does not share computation between regions \cite{DBLP:journals/corr/Girshick15}. Spacial pyramid pooling networks (SPPnet) \cite{DBLP:journals/corr/HeZR014} are designed to mitigate this problem by creating a feature map (which is always the same shape) from an input image and then classifying each object proposal from a vector extracted from the shared feature map. This paper still uses a multiple-stage classification pipeline but is a marked improvement on R-CNN with regards to speed. 
+\newline \newline
+Fast-RCNN uses the SPPnet concept but also incorporates a single-stage pipeline. The process inputs an image and multiple RoIs into a fully convolutional network (Figure \ref{Fast_RNN_fig}). Each RoI is then pooled into a fixed-size feature map as in SPPnet and then mapped to a feature vector by fully connected layers. As can be seen in Figure \ref{Fast_RNN_fig} the network then branches into 2 separate outputs, one 4-point regression output of the bounding box location and a K-size classification output, where K is the number of object classes. The model therefore must contain a multi-task loss function that accounts for both bounding box and softmax loss (Equation \ref{multi-task_loss}).
 
 \begin{equation}
 \label{multi-task_loss}
@@ -127,34 +130,34 @@ smooth_{L_{1}} =
 |x| - 0.5  \textnormal{otherwise} \\
 \end{cases}
 \end{equation}
-is a $L_{1}$ loss. This architecture allows for fast training with the forward pass of the network and therefore processes images 146$\times$ faster than R-CNN. 
+is a $L_{1}$ loss. This architecture allows for fast training with the forward pass of the network and therefore processes images 146$\times$ faster than R-CNN due to sharing computation between layers and the improved pipeline design. 
 
 %TODO
 \noindent \begin{figure}[h!]
-\includegraphics[width = 1.0\hsize]{./figures/fast-rcnn2.jpg}
+\includegraphics[trim={0 22em 22em 3em},clip,width = 1.0\hsize]{./figures/arch.pdf}
 \caption{Fast R-CNN Architecture \cite{DBLP:journals/corr/Girshick15}}
-\label{Fast_RNN}
+\label{Fast_RNN_fig}
 \end{figure}
 
-Figure \ref{Fast_RCNN} depicts the pipeline architecture, this incorporates an RoI pooling layer which maps the convolutional feature map from an RoI (created by selective search) to a fixed extent feature map of a set $H \times W$, where $H$ and $W$ are layer hyperparameters. Each RoI is a rectangular window defined by a tuple of four elements ($r,c,h,w$), where ($r,c$) specify the top left corner and ($h,w$) the width. RoI max pooling then divides the RoI window into a grid and then max-pools each grid into the corresponding output cell. The size of the grid is proportionate to the RoI and so the output shape is constant regardless of RoI input size. 
+Figure \ref{Fast_RNN_fig} depicts the network architecture, this incorporates an RoI pooling layer which maps the convolutional feature map from an RoI (created by selective search) to a fixed extent feature map of a set $H \times W$, where $H$ and $W$ are layer hyperparameters. Each RoI is a rectangular window defined by a tuple of four elements ($r,c,h,w$), where ($r,c$) specify the top left corner and ($h,w$) the width. RoI max pooling then divides the RoI window into a grid and then max-pools each grid into the corresponding output cell. The size of the grid is proportionate to the RoI and so the output shape is constant regardless of RoI input size. 
 
 \subsubsection{Faster R-CNN} \label{Faster_rcnn}
 Although the previous method \cite{DBLP:journals/corr/Girshick15} removed the need for a multi-stage classification pipeline (CNN and SVM), it still relies on the selective search \cite{Uijlings2013} method for region proposal. This part is now the computational bottleneck that slows down the process. Faster R-CNN proposed by Ren et al. \cite{DBLP:journals/corr/RenHG015} seeks to alleviate this issue by combining region proposal into the CNN. The paper suggests the use of a region proposal network (RPN) to produce the RoIs used later in the network. 
 
 %TODO sort out grphic keep only (c)
 \noindent \begin{figure}[h!]
-\includegraphics[width = 0.5\hsize]{./figures/faster.png}
-\includegraphics[width = 0.5\hsize]{./figures/rpn_faster.jpg}
+\includegraphics[width = 0.45\hsize]{./figures/faster.png}
+\includegraphics[width = 0.45\hsize]{./figures/rpn_faster.jpg}
 \caption{Fast R-CNN Architecture \cite{DBLP:journals/corr/Girshick15}}
 \label{Faster_rnn_fig}
 \end{figure}
 
-The region proposal network (RPN) outputs a set of rectangular object proposals, each of these proposals has an objectiveness score i.e. how likely the network thinks the proposal contains an object. This part of the network comes after a number of convolutional layers (in this paper 5 or 13 such layers). The region proposals are then created off the feature map from these layers by sliding a smaller network of size $n \times n$ over the convolutional feature map (Figure \ref{Faster_rnn_fig}. At each sliding window location a number of region proposals are predicted simultaneously. These consist of 3 aspect ratios and 3 scales, therefore 9 total region predictions or anchors at each location. The network is then followed by two sibling $1 \times 1$ convolutional layers, one for $reg$ (region proposal) and one for $cls$ (probability of object or not). The $reg$ layer outputs 4$k$ results, which represent the encoding coordinates of the $k$ boxes and the $cls$ later scores the probability that there is an object or no object in each proposal, therefore $2k$ outputs. This results in a convolutional layer output of depth 9.
-
-The loss for the network is calculated from two metrics, the output of the $reg$ layer is a binary i.e. positive example or not. A positive example is defined by how much the box overlaps with the ground truth box of the object and so an IoU (Intersection-over-union) overlap > 0.7 is considered a positive example and an IoU < 0.3 is considered a negative label. For the first positive case if no positive examples are found the boxes with highest IoU  are labelled positive. With this it follows that:
+The region proposal network (RPN) outputs a set of rectangular object proposals, each of these proposals has an objectiveness score i.e. how likely the network thinks the proposal contains an object. This part of the network comes after a number of convolutional layers (in this paper 5 or 13 such layers). The region proposals are then created off the feature map from these layers by sliding a smaller network of size $n \times n$ over the convolutional feature map (Figure \ref{Faster_rnn_fig}). At each sliding window location a number of region proposals are predicted simultaneously. These consist of 3 aspect ratios and 3 scales, therefore 9 total region predictions or anchors at each location. The network is then followed by two sibling $1 \times 1$ convolutional layers, one for $reg$ (region proposal) and one for $cls$ (probability of object or not). The $reg$ layer outputs 4$k$ results, which represents the encoding coordinates of the $k$ boxes and the $cls$ later scores the probability that there is an object or no object in each proposal, therefore cls has $2k$ outputs. This results in a convolutional layer output of depth 9.
+\newline \newline
+The loss for the network is calculated from two metrics, the output of the $reg$ layer is a binary, i.e. positive example, or not. A positive example is defined by how much the box overlaps with the ground truth box of the object and so an IoU (Intersection-over-union) overlap $> 0.7$ is considered a positive example and an IoU $< 0.3$ is considered a negative label. For the first positive case, if no positive examples are found, the boxes with highest IoU  are labelled positive. With this it follows that:
 
 \begin{equation}
-\label{multi-task_loss}
+\label{multi-task_loss_fast_rcnn}
 L(\{p_{i}\},\{t_{i}\}) = \frac{1}{N_{cls}} \sum_{i} L_{cls}(p{i},p_{i}^{*}) + \lambda \frac{1}{N_{reg}} \sum_{i}p_{i}^{*} L_{reg}(t_{i},t_{i}^{*})
 \end{equation}
 
@@ -162,7 +165,7 @@ Where $i$ is the anchor index, $p_{i}$ is the predicted probability of anchor $i
 
 \begin{equation}
 \begin{aligned}
-\label{multi-task_loss}
+\label{bounding_box_loss}
 t_{x} = (x-x_{a})/w_{a}, \quad t_{y} = (y-y_{a})/h_{a},\\
 t_{w} = log(w/w_{a}), \quad t_{h} = log(h/h_{a}), \\
 t_{x}^{*} = (x^{*}-x_{a})/w_{a},\quad t_{y}^{*} = (y^{*} - y_{a})/h_{a} \\
@@ -170,9 +173,9 @@ t_{w}^{*} = log(w^{*}/w_{a}), \quad t_{h}^{*} = log(h^{*}/h_{a})
 \end{aligned}
 \end{equation}
 
-where $x$, $y$, $w$, and $h$ are the box centre coordinates plus width and height. Predicted box, anchored box are denoted by $x$, $x_{a}$, $x^{*}$ (likewise for $y$, $w$, $h$).
-
-Finally after the regions have been proposed c.6000 per image, some regions overlap with others, and so, to reduce redundancy non-maximum supression is used on their cls score with an IoU threshold of 0.7 to leave around 2000 proposals per image. Non-maximum supression is a technique that sets all neighbouring areas to zero around a local maximum and hence only keeps the maximum value and suppresses the others.
+where $x$, $y$, $w$, and $h$ are the box centre coordinates plus width and height. Predicted box, and anchored box are denoted by $x$, $x_{a}$, $x^{*}$ (likewise for $y$, $w$, $h$).
+\newline \newline
+Finally after the regions have been proposed, c.6000 per image, some regions overlap with others, and so, to reduce redundancy non-maximum supression is used on their $cls$ score with an IoU threshold of 0.7 to leave around 2000 proposals per image. Non-maximum supression is a technique that sets all neighbouring areas to zero around a local maximum and hence only keeps the maximum value and suppresses the others.
  
 \subsection{Image Segmentation}\label{image_seg}
 Unlike the image detection problem described in Section \ref{Image_det}, this task aims to segment an image on a pixel-by-pixel basis into respective classes (Figure \ref{cityscapes_data}). A conventional classification network takes an image and outputs a prediction of which class the image is i.e. a vector of probabilities or a `score'. This process uses fully-connected layers to produce the final output vector which throws away important spacial information used in a segmentation task. Therefore Long et al. \cite{DBLP:journals/corr/LongSD14} propose converting these final layers to convolutional layers, maintaining the spacial information and creating a heatmap output (Figure \ref{cityscapes_data}).
@@ -184,17 +187,17 @@ Unlike the image detection problem described in Section \ref{Image_det}, this ta
 \label{cityscapes_data}
 \end{figure}
 
-The heatmaps produces from the network then need to be upsampled from their respective dimensions to that of the output image. This process is essentially a reverse or deconvolution. Upsampling, therefore, with factor f is convolution with a fractional input stride of 1/f. Essentially each filter is placed on the output image and then multiplied by the input pixel. Hence the image increases in size depending on stride and kernel size as one pixel value is interpolated over a grid. The final problem therefore is how to choose the filter values, this can be done in a number of ways but the main accepted approach is to simply learn them as part of the tuning process.
+The heatmaps produced from the network then need to be upsampled from their respective dimensions to that of the output image. This process is essentially a reverse or deconvolution. Upsampling, therefore, with factor f is convolution with a fractional input stride of 1/f. Essentially each filter is placed on the output image and then multiplied by the input pixel. Hence the image increases in size depending on stride and kernel size as one pixel value is interpolated over a grid. The final problem therefore is how to choose the filter values, this can be done in a number of ways but the main accepted approach is to simply learn them as part of the tuning process.
 \newline \newline
 An important concept is that of patchwise training which feeds the network a number of patches from an input image (small patches surrounding objects of interest) instead of an entire input image. This both helps to balance the classes, ensures the input has enough variance, and is a correct representation of the input set. However, this paper argues that this can be done from a fully convolutional training regime with incorporating a DropConnect-like mask \cite{Wan:2013:RNN:3042817.3043055} between the output and the loss. A DropConnect mask is similar to the proposed regularisation technique of Dropout \cite{JMLR:v15:srivastava14a} except that it randomly sets the network weights to 0 rather than the activation functions. This, on the output layer (connected to the network loss) is found to have the same effect as patch-wise sampling in Long et al.'s paper.
 \newline \newline
-Although conventional, proven classification architectures performed to state-of-the-art when modified for segmentation 56.0 mean IU it was found that a novel and specific architecture performed best 62.7 mean IU. Mean pixel intersection over union (Mean IU) is a standard performance metric where mean is taken over all classes, including the background. The paper describes a network architecture that uses skips \cite{Bishop:2006:PRM:1162264}. Skips allow predictions from lower-level coarser layers to interact with finer, latter layer predictions. This lets the model make local predictions (finer) within the context of the global structure (coarser). This addition made for a marked increase in performance by simply up-sampling earlier layers and summing with latter layer outputs for a final image prediction.
+Although conventional proven classification architectures performed to state-of-the-art when modified for segmentation (56.0 mean IU), Long at al. \cite{DBLP:journals/corr/LongSD14} go on to design a bespoke network that achieves 62.7 mean IU. Mean pixel intersection over union (Mean IU) is a standard performance metric where the mean is taken over all classes, including the background. The paper describes a network architecture that uses skips \cite{Bishop:2006:PRM:1162264}. Skips allow predictions from lower-level coarser layers to interact with finer, latter layer predictions. This lets the model make local predictions (finer) within the context of the global structure (coarser). This addition made for a marked increase in performance by simply up-sampling earlier layers and summing with latter layer outputs for a final image prediction.
 
 \subsection{Instance Segmentation}
 Instance segmentation is a problem that combines research in Sections \ref{Image_det} \& \ref{image_seg}, it aims to not only perform pixel-wise segmentation of classes but also determine instances of objects within and image. As discussed in Section \ref{mask_rcnn} there is a simple method of combining these networks into one simple classification pipeline.
 \subsubsection{Mask R-CNN} \label{mask_rcnn}
 Mask R-CNN was proposed by Facebook AI Research (FAIR) namely Kaiming He et al. in March 2017. It uses the Faster R-CNN network described in Section \ref{Faster_rcnn} which builds from advances in Sections \ref{rcnn}  \& \ref{Fast_RCNN}. The method works by simply adding a branch from the existing network for predicting segmentation masks as in Section \ref{image_seg} (Figure \ref{Mask_rcnn_arch}). The branch is a small FCN that is applied to each ROI for segmentation. There are a number of slight modifications to each approach to produce the final Mask R-CNN that are documented below.
-
+\newline \newline
 
 \noindent \begin{figure}[h!]
 \includegraphics[width = 1.0\hsize]{./figures/mask_arch.jpg}
@@ -202,7 +205,7 @@ Mask R-CNN was proposed by Facebook AI Research (FAIR) namely Kaiming He et al. 
 \label{Mask_rcnn_arch}
 \end{figure}
 %TODO nice binary mask per class photo
-RoIs are produced from the RPN as in Faster R-CNN \cite{DBLP:journals/corr/RenHG015} then an $m \times m$ mask is predicted from each RoI without the use of a fully-connected (fc) layer and therefore keeps spacial information as in Section \ref{image_seg}. It was found during experimentation that it is preferable to decouple the class classification and the mask production of the network. This stops multiple classes disrupting each-other during mask production, hence a mask is produced for each class. The class of each respective mask is then determined from the class output branch and that binary mask is selected. 
+RoIs are produced from the RPN as in Faster R-CNN \cite{DBLP:journals/corr/RenHG015} then an $m \times m$ mask is predicted from each RoI without the use of a fully-connected (fc) layer and therefore keeps spacial information as in Section \ref{image_seg}. It was found during experimentation that it is preferable to decouple the class classification and the mask production of the network. This stops multiple classes disrupting eachother during mask production, hence a mask is produced for each class. The class of each respective mask is then determined from the class output branch and that binary mask is selected. 
 \newline \newline
 The loss function for the network must now incorporate the three different branches; mask, class prediction, bounding-box prediction (Equation \ref{maskrcnnloss}). 
 
@@ -215,11 +218,11 @@ Where $L_{cls}$ \& $L_{box}$ are identical to Section \ref{Fast_RCNN}. The mask 
 \newline \newline
 RoI pool as discussed in Section \ref{Fast_RCNN} is modified in this approach. Instead of subdividing an RoI into discrete regions e.g. a grid of $4 \times 5$ cells. An RoI does not always divide equally into these grid cells and so rounding of grid sizes is needed, this quantisation of sub-windows can cause misalignments of the RoI and extracted features. The new RoIAlign layer introduced in this paper mitigates this problem by not rounding grid-cells. Mask R-CNN uses bi-linear interpolation (linear interpolation with 2d) to compute the exact values of input features at four regularly samples locations in each RoI window.
 
-\section{Background, SLAM}
+\section{Background, SLAM} \label{back_slam}
 In order to detect collisions between the bike and obstacles the software must have an understanding of the global environment. The detection described in Section \ref{comp_vis_back} allows mapping, and tracking of dynamic objects in the frame, but distance, path prediction and eventually collision prediction rely strongly on an accurate understanding of 2.5-3D space.
 
 \subsection{Sensors}
-The sensors used in this project are an RGBD camera and an IMU. These are both available in the Intel Realsense Camera (ZR300, Figure \ref{realsense_camera}). This camera has a USB cable that both provides the power and sends camera information. An extension cable allows for a laptop to be attached to the camera, from a backpack whilst cycling. Potential problems with this setup are due to the potential juddering of the bike during operation. This could cause tricky footage to analyse and can cause data loss when the hard-drive is writing to disk. The later issue can been easily solved by writing to an SSD while cycling.
+The sensors used in this project are an RGBD camera and an IMU. These are both available in the Intel Realsense Camera (ZR300, Figure \ref{realsense_camera}). This camera has a USB cable that both provides the power and sends camera information. An extension cable allows for a laptop to be attached to the camera, from a backpack whilst cycling. Potential problems with this setup are due to juddering of the bike during operation; this could cause tricky footage to analyse and can data loss when the hard-drive is writing to disk. The later issue can easily be solved by writing to an SSD while cycling.
 
 \noindent \begin{figure}[h!]
 \includegraphics[width = 1.0\hsize]{./figures/intel_realsense.jpg}
@@ -231,7 +234,7 @@ The sensors used in this project are an RGBD camera and an IMU. These are both a
 
 
 
-In order to fully understand the bike's location, the environment can be considered from two frame's of reference, the world and camera frame. 
+In order to fully understand the bike's location, the environment can be considered from two frames of reference, the world and camera frame. 
 \newline
 
 
@@ -283,11 +286,11 @@ The Vectors expressed within a frame are denoted as $\textbf{p}_{A}$ or $\textbf
 
 \subsection{Bicycle States}
 
-At each taken image ($k$) the bike can be assumed to have a set state $\mathcal{X}_{R}^{k}$ and landmarks are contained within $\mathcal{X}_{L}$. $\mathcal{X}_{R}$ contains a set of pose states $\mathcal{X}_{T}$ and speed/bias states $\mathcal{X}_{sb}$, Equation \ref{states}.
+At each taken image ($k$) the bike can be assumed to have a set state $\mathcal{X}_{R}^{k}$. Contained within $\mathcal{X}_{R}$ are a set of pose states, $\mathcal{X}_{T}$, and speed/bias states $\mathcal{X}_{sb}$, Equation \ref{states_1}. Landmarks are contained within the set $\mathcal{X}_{L}$.
 
 \begin{equation}
 \begin{aligned}
-\label{states}
+\label{states_1}
 \mathcal{X}_{T} := [ _{W}r_{S}^{T},q_{WS}^{T} ]^{T} \\
 \mathcal{X}_{sb} := [ _{s}v^{T},b_{g}^{T}, b_{a}^{T} ]^{T} \\
 \mathcal{X}_{R} := [ _{W}r_{S}^{T},q_{WS}^{T},_{s}v^{T},b_{g}^{T}, b_{a}^{T}]^{T}
@@ -298,7 +301,7 @@ The elements $_{W}\textbf{r}_{S}^{T}$, $\textbf{{q}}_{W}^{T}$ are the position a
 
 \begin{equation}
 \begin{aligned}
-\label{states}
+\label{states_2}
 \delta \mathcal{X}_{T} := [ \delta r^{T}, \delta \alpha^{T} ]^{T} \\
 \delta \mathcal{X}_{sb} := [ \delta v^{T}, \delta b_{g}^{T},\delta b_{a}^{T} ]^{T} \\
 \delta \mathcal{X}_{R} := [ \delta r^{T}, \delta \alpha^{T}, \delta v^{T},b_{g}^{T}, b_{a}^{T}]^{T}
@@ -316,18 +319,10 @@ If measurements were exact, mapping of an environment would be easy. This, howev
 \end{aligned}
 \end{equation}
 
-where $\textbf{z}$ is the correct measurement, $\textbf{b}_{C}$ is a long-term constant bias, $s$ is scaling, $\textbf{M}$- misalignment, $\textbf{b}$- time varying bias, $n$ - noise, and $o$ is other un-modelled influences. 
-\newline\newline
-
-This means that no measurement can be trusted exclusively for state-space information. When moving therefore, it was first assumed that errors have a compounding effect. So the position of a bike, would become increasingly unknown as the environment is explored and the bike is displaced from the origin. This, however is not the case as proved by Durrant-Whyte \ref{F_Durr_1} since there is a high degree of correlation between estimates of different landmarks and locations in a map, these correlations also increase with successive observations (Figure \ref{slam_prob_fig}). As an example of this (Figure \ref{slam_prob_fig} : Right) displays error in measurements of landmark observation, the mean error is common between all landmarks and so with successive landmark observations the errors in location estimates become highly correlated. This means that although $\textbf{m}_{i}$'s location may be quite uncertain but the relative location between two landmarks $\textbf{m}_{i}-\textbf{m}_{j}$ may be relatively certain.
+where $\textbf{z}$ is the correct measurement, $\textbf{b}_{C}$ is a long-term constant bias, $s$ is scaling, $\textbf{M}$- misalignment, $\textbf{b}$- time varying bias, $n$ - noise, and $o$ is other un-modelled influences. This means that no measurement can be trusted exclusively for state-space information. When moving therefore, it was first assumed that errors have a compounding effect. The position of a bike, would become increasingly unknown as the environment is explored and the bike is displaced from the origin. This, however, is not the case as proved by Durrant-Whyte \cite{F_Durr_1} since there is a high degree of correlation between estimates of different landmarks and locations in a map, these correlations also increase with successive observations (Figure \ref{slam_prob_fig}). As an example of this (Figure \ref{slam_prob_fig} : Right) displays error in measurements of landmark observation, the mean error is common between all landmarks and so with successive landmark observations the errors in location estimates become highly correlated. This means that although $\textbf{m}_{i}$'s location may be quite uncertain but the relative location between two landmarks $\textbf{m}_{i}-\textbf{m}_{j}$ is almost certain.
 
 
-\noindent \begin{figure}[h!]
-\includegraphics[width = 0.5\hsize]{figures/convergence_landmark_uncertainty.png}
-\includegraphics[width = 0.5\hsize]{figures/ess_slam.png}
-\caption{Left: Graphical depiction of convergence in landmark uncertainty. Time history of standard deviations of a set of landmark locations. Over time, standard deviations reduce monotonically to a lower bound \cite{F_Durr_Pt1}. Right: Error between estimated and true landmarks is mostly common between landmarks.}
-\label{slam_prob_fig}
-\end{figure}
+
 
 The SLAM problem is therefore formulated using both re-projection error (from the camera measurements) $\textbf{e}_{r}$ and an inertial error term from the IMU $\textbf{e}_{s}$.  
 
@@ -340,14 +335,26 @@ J(x) := \sum_{i=1}^{I} \sum_{k=1}^{K}\sum_{j \in \mathcal{J}(i,k)} \textbf{e}_{r
 
 where $i$ is the camera index, $k$ the camera frame index, $j$ the landmark index. Indices of landmarks in the $k$th frame and $i$th camera are in the set $\mathcal{J}(i,k)$. In the case of this project the error is only estimated with one camera, and the IMU. Any additional sensors used would also need to be included in this error state. 
 
+
+\noindent \begin{figure}[h!]
+\includegraphics[width = 0.5\hsize]{figures/convergence_landmark_uncertainty.png}
+\includegraphics[width = 0.5\hsize]{figures/ess_slam.png}
+\caption{Left: Convergence in landmark uncertainty.  Over time, standard deviations reduce monotonically to a lower bound \cite{F_Durr_Pt1}. Right: Error between estimated and true landmarks is common.}
+\label{slam_prob_fig}
+\end{figure}
+
+
+\subsubsection{Camera Re-projection Error}
+
+The camera uses a focal-lens to take a photograph. This, especially on cheaper cameras, can distort the image. The distortion is intrinsic to the camera and it needs to calibrated to determine a distortion model $\mathbf{h}(^{.})$. This is then used to determine the re-projection error \cite{Furgale}.
+
 \begin{equation}
 \begin{aligned}
 \textbf{e}_{r}^{i,j,k} = \textbf{z}^{i,j,k} - \textbf{h}_{i} (\textbf{T}^{k}_{CiS} \textnormal{ } \textbf{T}^{k}_{SW} \textnormal{ } _{w}\textbf{l}^{j})
 \end{aligned}
 \end{equation}
 
-
-
+where $\textbf{z}^{i,j,k}$ denotes the measurement image coordinates.
 
 \subsubsection{IMU Kinematics}
 
@@ -428,7 +435,265 @@ _{S}\textbf{$\omega$} =  _{S}\tilde{\textbf{$\omega$}} + \textbf{w}_{g} - \textb
        \textbf{W}_{ba}
 \end{bmatrix}
 \end{equation}
+ 
+This formulation of the error dynamics is then used to derive the IMU error term (Equation \ref{imu_error}), for further details see \cite{Okvis_1}.
 
+
+\begin{equation}
+\mathbf{e}^{k}_{s}(\mathbf{x}^{k}_{R},\mathbf{x}^{k+1}_{R},\mathbf{z}_{s}^{k}) = 
+\begin{bmatrix}
+       _{W} \hat{\mathbf{r}}_{S}^{k+1} - _{W}\mathbf{r}_{S}^{k+1} \\
+       
+       2[\hat{\mathbf{q}}_{WS}^{k+1} \otimes \mathbf{q}_{WS}^{k+1 \textnormal{ } -1]} \\
+       
+       \hat{\mathbf{x}}^{k+1}_{sb} - \mathbf{x}_{sb}^{k+1}
+\end{bmatrix}
+\label{imu_error}
+\end{equation}
+
+
+
+\subsubsection{Keypoint Detection}
+
+The Okvis \cite{Okvis_1} paper uses an corner detection method to determine keypoints and then matches these keypoints using a binary descriptor (BRISK \cite{BRISK}). Binary descriptors use a sampling pattern to create pairs of points (lines). The algorithm then compares the two points ($p1,p2$) and if $p1 > p2$ a 1 is recorded and otherwise 0. This creates a binary string, that along with orientation representation describe a keypoint. When matching keypoints between images a simple, and fast $\sum XOR(img1,img2)$ reveals keypoint similarity from which a threshold can be used to determine matches.
+
+\noindent \begin{figure}[h!] 
+\includegraphics[width = 0.7\hsize]{figures/brisk.jpg}
+\includegraphics[width = 0.26\hsize]{figures/brisk.png}
+\caption{Left: Brisk keypoint matching example, Right: Brisk Sampling Pattern \cite{BRISK} }
+\label{Brisk}
+\end{figure}
+
+The BRISK sampling pattern (Figure \ref{Brisk}: Right) uses a standard Gaussian smoothing at each sample point. The standard deviation of the sample is represented by the red circles in the figure. This ensures the sample is less prone to noise than other traditional binary detectors e.g. BRIEF.
+
+
+\section{Background, Object Tracking}
+
+Once an object is found (Section \ref{comp_vis_back}) and the 3d world coordinates of the object in question (bike, car, pedestrian etc.) are determined (Section \ref{back_slam}) the path of the object needs to be calculated. This requires the ability to track an object from frame-to-frame and transfer that knowledge to 3D space. Mask-RCNN as an instance segmentation solution (Section \ref{comp_vis_back}) and runs slower than real-time unless on a powerful GPU system, which cannot be feasibly carried on a bike. So once an object is detected it is preferable to learn simpler features and track it with more basic but faster techniques. An object from frame-to-frame can be easily distinguished if the features of that object are not occluded and colour balance (for example sunny to shaded regions) is minimal. This, however, is not the case in real-world environments and so the tracking task is less simple than it appears.
+\newline \newline
+Section \ref{back_slam} used the IMU measurements and camera measurements to determine the location of the bicycle and objects in the world frame. This problem is similar but involves the tracking of an object. In \cite{Ped_tract} there are two parts at play, the camera measurements, and a predictive Kalman filter using the object's motion information. The Kalman filter creates a bounding box of the expected object location, the object is then correctly located in that region, and the Kalman filter is then updated.
+
+\subsection{Kalman Filter}
+
+The Kalman filter has two main parts, a predictive step and an update. The predictive step tries to find a-priori estimates of the state for the next time-step by projecting forward the current state and error covariance estimates. This estimate is then updated using the measurements (camera) of the object location. The iterative process continues improving the Kalman filter estimates at each stage. Assuming a linear system with Gaussian process and measurement noise the state can be modelled as:
+
+\begin{equation}
+\begin{aligned}
+X_{k} =  \Phi X_{k-1} + w_{k-1}
+\end{aligned}
+\end{equation}
+
+where $k$ is the time step, $X \in \mathbb{R}^{n}$ is the state vector, $\Phi$ is the $n \times n$ state transition matrix from state $k$ to $k+1$ and $w_{k}$ is $\mathcal{N}(0,Q)$. The measurement step can also predict the current state. With $Z_{k} \in \mathbb{R}^{m}$ as the system measurement vector:
+
+\begin{equation}
+\begin{aligned}
+Z_{k} =  \Psi X_{k} + v_{k}
+\end{aligned}
+\end{equation}
+
+where $\Psi$ is an $m \times n$ measurement matrix relating $X_{k}$ to the measurement $Z_{k}$, and $v_{k}$ is $\mathcal{N}(0,R)$. The prior estimates for the next time step by the Kalman predictions step:
+
+
+\begin{equation}
+\begin{aligned}
+\begin{cases}
+    \hat{X}_{k}(-) =  \Phi \hat{X}_{k-1}(+)\\
+    P_{k}(-) = \Phi P_{k-1}(+)\Phi^{T} + Q
+\end{cases}
+\end{aligned}
+\end{equation}
+
+where $\hat{X}_{k}(-)$ is a priori state estimate and $\Phi P_{k-1}(-)$ is the priori estimate error at step $k-1$. It is essentially the previous state $\times$ the transition matrix to the new state ($\hat{X}_{k}(-)$). Then a similar approach for the error covariance between the previous and current state. The correction step is then:
+
+\begin{equation}
+\begin{aligned}
+\begin{cases}
+    K_{k} = P_{k}(-) \Psi^{T} \textnormal{ } /  \textnormal{ }[\Psi P_{k}(-)\Psi^{T} + R] \\ 
+    \hat{X}_{k}(+) = \hat{X}_{k}(-) + K_{k}[Z_{k} - \Psi \hat{X}_{k}(-)]\\
+    P_{k}(+) = (I-K_{k} \Psi) P_{k}(-)
+\end{cases}
+\end{aligned}
+\end{equation}
+
+where $K_{k}$ is the $n \times m$ Kalman gain matrix, $\hat{X}_{k}(+)$ is the posterior state estimate according to the actual measurement $Z_{k}$ and the predicted measurement $\Psi \hat{X}_{k}(-)$ and $P_{k}(+)$ is the posterior state estimate error covariance.
+
+\subsection{CamShift}
+
+Camshift is a modification of the Meanshift algorithm that locates the maximum of a density function. In this case the probability of a region containing the colour and hue values of a previously discovered object in a new frame. It is an iterative algorithm that starts with an initial estimate $\mathbf{x}$ and a Kernel function $\mathbf{K}(\mathbf{x_{i}} - \mathbf{x})$ which determines the weighting of nearby points for mean re-estimation.
+
+\begin{equation}
+m(x) = \frac{\sum_{x_{i} \in N(x)} K(x_{i} - x) x_{i}}{\sum_{x_{i} \in N(x)} K(x_{i} - x)}
+\end{equation}
+
+Where N(x) is where $K(x_{i} \neq 0)$. This, however does not account for objects moving in a frame and therefore a dynamic scaling approach is needed where the kernel size is variable. Hence CamShift \cite{Bradski98computervision} solves these issues by updating the window size every time mean shift converges until a required threshold is reached.
+\newline \newline
+The Meanshift and Camshift algorithms require a probability density to describe objects in each image. Since, as mentioned earlier, colour values in the RGB space can easily alter due to occlusion and other light-variation effects it is suggested in \cite{Ped_tract} to convert the image to an HSV space before creation of a 48-bin histogram. HSV uses hue, saturation and brightness and the transformation from RGB is as follows:
+
+\begin{equation}
+\begin{aligned}
+H = 
+\begin{cases}
+    60 \times \Big[ \frac{g-b}{max(r,g,b)-min(r,g,b)} \Big] , if(r = max(r,g,b)) \\
+    60 \times \Big[ \frac{b-r}{max(r,g,b)-min(r,g,b)} + 2 \Big] , if(g = max(r,g,b)) \\
+    60 \times \Big[ \frac{r-g}{max(r,g,b)-min(r,g,b)} + 4 \Big] , if(b = max(r,g,b))
+\end{cases} \\
+S = \frac{max(r,g,b)-min(r,g,b)}{max(r,g,b)} \\
+V = max(r,g,b)
+\end{aligned}
+\end{equation}
+
+where H, S and V are the hue, saturation, and brightness value of each pixel and r,g,b are red, green and blue values.
+
+\subsection{Object Tracking Summary}
+
+The method discussed in this section uses image segmentation, a predictive Kalman filter with movement information, and the Camshift algorithm. The update step of the Kalman filter requires a measurement, this is obtained from the Camshift algorithm that iteratively and accurately locates the mid-point of a object in the image. This then updates the Kalman filter which predicts where the object will be in the next image and hence dictates where Camshift starts from at step $k+1$. This means that the expensive Mask-RCNN needs to be called far less frequently and hence makes the entire system less computationally expensive. The architecture used in \cite{Ped_tract} is displayed below (but uses a different image segmentation method of SVMs and Adaboost) in Figure \ref{Ped_tr_mod_fig}.
+
+\noindent \begin{figure}[h!]
+\includegraphics[width = 1.0\hsize]{figures/pedestrian_tracking_module.png}
+\caption{Pedestrian Tracking Module \cite{Ped_tract} }
+\label{Ped_tr_mod_fig}
+\end{figure}
+
+\newpage
+
+\section{Ethics Checklist}
+
+% You need the following added in your includes:
+% \usepackage[table]{xcolor}
+% \usepackage{amssymb}
+
+% Check off the boxes using: \checkmark
+
+
+\renewcommand*{\arraystretch}{1.3}
+\begin{longtable}{ |p{13.2cm}|p{0.6cm}|p{0.6cm}| }
+\hline
+ & \bf Yes & \bf No \\
+\hline
+
+\multicolumn{3}{|l|}{\cellcolor{green!25}\bf Section 1: HUMAN EMBRYOS/FOETUSES} \\
+\hline
+
+Does your project involve Human Embryonic Stem Cells? & & \checkmark \\
+\hline
+
+Does your project involve the use of human embryos? & & \checkmark \\
+\hline
+
+Does your project involve the use of human foetal tissues / cells? & & \checkmark \\
+\hline
+
+\multicolumn{3}{|l|}{\cellcolor{green!25}\bf Section 2: HUMANS} \\
+\hline
+
+Does your project involve human participants? & & \checkmark \\
+\hline
+
+\multicolumn{3}{|l|}{\cellcolor{green!25}\bf Section 3: HUMAN CELLS / TISSUES} \\
+\hline
+
+Does your project involve human cells or tissues? (Other than from “Human Embryos/Foetuses” i.e. Section 1)? & & \checkmark \\
+\hline
+
+\multicolumn{3}{|l|}{\cellcolor{green!25}\bf Section 4: PROTECTION OF PERSONAL DATA} \\
+\hline
+
+Does your project involve personal data collection and/or processing? & & \checkmark \\
+\hline
+
+Does it involve the collection and/or processing of sensitive personal data (e.g. health, sexual lifestyle, ethnicity, political opinion, religious or philosophical conviction)? & & \checkmark \\
+\hline
+
+Does it involve processing of genetic information? &  & \checkmark\\
+\hline
+
+Does it involve tracking or observation of participants? It should be noted that this issue is not limited to surveillance or localization data. It also applies to Wan data such as IP address, MACs, cookies etc. & & \checkmark \\
+\hline
+
+Does your project involve further processing of previously collected personal data (secondary use)? For example Does your project involve merging existing data sets? & & \checkmark \\
+\hline
+
+\multicolumn{3}{|l|}{\cellcolor{green!25}\bf Section 5: ANIMALS} \\
+\hline
+
+Does your project involve animals? & & \checkmark \\
+\hline
+
+
+\multicolumn{3}{|l|}{\cellcolor{green!25}\bf Section 6: DEVELOPING COUNTRIES} \\
+\hline
+
+Does your project involve developing countries? & & \checkmark \\
+\hline
+
+If your project involves low and/or lower-middle income countries, are any benefit-sharing actions planned? & & \checkmark \\
+\hline
+
+Could the situation in the country put the individuals taking part in the project at risk? & & \checkmark \\
+\hline
+
+\multicolumn{3}{|l|}{\cellcolor{green!25}\bf Section 7: ENVIRONMENTAL PROTECTION AND SAFETY} \\
+\hline
+
+Does your project involve the use of elements that may cause harm to the environment, animals or plants? & & \checkmark \\
+\hline
+
+Does your project deal with endangered fauna and/or flora /protected areas? & & \checkmark \\
+\hline
+
+Does your project involve the use of elements that may cause harm to humans, including project staff? & & \checkmark \\
+\hline
+
+Does your project involve other harmful materials or equipment, e.g. high-powered laser systems? & & \checkmark \\
+\hline
+
+
+\multicolumn{3}{|l|}{\cellcolor{green!25}\bf Section 8: DUAL USE} \\
+\hline
+
+Does your project have the potential for military applications? & & \checkmark \\
+\hline
+
+Does your project have an exclusive civilian application focus? & \checkmark & \\
+\hline
+
+Will your project use or produce goods or information that will require export licenses in accordance with legislation on dual use items? & & \checkmark \\
+\hline
+
+Does your project affect current standards in military ethics – e.g., global ban on weapons of mass destruction, issues of proportionality, discrimination of combatants and accountability in drone and autonomous robotics developments, incendiary or laser weapons? & & \checkmark \\
+\hline
+
+\multicolumn{3}{|l|}{\cellcolor{green!25}\bf Section 9: MISUSE} \\
+\hline
+
+Does your project have the potential for malevolent/criminal/terrorist abuse? & & \checkmark \\
+\hline
+
+Does your project involve information on/or the use of biological-, chemical-, nuclear/radiological-security sensitive materials and explosives, and means of their delivery? & \checkmark & \\
+\hline
+
+Does your project involve the development of technologies or the creation of information that could have severe negative impacts on human rights standards (e.g. privacy, stigmatization, discrimination), if misapplied? & & \checkmark \\
+\hline
+
+Does your project have the potential for terrorist or criminal abuse e.g. infrastructural vulnerability studies, cybersecurity related project? & & \checkmark \\
+\hline
+
+\multicolumn{3}{|l|}{\cellcolor{green!25}\bf Section 10: LEGAL ISSUES} \\
+\hline
+
+Will your project use or produce software for which there are copyright licensing implications? & \checkmark & \checkmark \\
+\hline
+
+Will your project use or produce goods or information for which there are data protection, or other legal implications? & & \checkmark \\
+\hline
+
+\multicolumn{3}{|l|}{\cellcolor{green!25}\bf Section 11: OTHER ETHICS ISSUES} \\
+\hline
+
+Are there any other ethics issues that should be taken into consideration? & & \checkmark \\
+\hline
+
+\end{longtable}
 
 
 \newpage
