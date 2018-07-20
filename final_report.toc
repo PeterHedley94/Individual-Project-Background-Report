@@ -5,13 +5,34 @@
 \contentsline {subsubsection}{\numberline {2.2.1}Convolutional Layers}{5}
 \contentsline {subsubsection}{\numberline {2.2.2}Pooling Layers}{5}
 \contentsline {subsection}{\numberline {2.3}Image Detection}{5}
-\contentsline {subsubsection}{\numberline {2.3.1}R-CNN}{5}
+\contentsline {subsubsection}{\numberline {2.3.1}R-CNN}{6}
 \contentsline {subsubsection}{\numberline {2.3.2}Fast-RCNN}{6}
 \contentsline {subsubsection}{\numberline {2.3.3}Faster R-CNN}{7}
 \contentsline {subsection}{\numberline {2.4}Image Segmentation}{8}
 \contentsline {subsection}{\numberline {2.5}Instance Segmentation}{9}
-\contentsline {subsubsection}{\numberline {2.5.1}Mask R-CNN}{9}
+\contentsline {subsubsection}{\numberline {2.5.1}Mask R-CNN}{10}
 \contentsline {section}{\numberline {3}Background, SLAM}{10}
-\contentsline {subsection}{\numberline {3.1}Sensors}{10}
+\contentsline {subsection}{\numberline {3.1}Sensors}{11}
 \contentsline {subsection}{\numberline {3.2}World and Camera Frame}{11}
-\contentsline {subsection}{\numberline {3.3}The SLAM Problem}{11}
+\contentsline {subsection}{\numberline {3.3}Bicycle States}{12}
+\contentsline {subsection}{\numberline {3.4}The SLAM Problem}{12}
+\contentsline {subsubsection}{\numberline {3.4.1}Camera Re-projection Error}{13}
+\contentsline {subsubsection}{\numberline {3.4.2}IMU Kinematics}{13}
+\contentsline {subsubsection}{\numberline {3.4.3}IMU Kinematics Linearised}{14}
+\contentsline {subsubsection}{\numberline {3.4.4}Keypoint Detection}{14}
+\contentsline {section}{\numberline {4}Background, Object Tracking}{14}
+\contentsline {subsection}{\numberline {4.1}CamShift}{15}
+\contentsline {subsection}{\numberline {4.2}Object Tracking Summary}{15}
+\contentsline {section}{\numberline {5}ROS}{16}
+\contentsline {section}{\numberline {6}Frame-to-Frame Tracking}{16}
+\contentsline {subsection}{\numberline {6.1}Intersection Over Union}{17}
+\contentsline {subsection}{\numberline {6.2}BRISK - Selector}{17}
+\contentsline {subsection}{\numberline {6.3}Class Matching}{18}
+\contentsline {subsection}{\numberline {6.4}Kalman Filter ROI Matching}{18}
+\contentsline {subsubsection}{\numberline {6.4.1}Kalman Predictive Step}{18}
+\contentsline {subsubsection}{\numberline {6.4.2}Kalman Update Step}{19}
+\contentsline {subsubsection}{\numberline {6.4.3}Kalman Equations}{19}
+\contentsline {subsubsection}{\numberline {6.4.4}Kalman Matching ROIS}{19}
+\contentsline {subsection}{\numberline {6.5}ROI Lives}{20}
+\contentsline {subsection}{\numberline {6.6}Combining Matching Methods}{20}
+\contentsline {section}{\numberline {7}Ethics Checklist}{21}

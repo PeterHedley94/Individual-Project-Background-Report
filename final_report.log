@@ -1,11 +1,9 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2018.6.4)  5 JUN 2018 13:51
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2018.6.4)  20 JUL 2018 12:06
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
 **final_report.tex
-
-(/home/peter/Documents/Imperial/Individual_Project/Report/Individual-Project-Ba
-ckground-Report/final_report.tex
+(./final_report.tex
 LaTeX2e <2016/02/01>
 Babel <3.9q> and hyphenation patterns for 81 language(s) loaded.
 (/usr/share/texlive/texmf-dist/tex/latex/base/article.cls
@@ -284,6 +282,13 @@ Package caption3 Info: TeX engine: e-TeX on input line 67.
 \c@subfigure=\count106
 \c@subtable=\count107
 )
+(/usr/share/texlive/texmf-dist/tex/latex/amsfonts/amsfonts.sty
+Package: amsfonts 2013/01/14 v3.01 Basic AMSFonts support
+\symAMSa=\mathgroup4
+\symAMSb=\mathgroup5
+LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
+(Font)                  U/euf/m/n --> U/euf/b/n on input line 106.
+)
 (/usr/share/texlive/texmf-dist/tex/latex/wrapfig/wrapfig.sty
 \wrapoverhang=\dimen137
 \WF@size=\dimen138
@@ -291,6 +296,51 @@ Package caption3 Info: TeX engine: e-TeX on input line 67.
 \WF@box=\box29
 \WF@everypar=\toks24
 Package: wrapfig 2003/01/31  v 3.6
+)
+(/usr/share/texlive/texmf-dist/tex/latex/xcolor/xcolor.sty
+Package: xcolor 2007/01/21 v2.11 LaTeX color extensions (UK)
+
+(/usr/share/texlive/texmf-dist/tex/latex/latexconfig/color.cfg
+File: color.cfg 2007/01/18 v1.5 color configuration of teTeX/TeXLive
+)
+Package xcolor Info: Driver file: pdftex.def on input line 225.
+
+(/usr/share/texlive/texmf-dist/tex/latex/colortbl/colortbl.sty
+Package: colortbl 2012/02/13 v1.0a Color table columns (DPC)
+\everycr=\toks25
+\minrowclearance=\skip58
+)
+\rownum=\count109
+Package xcolor Info: Model `cmy' substituted by `cmy0' on input line 1337.
+Package xcolor Info: Model `hsb' substituted by `rgb' on input line 1341.
+Package xcolor Info: Model `RGB' extended on input line 1353.
+Package xcolor Info: Model `HTML' substituted by `rgb' on input line 1355.
+Package xcolor Info: Model `Hsb' substituted by `hsb' on input line 1356.
+Package xcolor Info: Model `tHsb' substituted by `hsb' on input line 1357.
+Package xcolor Info: Model `HSB' substituted by `hsb' on input line 1358.
+Package xcolor Info: Model `Gray' substituted by `gray' on input line 1359.
+Package xcolor Info: Model `wave' substituted by `hsb' on input line 1360.
+)
+(/usr/share/texlive/texmf-dist/tex/latex/amsfonts/amssymb.sty
+Package: amssymb 2013/01/14 v3.01 AMS font symbols
+)
+(/usr/share/texlive/texmf-dist/tex/latex/tools/longtable.sty
+Package: longtable 2014/10/28 v4.11 Multi-page Table package (DPC)
+\LTleft=\skip59
+\LTright=\skip60
+\LTpre=\skip61
+\LTpost=\skip62
+\LTchunksize=\count110
+\LTcapwidth=\dimen139
+\LT@head=\box30
+\LT@firsthead=\box31
+\LT@foot=\box32
+\LT@lastfoot=\box33
+\LT@cols=\count111
+\LT@rows=\count112
+\c@LT@tables=\count113
+\c@LT@chunks=\count114
+\LT@p@ftn=\toks26
 )
 (/usr/share/texlive/texmf-dist/tex/latex/placeins/placeins.sty
 Package: placeins 2005/04/18  v 2.2
@@ -300,7 +350,7 @@ Package: datetime 2015/03/20 v2.60 Date Time Package
 
 (/usr/share/texlive/texmf-dist/tex/latex/etoolbox/etoolbox.sty
 Package: etoolbox 2015/08/02 v2.2a e-TeX tools for LaTeX (JAW)
-\etb@tempcnta=\count109
+\etb@tempcnta=\count115
 )
 (/usr/share/texlive/texmf-dist/tex/latex/fmtcount/fmtcount.sty
 Package: fmtcount 2015/05/05 v3.01
@@ -313,10 +363,10 @@ Package: xkeyval 2014/12/03 v2.7a package option processing (HA)
 
 (/usr/share/texlive/texmf-dist/tex/generic/xkeyval/xkeyval.tex
 (/usr/share/texlive/texmf-dist/tex/generic/xkeyval/xkvutils.tex
-\XKV@toks=\toks25
-\XKV@tempa@toks=\toks26
+\XKV@toks=\toks27
+\XKV@tempa@toks=\toks28
 )
-\XKV@depth=\count110
+\XKV@depth=\count116
 File: xkeyval.tex 2014/12/03 v2.7a key=value parser (HA)
 ))
 (/usr/share/texlive/texmf-dist/tex/latex/fmtcount/fcprefix.sty
@@ -324,17 +374,17 @@ Package: fcprefix 2012/09/28
 
 (/usr/share/texlive/texmf-dist/tex/latex/fmtcount/fcnumparser.sty
 Package: fcnumparser 2012/09/28
-\fc@digit@counter=\count111
+\fc@digit@counter=\count117
 ))
-\c@padzeroesN=\count112
-\fc@tmpcatcode=\count113
-\@DT@modctr=\count114
-\@ordinalctr=\count115
-\@orgargctr=\count116
-\@strctr=\count117
-\@tmpstrctr=\count118
-\@DT@loopN=\count119
-\@DT@X=\count120
+\c@padzeroesN=\count118
+\fc@tmpcatcode=\count119
+\@DT@modctr=\count120
+\@ordinalctr=\count121
+\@orgargctr=\count122
+\@strctr=\count123
+\@tmpstrctr=\count124
+\@DT@loopN=\count125
+\@DT@X=\count126
 
 (/usr/share/texlive/texmf-dist/tex/latex/fmtcount/fc-english.def
 File: fc-english.def 2013/08/17
@@ -342,56 +392,48 @@ File: fc-english.def 2013/08/17
 (/usr/share/texlive/texmf-dist/tex/latex/datetime/datetime-defaults.sty
 Package: datetime-defaults 2013/09/10
 )
-\@day=\count121
-\@month=\count122
-\@year=\count123
-\c@HOUR=\count124
-\c@HOURXII=\count125
-\c@MINUTE=\count126
-\c@TOHOUR=\count127
-\c@TOMINUTE=\count128
-\c@SECOND=\count129
-\currenthour=\count130
-\currentminute=\count131
-\currentsecond=\count132
+\@day=\count127
+\@month=\count128
+\@year=\count129
+\c@HOUR=\count130
+\c@HOURXII=\count131
+\c@MINUTE=\count132
+\c@TOHOUR=\count133
+\c@TOMINUTE=\count134
+\c@SECOND=\count135
+\currenthour=\count136
+\currentminute=\count137
+\currentsecond=\count138
 Package datetime Info: No datetime.cfg file found, using default settings on in
 put line 308.
-\@dtctr=\count133
-\dayofyear=\count134
-\dayofweek=\count135
+\@dtctr=\count139
+\dayofyear=\count140
+\dayofweek=\count141
 LaTeX Info: Redefining \today on input line 736.
-\dt@a=\toks27
-\dt@b=\toks28
+\dt@a=\toks29
+\dt@b=\toks30
 )
-(/home/peter/Documents/Imperial/Individual_Project/Report/Individual-Project-Ba
-ckground-Report/final_report.aux
-
-LaTeX Warning: Label `multi-task_loss' multiply defined.
-
-
-LaTeX Warning: Label `multi-task_loss' multiply defined.
-
-)
+(./final_report.aux)
 \openout1 = `final_report.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 31.
-LaTeX Font Info:    ... okay on input line 31.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 31.
-LaTeX Font Info:    ... okay on input line 31.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 31.
-LaTeX Font Info:    ... okay on input line 31.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 31.
-LaTeX Font Info:    ... okay on input line 31.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 31.
-LaTeX Font Info:    ... okay on input line 31.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 31.
-LaTeX Font Info:    ... okay on input line 31.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 31.
-LaTeX Font Info:    Try loading font information for TS1+cmr on input line 31.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 35.
+LaTeX Font Info:    ... okay on input line 35.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 35.
+LaTeX Font Info:    ... okay on input line 35.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 35.
+LaTeX Font Info:    ... okay on input line 35.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 35.
+LaTeX Font Info:    ... okay on input line 35.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 35.
+LaTeX Font Info:    ... okay on input line 35.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 35.
+LaTeX Font Info:    ... okay on input line 35.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 35.
+LaTeX Font Info:    Try loading font information for TS1+cmr on input line 35.
  (/usr/share/texlive/texmf-dist/tex/latex/base/ts1cmr.fd
 File: ts1cmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
-LaTeX Font Info:    ... okay on input line 31.
+LaTeX Font Info:    ... okay on input line 35.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -429,17 +471,17 @@ LaTeX Font Info:    ... okay on input line 31.
 
 (/usr/share/texlive/texmf-dist/tex/context/base/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count136
-\scratchdimen=\dimen139
-\scratchbox=\box30
-\nofMPsegments=\count137
-\nofMParguments=\count138
-\everyMPshowfont=\toks29
-\MPscratchCnt=\count139
-\MPscratchDim=\dimen140
-\MPnumerator=\count140
-\makeMPintoPDFobject=\count141
-\everyMPtoPDFconversion=\toks30
+\scratchcounter=\count142
+\scratchdimen=\dimen140
+\scratchbox=\box34
+\nofMPsegments=\count143
+\nofMParguments=\count144
+\everyMPshowfont=\toks31
+\MPscratchCnt=\count145
+\MPscratchDim=\dimen141
+\MPnumerator=\count146
+\makeMPintoPDFobject=\count147
+\everyMPtoPDFconversion=\toks32
 ) (/usr/share/texlive/texmf-dist/tex/generic/oberdiek/pdftexcmds.sty
 Package: pdftexcmds 2011/11/29 v0.20 Utility functions of pdfTeX for LuaTeX (HO
 )
@@ -485,33 +527,44 @@ File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
 Package caption Info: Begin \AtBeginDocument code.
+Package caption Info: longtable package is loaded.
+
+(/usr/share/texlive/texmf-dist/tex/latex/caption/ltcaption.sty
+Package: ltcaption 2013/06/09 v1.4-94 longtable captions (AR)
+)
 Package caption Info: wrapfig package is loaded.
 Package caption Info: End \AtBeginDocument code.
+LaTeX Font Info:    Try loading font information for U+msa on input line 36.
 
-[1
+(/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsa.fd
+File: umsa.fd 2013/01/14 v3.01 AMS symbols A
+)
+LaTeX Font Info:    Try loading font information for U+msb on input line 36.
 
-{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
-(/home/peter/Documents/Imperial/Individual_Project/Report/Individual-Project-Ba
-ckground-Report/final_report.toc)
+(/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsb.fd
+File: umsb.fd 2013/01/14 v3.01 AMS symbols B
+) [1
+
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] (./final_report.toc)
 \tf@toc=\write3
 \openout3 = `final_report.toc'.
 
  [2
 
 ]
-Underfull \hbox (badness 10000) in paragraph at lines 45--48
+Underfull \hbox (badness 10000) in paragraph at lines 49--52
 
  []
 
 [3
 
 ]
-Underfull \hbox (badness 10000) in paragraph at lines 52--55
+Underfull \hbox (badness 10000) in paragraph at lines 56--59
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 57--60
+Underfull \hbox (badness 10000) in paragraph at lines 61--64
 
  []
 
@@ -519,16 +572,16 @@ Underfull \hbox (badness 10000) in paragraph at lines 57--60
 File: ./figures/neural_net2.jpeg Graphic file (type jpg)
 
 <use ./figures/neural_net2.jpeg>
-Package pdftex.def Info: ./figures/neural_net2.jpeg used on input line 62.
+Package pdftex.def Info: ./figures/neural_net2.jpeg used on input line 66.
 (pdftex.def)             Requested size: 241.84843pt x 118.63206pt.
 
 <./figures/cnn.jpeg, id=19, 571.13374pt x 202.7575pt>
 File: ./figures/cnn.jpeg Graphic file (type jpg)
  <use ./figures/cnn.jpeg>
-Package pdftex.def Info: ./figures/cnn.jpeg used on input line 63.
+Package pdftex.def Info: ./figures/cnn.jpeg used on input line 67.
 (pdftex.def)             Requested size: 241.84843pt x 85.85677pt.
 
-Overfull \hbox (2.43333pt too wide) in paragraph at lines 62--64
+Overfull \hbox (2.43333pt too wide) in paragraph at lines 66--68
 [][] [] 
  []
 
@@ -537,32 +590,32 @@ Overfull \hbox (2.43333pt too wide) in paragraph at lines 62--64
 File: ./figures/conv_filter.jpg Graphic file (type jpg)
 
 <use ./figures/conv_filter.jpg>
-Package pdftex.def Info: ./figures/conv_filter.jpg used on input line 72.
+Package pdftex.def Info: ./figures/conv_filter.jpg used on input line 76.
 (pdftex.def)             Requested size: 241.84843pt x 112.63223pt.
 
 <./figures/maxpool.jpeg, id=24, 789.95125pt x 369.38pt>
 File: ./figures/maxpool.jpeg Graphic file (type jpg)
 
 <use ./figures/maxpool.jpeg>
-Package pdftex.def Info: ./figures/maxpool.jpeg used on input line 73.
+Package pdftex.def Info: ./figures/maxpool.jpeg used on input line 77.
 (pdftex.def)             Requested size: 241.84843pt x 113.08627pt.
 
-Overfull \hbox (2.43333pt too wide) in paragraph at lines 72--74
+Overfull \hbox (2.43333pt too wide) in paragraph at lines 76--78
 [][] [] 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 79--82
+Underfull \hbox (badness 10000) in paragraph at lines 83--86
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 84--87
+Underfull \hbox (badness 10000) in paragraph at lines 88--91
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 90--93
+Underfull \hbox (badness 10000) in paragraph at lines 94--97
 
  []
 
@@ -571,215 +624,270 @@ Underfull \hbox (badness 10000) in paragraph at lines 90--93
 File: ./figures/region_prop.png Graphic file (type png)
 
 <use ./figures/region_prop.png>
-Package pdftex.def Info: ./figures/region_prop.png used on input line 96.
+Package pdftex.def Info: ./figures/region_prop.png used on input line 99.
 (pdftex.def)             Requested size: 483.69687pt x 136.21645pt.
 
+Underfull \hbox (badness 10000) in paragraph at lines 108--111
 
-Package caption Warning: \label without proper reference on input line 95.
-See the caption package documentation for explanation.
-
-
-LaTeX Warning: Reference `Selective_search' on page 6 undefined on input line 1
-00.
+ []
 
 [6 <./figures/region_prop.png>]
-<./figures/fast-rcnn2.jpg, id=40, 580.1675pt x 214.8025pt>
-File: ./figures/fast-rcnn2.jpg Graphic file (type jpg)
+<./figures/arch.pdf, id=37, 963.6pt x 542.025pt>
+File: ./figures/arch.pdf Graphic file (type pdf)
+ <use ./figures/arch.pdf>
+Package pdftex.def Info: ./figures/arch.pdf used on input line 137.
+(pdftex.def)             Requested size: 483.69687pt x 179.55455pt.
 
-<use ./figures/fast-rcnn2.jpg>
-Package pdftex.def Info: ./figures/fast-rcnn2.jpg used on input line 133.
-(pdftex.def)             Requested size: 483.69687pt x 179.08575pt.
-
-<./figures/faster.png, id=41, 1606.0pt x 1206.5075pt>
+<./figures/faster.png, id=39, 1606.0pt x 1206.5075pt>
 File: ./figures/faster.png Graphic file (type png)
 
 <use ./figures/faster.png>
-Package pdftex.def Info: ./figures/faster.png used on input line 145.
-(pdftex.def)             Requested size: 241.84843pt x 181.6863pt.
+Package pdftex.def Info: ./figures/faster.png used on input line 149.
+(pdftex.def)             Requested size: 217.66211pt x 163.51582pt.
 
-<./figures/rpn_faster.jpg, id=42, 1971.365pt x 1407.2575pt>
+<./figures/rpn_faster.jpg, id=40, 1971.365pt x 1407.2575pt>
 File: ./figures/rpn_faster.jpg Graphic file (type jpg)
 
 <use ./figures/rpn_faster.jpg>
-Package pdftex.def Info: ./figures/rpn_faster.jpg used on input line 146.
-(pdftex.def)             Requested size: 241.84843pt x 172.64285pt.
-
-Overfull \hbox (2.43333pt too wide) in paragraph at lines 145--147
-[][] [] 
- []
-
-
-LaTeX Warning: `!h' float specifier changed to `!ht'.
-
-[7 <./figures/fast-rcnn2.jpg>]
-<./figures/image_seg1.png, id=47, 2047.65pt x 1019.81pt>
-File: ./figures/image_seg1.png Graphic file (type png)
-
-<use ./figures/image_seg1.png>
-Package pdftex.def Info: ./figures/image_seg1.png used on input line 180.
-(pdftex.def)             Requested size: 241.84843pt x 120.44235pt.
-
-<./figures/sem_im_seg1.jpg, id=48, 366.36874pt x 201.75375pt>
-File: ./figures/sem_im_seg1.jpg Graphic file (type jpg)
-
-<use ./figures/sem_im_seg1.jpg>
-Package pdftex.def Info: ./figures/sem_im_seg1.jpg used on input line 181.
-(pdftex.def)             Requested size: 241.84843pt x 133.18251pt.
-
-Overfull \hbox (2.43333pt too wide) in paragraph at lines 180--182
-[][] [] 
- []
+Package pdftex.def Info: ./figures/rpn_faster.jpg used on input line 150.
+(pdftex.def)             Requested size: 217.66211pt x 155.3571pt.
 
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 186--191
+Underfull \hbox (badness 10000) in paragraph at lines 155--158
 
  []
 
-
-Underfull \hbox (badness 10000) in paragraph at lines 186--191
+[7 <./figures/arch.pdf>]
+Underfull \hbox (badness 10000) in paragraph at lines 176--179
 
  []
 
 [8 <./figures/faster.png> <./figures/rpn_faster.jpg>]
-<./figures/mask_arch.jpg, id=53, 752.8125pt x 232.87pt>
-File: ./figures/mask_arch.jpg Graphic file (type jpg)
+<./figures/image_seg1.png, id=83, 2047.65pt x 1019.81pt>
+File: ./figures/image_seg1.png Graphic file (type png)
 
-<use ./figures/mask_arch.jpg>
-Package pdftex.def Info: ./figures/mask_arch.jpg used on input line 199.
-(pdftex.def)             Requested size: 483.69687pt x 149.62613pt.
+<use ./figures/image_seg1.png>
+Package pdftex.def Info: ./figures/image_seg1.png used on input line 184.
+(pdftex.def)             Requested size: 241.84843pt x 120.44235pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 198--207
+<./figures/sem_im_seg1.jpg, id=84, 366.36874pt x 201.75375pt>
+File: ./figures/sem_im_seg1.jpg Graphic file (type jpg)
 
- []
+<use ./figures/sem_im_seg1.jpg>
+Package pdftex.def Info: ./figures/sem_im_seg1.jpg used on input line 185.
+(pdftex.def)             Requested size: 241.84843pt x 133.18251pt.
 
-
-LaTeX Warning: `!h' float specifier changed to `!ht'.
-
-[9 <./figures/image_seg1.png> <./figures/sem_im_seg1.jpg>]
-Underfull \hbox (badness 10000) in paragraph at lines 213--216
-
- []
-
-<./figures/intel_realsense.jpg, id=57, 500.87125pt x 114.4275pt>
-File: ./figures/intel_realsense.jpg Graphic file (type jpg)
-
-<use ./figures/intel_realsense.jpg>
-Package pdftex.def Info: ./figures/intel_realsense.jpg used on input line 224.
-(pdftex.def)             Requested size: 483.69687pt x 110.50914pt.
-
-
-LaTeX Warning: `!h' float specifier changed to `!ht'.
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 233--235
-
- []
-
-[10 <./figures/mask_arch.jpg>]
-<figures/world_to_cam.jpg, id=61, 181.3977pt x 95.3964pt>
-File: figures/world_to_cam.jpg Graphic file (type jpg)
-
-<use figures/world_to_cam.jpg>
-Package pdftex.def Info: figures/world_to_cam.jpg used on input line 238.
-(pdftex.def)             Requested size: 241.84843pt x 127.19144pt.
-
-<figures/quaternions.png, id=62, 472.76625pt x 394.47375pt>
-File: figures/quaternions.png Graphic file (type png)
-
-<use figures/quaternions.png>
-Package pdftex.def Info: figures/quaternions.png used on input line 239.
-(pdftex.def)             Requested size: 169.29684pt x 141.26405pt.
- [11 <./figures/intel_realsense.jpg> </home/peter/Documents/Imperial/Individual
-_Project/Report/Individual-Project-Background-Report/figures/world_to_cam.jpg> 
-</home/peter/Documents/Imperial/Individual_Project/Report/Individual-Project-Ba
-ckground-Report/figures/quaternions.png>]
-Underfull \hbox (badness 10000) in paragraph at lines 314--316
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 314--316
-
- []
-
-
-LaTeX Warning: Reference `F_Durr_1' on page 12 undefined on input line 317.
-
-
-<figures/convergence_landmark_uncertainty.png, id=67, 334.24875pt x 260.975pt>
-File: figures/convergence_landmark_uncertainty.png Graphic file (type png)
-
-<use figures/convergence_landmark_uncertainty.png>
-Package pdftex.def Info: figures/convergence_landmark_uncertainty.png used on i
-nput line 321.
-(pdftex.def)             Requested size: 241.84843pt x 188.83766pt.
-
-<figures/ess_slam.png, id=68, 595.22375pt x 473.77pt>
-File: figures/ess_slam.png Graphic file (type png)
-
-<use figures/ess_slam.png>
-Package pdftex.def Info: figures/ess_slam.png used on input line 322.
-(pdftex.def)             Requested size: 241.84843pt x 192.4975pt.
-
-Overfull \hbox (2.43333pt too wide) in paragraph at lines 321--323
+Overfull \hbox (2.43333pt too wide) in paragraph at lines 184--186
 [][] [] 
  []
 
 
+Underfull \hbox (badness 10000) in paragraph at lines 190--195
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 190--195
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 199--201
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 199--201
+
+ []
+
+[9 <./figures/image_seg1.png> <./figures/sem_im_seg1.jpg>]
+<./figures/mask_arch.jpg, id=88, 752.8125pt x 232.87pt>
+File: ./figures/mask_arch.jpg Graphic file (type jpg)
+
+<use ./figures/mask_arch.jpg>
+Package pdftex.def Info: ./figures/mask_arch.jpg used on input line 203.
+(pdftex.def)             Requested size: 483.69687pt x 149.62613pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 202--211
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 217--220
+
+ []
+
+[10 <./figures/mask_arch.jpg>]
+<./figures/intel_realsense.jpg, id=92, 500.87125pt x 114.4275pt>
+File: ./figures/intel_realsense.jpg Graphic file (type jpg)
+
+<use ./figures/intel_realsense.jpg>
+Package pdftex.def Info: ./figures/intel_realsense.jpg used on input line 228.
+(pdftex.def)             Requested size: 483.69687pt x 110.50914pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 237--239
+
+ []
+
+<figures/world_to_cam.jpg, id=93, 181.3977pt x 95.3964pt>
+File: figures/world_to_cam.jpg Graphic file (type jpg)
+
+<use figures/world_to_cam.jpg>
+Package pdftex.def Info: figures/world_to_cam.jpg used on input line 242.
+(pdftex.def)             Requested size: 241.84843pt x 127.19144pt.
+
+<figures/quaternions.png, id=94, 472.76625pt x 394.47375pt>
+File: figures/quaternions.png Graphic file (type png)
+
+<use figures/quaternions.png>
+Package pdftex.def Info: figures/quaternions.png used on input line 243.
+(pdftex.def)             Requested size: 169.29684pt x 141.26405pt.
+ [11 <./figures/intel_realsense.jpg> <./figures/world_to_cam.jpg> <./figures/qu
+aternions.png>]
+<figures/convergence_landmark_uncertainty.png, id=100, 334.24875pt x 260.975pt>
+File: figures/convergence_landmark_uncertainty.png Graphic file (type png)
+<use figures/convergence_landmark_uncertainty.png>
+Package pdftex.def Info: figures/convergence_landmark_uncertainty.png used on i
+nput line 340.
+(pdftex.def)             Requested size: 241.84843pt x 188.83766pt.
+
+<figures/ess_slam.png, id=101, 595.22375pt x 473.77pt>
+File: figures/ess_slam.png Graphic file (type png)
+
+<use figures/ess_slam.png>
+Package pdftex.def Info: figures/ess_slam.png used on input line 341.
+(pdftex.def)             Requested size: 241.84843pt x 192.4975pt.
+
+Overfull \hbox (2.43333pt too wide) in paragraph at lines 340--342
+[][] [] 
+ []
+
+[12] [13 <./figures/convergence_landmark_uncertainty.png> <./figures/ess_slam.p
+ng>] <figures/brisk.jpg, id=109, 470.50781pt x 172.39406pt>
+File: figures/brisk.jpg Graphic file (type jpg)
+
+<use figures/brisk.jpg>
+Package pdftex.def Info: figures/brisk.jpg used on input line 461.
+(pdftex.def)             Requested size: 338.58632pt x 124.05786pt.
+ <figures/brisk.png, id=110, 241.65282pt x 237.13594pt>
+File: figures/brisk.png Graphic file (type png)
+
+<use figures/brisk.png>
+Package pdftex.def Info: figures/brisk.png used on input line 462.
+(pdftex.def)             Requested size: 125.75851pt x 123.40909pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 472--475
+
+ []
+
+[14 <./figures/brisk.jpg> <./figures/brisk.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 486--489
+
+ []
+
+<figures/pedestrian_tracking_module.png, id=114, 1522.68875pt x 764.8575pt>
+File: figures/pedestrian_tracking_module.png Graphic file (type png)
+
+<use figures/pedestrian_tracking_module.png>
+Package pdftex.def Info: figures/pedestrian_tracking_module.png used on input l
+ine 510.
+(pdftex.def)             Requested size: 483.69687pt x 242.9621pt.
+
+
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
-[12]
-(/home/peter/Documents/Imperial/Individual_Project/Report/Individual-Project-Ba
-ckground-Report/final_report.bbl
+[15]
+Underfull \hbox (badness 10000) in paragraph at lines 519--522
+
+ []
+
+<figures/roi_match.png, id=119, 1032.85875pt x 318.18875pt>
+File: figures/roi_match.png Graphic file (type png)
+
+<use figures/roi_match.png>
+Package pdftex.def Info: figures/roi_match.png used on input line 531.
+(pdftex.def)             Requested size: 483.69687pt x 149.0098pt.
+
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+[16 <./figures/pedestrian_tracking_module.png>]
+<figures/iou.png, id=123, 1416.29124pt x 305.14pt>
+File: figures/iou.png Graphic file (type png)
+ <use figures/iou.png>
+Package pdftex.def Info: figures/iou.png used on input line 543.
+(pdftex.def)             Requested size: 483.69687pt x 104.21182pt.
+
+<figures/CBRD.png, id=124, 597.23125pt x 181.67876pt>
+File: figures/CBRD.png Graphic file (type png)
+ <use figures/CBRD.png>
+Package pdftex.def Info: figures/CBRD.png used on input line 551.
+(pdftex.def)             Requested size: 483.69687pt x 147.14233pt.
+
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+[17 <./figures/roi_match.png> <./figures/iou.png>] [18 <./figures/CBRD.png>]
+[19]
+Overfull \hbox (2.1377pt too wide) in paragraph at lines 749--749
+[]|\OT1/cmr/bx/n/10.95 Yes| 
+ []
+
 Missing character: There is no ‚ in font cmr10!
 Missing character: There is no Ä in font cmr10!
-Missing character: There is no ò in font cmr10!
- [13 </home/peter/Documents/Imperial/Individual_Project/Report/Individual-Proje
-ct-Background-Report/figures/convergence_landmark_uncertainty.png> </home/peter
-/Documents/Imperial/Individual_Project/Report/Individual-Project-Background-Rep
-ort/figures/ess_slam.png>]
+Missing character: There is no ú in font cmr10!
+Missing character: There is no ‚ in font cmr10!
+Missing character: There is no Ä in font cmr10!
+Missing character: There is no ù in font cmr10!
+[20]
+Underfull \vbox (badness 10000) detected at line 808
+ []
+
 Missing character: There is no ‚ in font cmr10!
 Missing character: There is no Ä in font cmr10!
 Missing character: There is no ì in font cmr10!
-) [14]
-(/home/peter/Documents/Imperial/Individual_Project/Report/Individual-Project-Ba
-ckground-Report/final_report.aux)
-
-LaTeX Warning: There were undefined references.
-
-
-LaTeX Warning: There were multiply-defined labels.
-
- ) 
+[21] [22] (./final_report.bbl
+Missing character: There is no ‚ in font cmr10!
+Missing character: There is no Ä in font cmr10!
+Missing character: There is no ò in font cmr10!
+ [23]
+Missing character: There is no ‚ in font cmr10!
+Missing character: There is no Ä in font cmr10!
+Missing character: There is no ì in font cmr10!
+) [24] (./final_report.aux) ) 
 Here is how much of TeX's memory you used:
- 6087 strings out of 493029
- 91721 string characters out of 6136235
- 181055 words of memory out of 5000000
- 9498 multiletter control sequences out of 15000+600000
- 11211 words of font info for 40 fonts, out of 8000000 for 9000
+ 7068 strings out of 493029
+ 102280 string characters out of 6136235
+ 209057 words of memory out of 5000000
+ 10438 multiletter control sequences out of 15000+600000
+ 14282 words of font info for 53 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 42i,14n,77p,1173b,340s stack positions out of 5000i,500n,10000p,200000b,80000s
-</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></us
-r/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/shar
-e/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texl
-ive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/te
-xmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/share/texlive/texmf-dis
-t/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/share/texlive/texmf-dist/fonts
-/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/
-public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/
-amsfonts/cm/cmr17.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfont
-s/cm/cmr6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr
-8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb>
-</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/s
-hare/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb>
-Output written on /home/peter/Documents/Imperial/Individual_Project/Report/Indi
-vidual-Project-Background-Report/final_report.pdf (14 pages, 3833192 bytes).
+ 42i,19n,77p,1280b,345s stack positions out of 5000i,500n,10000p,200000b,80000s
+</usr/share/texlive/texmf-dist/fonts/type1/public/
+amsfonts/cm/cmbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfon
+ts/cm/cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/
+cmbx8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.
+pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></
+usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/sha
+re/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/share/texl
+ive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/tex
+mf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist
+/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/texlive/texmf-dist/fonts/
+type1/public/amsfonts/cm/cmr6.pfb></usr/share/texlive/texmf-dist/fonts/type1/pu
+blic/amsfonts/cm/cmr8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/ams
+fonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/
+cm/cmsy8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti
+10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msam1
+0.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10
+.pfb>
+Output written on final_report.pdf (24 pages, 4469918 bytes).
 PDF statistics:
- 125 PDF objects out of 1000 (max. 8388607)
- 76 compressed objects within 1 object stream
+ 207 PDF objects out of 1000 (max. 8388607)
+ 117 compressed objects within 2 object streams
  0 named destinations out of 1000 (max. 500000)
- 81 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 117 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -453,7 +453,7 @@ This formulation of the error dynamics is then used to derive the IMU error term
 
 
 
-\subsubsection{Keypoint Detection}
+\subsubsection{Keypoint Detection}\label{BRISK_section}
 
 The Okvis \cite{Okvis_1} paper uses an corner detection method to determine keypoints and then matches these keypoints using a binary descriptor (BRISK \cite{BRISK}). Binary descriptors use a sampling pattern to create pairs of points (lines). The algorithm then compares the two points ($p1,p2$) and if $p1 > p2$ a 1 is recorded and otherwise 0. This creates a binary string, that along with orientation representation describe a keypoint. When matching keypoints between images a simple, and fast $\sum XOR(img1,img2)$ reveals keypoint similarity from which a threshold can be used to determine matches.
 
@@ -473,49 +473,7 @@ Once an object is found (Section \ref{comp_vis_back}) and the 3d world coordinat
 \newline \newline
 Section \ref{back_slam} used the IMU measurements and camera measurements to determine the location of the bicycle and objects in the world frame. This problem is similar but involves the tracking of an object. In \cite{Ped_tract} there are two parts at play, the camera measurements, and a predictive Kalman filter using the object's motion information. The Kalman filter creates a bounding box of the expected object location, the object is then correctly located in that region, and the Kalman filter is then updated.
 
-\subsection{Kalman Filter}
 
-The Kalman filter has two main parts, a predictive step and an update. The predictive step tries to find a-priori estimates of the state for the next time-step by projecting forward the current state and error covariance estimates. This estimate is then updated using the measurements (camera) of the object location. The iterative process continues improving the Kalman filter estimates at each stage. Assuming a linear system with Gaussian process and measurement noise the state can be modelled as:
-
-\begin{equation}
-\begin{aligned}
-X_{k} =  \Phi X_{k-1} + w_{k-1}
-\end{aligned}
-\end{equation}
-
-where $k$ is the time step, $X \in \mathbb{R}^{n}$ is the state vector, $\Phi$ is the $n \times n$ state transition matrix from state $k$ to $k+1$ and $w_{k}$ is $\mathcal{N}(0,Q)$. The measurement step can also predict the current state. With $Z_{k} \in \mathbb{R}^{m}$ as the system measurement vector:
-
-\begin{equation}
-\begin{aligned}
-Z_{k} =  \Psi X_{k} + v_{k}
-\end{aligned}
-\end{equation}
-
-where $\Psi$ is an $m \times n$ measurement matrix relating $X_{k}$ to the measurement $Z_{k}$, and $v_{k}$ is $\mathcal{N}(0,R)$. The prior estimates for the next time step by the Kalman predictions step:
-
-
-\begin{equation}
-\begin{aligned}
-\begin{cases}
-    \hat{X}_{k}(-) =  \Phi \hat{X}_{k-1}(+)\\
-    P_{k}(-) = \Phi P_{k-1}(+)\Phi^{T} + Q
-\end{cases}
-\end{aligned}
-\end{equation}
-
-where $\hat{X}_{k}(-)$ is a priori state estimate and $\Phi P_{k-1}(-)$ is the priori estimate error at step $k-1$. It is essentially the previous state $\times$ the transition matrix to the new state ($\hat{X}_{k}(-)$). Then a similar approach for the error covariance between the previous and current state. The correction step is then:
-
-\begin{equation}
-\begin{aligned}
-\begin{cases}
-    K_{k} = P_{k}(-) \Psi^{T} \textnormal{ } /  \textnormal{ }[\Psi P_{k}(-)\Psi^{T} + R] \\ 
-    \hat{X}_{k}(+) = \hat{X}_{k}(-) + K_{k}[Z_{k} - \Psi \hat{X}_{k}(-)]\\
-    P_{k}(+) = (I-K_{k} \Psi) P_{k}(-)
-\end{cases}
-\end{aligned}
-\end{equation}
-
-where $K_{k}$ is the $n \times m$ Kalman gain matrix, $\hat{X}_{k}(+)$ is the posterior state estimate according to the actual measurement $Z_{k}$ and the predicted measurement $\Psi \hat{X}_{k}(-)$ and $P_{k}(+)$ is the posterior state estimate error covariance.
 
 \subsection{CamShift}
 
@@ -555,6 +513,226 @@ The method discussed in this section uses image segmentation, a predictive Kalma
 \end{figure}
 
 \newpage
+
+\section{ROS}
+
+The program is split into respective parts, camera driver, okvis, Mask RCNN and a tracking component. These are all required to communicate for a comprehensive system, hence, since the Mask RCNN implementation used is written in python and okvis plus the driver in c++ ROS is an easy method to transfer messages between nodes. ROS uses a subscriber and publisher methodology where a node can subscribe or publish to a topic. ROS is the de-facto standard library for robotics and allows cross-language compatibility between python and c++.
+\newline \newline
+The ROS library is optimised for development of robotics applications with useful graphing, message passing and debugging capabilities. In particular ROS supports a rosbag capability which allows the recording and playback of data. This should allow for easy testing of the application in less-than real-time as Mask RCNN operates at 0.2s/frame on a dedicated GPU.
+
+
+\section{Frame-to-Frame Tracking}
+
+For each frame Mask RCNN outputs a set of bounding boxes, and masks. These are not within any particular order and so a method must be devised to track objects from one frame to the next. This is a hard challenge due to object occlusion, variation in shadow/lighting conditions and rapid in-frame movement. An obvious method is intersection over union (IOU) of the bounding boxes on a frame-by-frame basis. This is good in theory, however, it lacks the ability to compensate for rapid movement (of the object and the camera angle), occlusion and object overlapping. A set of methods have therefore been developed to overcome this problem, which combined provide a robust tracking system.
+
+The method must both track objects in the frame, determine which objects are no-longer in-frame and find any new objects that enter the frame. Information about each object must be stored as to determine the velocity and direction of travel/ if a collision is likely between the cyclist and the object in question. Figure \ref{roi_match} displays an example of a working system.
+
+\noindent \begin{figure}[h!]
+	\includegraphics[width = 1.0\hsize]{figures/roi_match.png}
+	\caption{ROI Old to New Frame Example.}
+	\label{roi_match}
+\end{figure}
+
+
+
+\subsection{Intersection Over Union}
+
+Intersection over union (IOU) is a simple method of comparing areas, Consider that there are a number of objects detected in one frame to the next. The majority of these objects can be assumed to have existed in the previous frame, excluding objects that pass out-of-frame and new objects that come into-frame. Hence, assuming a high enough frame rate an IOU score can be computed for each box in the old frame relative to the newer frame boxes. This, with a threshold value can be used to match objects between each frame. The threshold value therefore needs to be established, this will be dependent on frame rate and the relative speed of objects with respect to the camera. 
+
+\noindent \begin{figure}[h!]
+	\includegraphics[width = 1.0\hsize]{figures/iou.png}
+	\caption{Intersection Over Union Equation.}
+	\label{iou_fig}
+\end{figure}
+
+The worst-case scenario is a person/object moving perpendicular to the camera, the best case directly towards the camera. Sailing has a concept known as constant bearing decreasing range (CBDR) Figure-\ref{cbrd} which is often used for collision detection between boats. It is a simple principle that is useful in this case, an object that is a hazard (there is a collision potential) will stay at a roughly constant angle to the bicycle. Hence the only objects we really care about are ones that IOU should be able to track as there is little movement perpendicular to the camera. This being said occlusions must still be dealt with as they may pass behind another object and need to be tracked. It can also not be assumed that the bike will be travelling in a straight line and steering movement will affect the camera angle significantly.
+
+\noindent \begin{figure}[h!]
+	\includegraphics[width = 1.0\hsize]{figures/CBRD.png}
+	\caption{Constant Bearing Reducing Distance.}
+	\label{cbrd}
+\end{figure}
+
+
+\subsection{BRISK - Selector} \label{BRISK_matching}
+BRISK as described earlier in Section-\ref{BRISK_section} is a binary descriptor that can match keypoints across two photographs. This can be used also in the tracking section to match keypoints across ROIs, although not thoroughly accurate, it offers a method of matching ROIs regardless of location. This should help re-detect objects after periods of occlusion or overlapping with others that IOU would be unable to do. The process is simple to match the ROIs. First keypoints and descriptors are calculated for each ROI, these are then compared using the fast binary matching process of BRISK, then the Hamiltonian distance is calculated for each matching keypoint...
+
+
+
+\subsection{Class Matching}
+An obvious additional requirement is the matching of classes between frames, as a person's ROI should not match to the ROI of a car in the next frame. Hence for each ROI, the class is stored for access by the next frame. This can both reduce expensive computation time of other metrics but provides an easy ROI comparison tool. It can be noted though that Mask RCNN is not perfect and often mis-classifies objects. It is, however, reliable enough to be assumed as correct.
+
+\subsection{Kalman Filter ROI Matching}
+
+The Kalman filter has two main parts, a predictive step and an update. The predictive step tries to find a-priori estimates of the state for the next time-step by projecting forward the current state and error covariance estimates. This estimate is then updated using the measurements (camera) of the object location. The iterative process continues improving the Kalman filter estimates at each stage.
+
+\subsubsection{Kalman Predictive Step}
+Assuming a linear system with Gaussian process, the state can be modelled as:
+
+\begin{equation}
+\begin{aligned}
+\hat{X}_{k} =  F_{k} \hat{X}_{k-1} + w_{k-1}
+\end{aligned}
+\end{equation}
+
+where $k$ is the time step, $\hat{X}_{k} \in \mathbb{R}^{n}$ is the state vector, $F_{k}$ is the $n \times n$ state transition matrix from state $k$ to $k+1$ and $w_{k}$ is $\mathcal{N}(0,Q)$. The state vector is described as follows:
+
+\begin{equation}
+\begin{aligned}
+\hat{X}_{k} =  [Cx,Cy,w,h,Cx_{vel},Cy_{vel},w_{vel},h_{vel}]
+\end{aligned}
+\end{equation}
+
+where $(Cx,Cy)$ is the centre point of the bounding box of the object, $w$ the width and $h$ the height. $Cx_{vel}$ describes the centre point velocity in the x direction, and $Cy_{vel},w_{vel},h_{vel}$ the y direction, w the width and h the height. $[Cx,Cy,w,h]$ describe the measurable variables of the system, and there are no controllable parameters in this system. From basic equations of motion, a general measurable parameter $\gamma$, and corresponding velocity  $\gamma_{vel}$ follows the update rule:
+
+\begin{equation}
+\begin{aligned}
+\gamma_{k+1} = \gamma_{k} + \gamma_{vel} \times \Delta t \\
+\gamma_{vel,k+1} = \quad \gamma_{vel,k}
+\end{aligned}
+\end{equation}
+
+where $\Delta t$ is the time step between each frame. Therefore, the update matrix for the filter $F_{k} \in R^{8 \times 8}$ is as follows:
+
+\begin{equation}
+F_{k} = 
+\begin{bmatrix}
+I_{4} & \Delta t \times I_{4} \\[0.3em]
+
+0_{4 \times 4} & I_{4} \\[0.3em]
+\end{bmatrix}
+\end{equation}
+
+The final term $w_{k} = \mathcal{N}(0,Q)$ describes the process noise in the system and is normally distributed with error covariance matrix $Q$. This is updated by the kalman filter at each step but is initially set as:
+
+\begin{equation}
+\begin{aligned}
+v = [5,5,5,5,10,10,10,10] \\
+Q_{k} = diag(v)
+\end{aligned}
+\end{equation}
+
+where $Q_{k} \in \mathbb{R}^{8 \times 8}$ and is the diagonalised matrix of v. 
+
+\subsubsection{Kalman Update Step}
+
+The measurement step can also predict the current state. With $Z_{k} \in \mathbb{R}^{8}$ as the system measurement vector:
+
+\begin{equation}
+\begin{aligned}
+Z_{k} =  H_{k} X_{k} + v_{k}
+\end{aligned}
+\end{equation}
+
+where $H_{k}$ is an $8 \times 4$ measurement matrix relating $X_{k}$ to the measurement $Z_{k}$, and $v_{k}$ is $\mathcal{N}(0,R)$. Since only the $Cx,Cy,w,h$ is measurable $H_{k}$ takes the form:
+
+
+
+\begin{equation}
+\begin{aligned}
+H_{k} = 
+\begin{bmatrix}
+I_{4} &  0_{4 \times 4}
+\end{bmatrix}
+\end{aligned}
+\end{equation}
+
+and the measurement noise $v_{k} = \mathcal{N}(0,R_{k})$ is set with covariance matrix:
+
+\begin{equation}
+\begin{aligned}
+r = [5,5,5,5] \\
+R_{k} = diag(v)
+\end{aligned}
+\end{equation}
+
+where $R_{k} \in \mathbb{R}^{4 \times 4}$ and is the diagonalised matrix of r. 
+
+\subsubsection{Kalman Equations}
+The prior estimates for the next time step by the Kalman predictions step (no control vector):
+
+\begin{equation}
+\label{Kalman_pred_eq}
+\begin{aligned}
+\begin{cases}
+\hat{X}_{k}(-) =  F_{k} \hat{X}_{k-1}(+)\\
+P_{k}(-) = F_{k} P_{k-1}(+) F_{k}^{T} + Q_{k}
+\end{cases}
+\end{aligned}
+\end{equation}
+
+where $\hat{X}_{k}(-)$ is a priori state estimate and $P_{k}(-)$ is the priori estimate error at step $k$. It is essentially the previous state $\times$ the transition matrix to the new state ($\hat{X}_{k}(-)$). Then a similar approach for the error covariance between the previous and current state. The correction step is then:
+
+\begin{equation}
+\begin{aligned}
+\begin{cases}
+\label{kalman_update_equs}
+\tilde{y}_{k} = Z_{k} - H_{k} \hat{X}_{k}(-) \\
+S_{k} = R_{k} + H_{k}P_{k}(-)H_{k}^{T} \\
+K_{k} = P_{k}(-) H_{k}^{T} S_{k}^{-1} \\ 
+\hat{X}_{k}(+) = \hat{X}_{k}(-) + K_{k} \tilde{y}_{k}\\
+P_{k}(+) = (I-K_{k}H_{k}) P_{k}(-)(I-K_{k}H_{k})^{T} + K_{k}R_{k}K_{k}^{T} \\
+\tilde{y}_{k|k} = Z_{k} - H_{k} \hat{X}_{k}(+)
+
+\end{cases}
+\end{aligned}
+\end{equation}
+
+where $K_{k}$ is the $n \times m$ Kalman gain matrix, $\hat{X}_{k}(+)$ is the posterior state estimate according to the actual measurement $Z_{k}$ and the predicted measurement $H_{k} \hat{X}_{k}(-)$ and $P_{k}(+)$ is the posterior state estimate error covariance.
+
+\subsubsection{Kalman Matching ROIS}
+
+From one frame to another it can be assumed that a number of bounding boxes (ROIS) are consistent in both frames. Hence a metric to match a box from a prior frame to the current frame is required. Using the Kalman filter, a prediction of where the ROI is at time $k$ is easily obtained. But this does not give a likelihood measure of the boxes in the new frame. However, in the kalman update step $\tilde{y}_{k}$, the innovation residual, and $S_{k}$, the innovation covariance matrix are calculated. These can be used to determine the marginal likelihood of a newer ROI's $Cx,Cy,w,h$ given the kalman $P_{k}(-)$ and $\hat{X}_{k}(-)$. Skipping the formulation, the log-marginal likelihood is:
+
+\begin{equation}
+\begin{aligned}
+l = log \textnormal{ } p(\mathbf{z}) \\
+l^{(-1)} = 0 \\
+l^{(k)} = l^{(k-1)} - \frac{1}{2} (\tilde{y}_{k}^{T}S_{k}^{-1}\tilde{y}_{k} + \log |S_{k}| + d_{y}\log 2 \pi) 
+\end{aligned}
+\end{equation}
+
+where $d_{y}$ is the dimension of the measurement matrix. The part dependent on the new ROI is $\tilde{y}_{k}^{T}S_{k}^{-1}\tilde{y}_{k}$ as $S_{k}$, from Equation \ref{kalman_update_equs} does not involve $\tilde{y}_{k}$. Therefore the matching step can be performed by simply matching each $ROI_{old}$ in the old frame to the $ROI_{new}$ in the new frame that has the lowest scalar value from:
+
+\begin{equation}
+\begin{aligned}
+\textnormal{\textit{M}} = \tilde{y}_{k}^{T}S_{k}^{-1}\tilde{y}_{k}
+\end{aligned}
+\end{equation}
+
+with a threshold value to ensure no incorrect matches. The matching procedure must be the same for all methods and matches the maximum value. Therefore the \textit{Match Metric} is as follows:
+
+\begin{equation}
+\begin{aligned}
+\textnormal{\textit{Match Metric}} = 
+\begin{cases}
+0 \quad \textnormal{\textit{ if }} K_{threshold}-M \leq 0 \\
+K_{threshold}-M \quad \textnormal{\textit{ otherwise}}
+\end{cases}
+\end{aligned}
+\end{equation}
+
+
+\subsection{ROI Lives}
+Each region of interest may be tracked from one frame to the next. However, if that object is occluded then it may not be spotted in the next frame. This, unless accounted for could lead to information loss regarding that object's state. Therefore a life system is in place whereby an object has a number of lives that are used when the object is not spotted in the next frame. These are decremented until 0 when the object is forgotten and no longer tracked.  
+
+\subsection{Combining Matching Methods}
+
+Taking the example provided in Figure \ref{roi_match}, there are three objects in the older frame and four in the new frame. BRISK (Section \ref{BRISK_matching}) is not reliable to match all objects from one frame to the next and sometimes cannot find matching keypoints between the same object in each frame (especially deformable objects such as people). Therefore, a system to combine methods is needed. For each $ROI_{old}$ and each $ROI_{new}$ the match metrics for each method (BRISK,Kalman) is calculated. This forms a matrix $matches \in \mathbb{R}^{new \times old \times methods}$ where $old,new$ are the number of ROIs in the old and new frames, and 
+$methods$ is the number of matching methods implemented (in this case two) but is designed to be easily extendible to more. The rules for the matching procedure are as follows:
+
+\begin{enumerate}
+	\item Multiply along $methods$ axis to form a $new \times old$ dimension matrix.
+	\item Check max element in array is greater than a threshold value.
+	\item Match new and old ROI of max element.
+	\item Correct Kalman filter.
+	\item Set max element value in array to -1.
+	\item Repeat steps 2-5 until 2 is False.
+	\item Decrement a life from any old ROIs that are not matched - keep if lives $>$ 0 and predict location using kalman filter.
+	\item Find $ID_{max}$ of current objects being tracked.
+	\item For each new object set ID to $ID_{max}+1$ and increment $ID_{max}$
+\end{enumerate}
+
 
 \section{Ethics Checklist}
 
