@@ -101,6 +101,9 @@ C.~M. Bishop, {\em Pattern Recognition and Machine Learning (Information
 K.~He, G.~Gkioxari, P.~Doll{\'{a}}r, and R.~B. Girshick, ``Mask {R-CNN},'' {\em
   CoRR}, vol.~abs/1703.06870, 2017.
 
+\bibitem{opencv_camera_article}
+O.~docs, ``Images,'' 2012.
+
 \bibitem{Okvis_1}
 S.~Leutenegger, S.~Lynen, M.~Bosse, R.~Siegwart, and P.~Furgale,
   ``Keyframe-based visual–inertial odometry using nonlinear optimization,''
@@ -132,5 +135,10 @@ L.~Guo, L.~Li, Y.~Zhao, and Z.~Zhao, ``Pedestrian tracking based on camshift
 \bibitem{Bradski98computervision}
 G.~R. Bradski, ``Computer vision face tracking for use in a perceptual user
   interface,'' 1998.
+
+\bibitem{kcf}
+J.~F. Henriques, R.~Caseiro, P.~Martins, and J.~Batista, ``High-speed tracking
+  with kernelized correlation filters,'' {\em IEEE Transactions on Pattern
+  Analysis and Machine Intelligence}, vol.~37, pp.~583--596, March 2015.
 
 \end{thebibliography}

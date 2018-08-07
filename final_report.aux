@@ -88,74 +88,103 @@
 \newlabel{maskrcnnloss}{{6}{10}}
 \@writefile{toc}{\contentsline {section}{\numberline {3}Background, SLAM}{10}}
 \newlabel{back_slam}{{3}{10}}
-\citation{Okvis_1}
-\citation{Okvis_1}
+\citation{opencv_camera_article}
+\citation{opencv_camera_article}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Sensors}{11}}
 \@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces Intel Realsense Camera (ZR300)\relax }}{11}}
 \newlabel{realsense_camera}{{8}{11}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.2}World and Camera Frame}{11}}
-\@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces World vs Camera Frame \cite  {Okvis_1}\relax }}{11}}
-\newlabel{quat_wcs}{{9}{11}}
-\newlabel{quaternion}{{7}{11}}
+\@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces No Distortion (left)\cite  {opencv_camera_article}, Positive/negative radial distortion (middle/right)\relax }}{11}}
+\newlabel{distortion}{{9}{11}}
+\newlabel{raddis}{{7}{11}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}Projecting to Camera Frame}{12}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.3.1}Calculating the 3D Ray}{12}}
+\@writefile{lof}{\contentsline {figure}{\numberline {10}{\ignorespaces Pinhole Camera Model\relax }}{12}}
+\newlabel{pinhole_model}{{10}{12}}
+\newlabel{camera_scale}{{8}{12}}
+\newlabel{camera_scale}{{9}{12}}
+\newlabel{to_3d_ray}{{10}{12}}
+\citation{Okvis_1}
+\citation{Okvis_1}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.3.2}Calculating the 3D Location}{13}}
+\newlabel{camera_scale}{{11}{13}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4}Projecting to World Frame}{13}}
+\@writefile{lof}{\contentsline {figure}{\numberline {11}{\ignorespaces World vs Camera Frame (left)\cite  {Okvis_1}, Hamiltonian Quaternion (right)\relax }}{13}}
+\newlabel{quat_wcs}{{11}{13}}
+\newlabel{quaternion}{{12}{13}}
+\newlabel{quat_delta}{{15}{13}}
+\newlabel{quat_opt}{{16}{13}}
 \citation{F_Durr_1}
 \citation{F_Durr_Pt1}
 \citation{F_Durr_Pt1}
-\newlabel{quat_delta}{{8}{12}}
-\newlabel{quat_opt}{{9}{12}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}Bicycle States}{12}}
-\newlabel{states_1}{{10}{12}}
-\newlabel{states_2}{{11}{12}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.4}The SLAM Problem}{12}}
 \citation{Furgale}
-\@writefile{lof}{\contentsline {figure}{\numberline {10}{\ignorespaces Left: Convergence in landmark uncertainty. Over time, standard deviations reduce monotonically to a lower bound \cite  {F_Durr_Pt1}. Right: Error between estimated and true landmarks is common.\relax }}{13}}
-\newlabel{slam_prob_fig}{{10}{13}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.4.1}Camera Re-projection Error}{13}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.4.2}IMU Kinematics}{13}}
-\newlabel{imu_kin}{{15}{13}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.5}Bicycle States}{14}}
+\newlabel{states_1}{{17}{14}}
+\newlabel{states_2}{{18}{14}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.6}The SLAM Problem}{14}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.6.1}Camera Re-projection Error}{14}}
+\@writefile{lof}{\contentsline {figure}{\numberline {12}{\ignorespaces Left: Convergence in landmark uncertainty. Over time, standard deviations reduce monotonically to a lower bound \cite  {F_Durr_Pt1}. Right: Error between estimated and true landmarks is common.\relax }}{15}}
+\newlabel{slam_prob_fig}{{12}{15}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.6.2}IMU Kinematics}{15}}
+\newlabel{imu_kin}{{22}{15}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.6.3}IMU Kinematics Linearised}{15}}
 \citation{Okvis_1}
 \citation{Okvis_1}
 \citation{BRISK}
 \citation{BRISK}
 \citation{BRISK}
 \citation{Ped_tract}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.4.3}IMU Kinematics Linearised}{14}}
-\newlabel{imu_error}{{19}{14}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.4.4}Keypoint Detection}{14}}
-\newlabel{BRISK_section}{{3.4.4}{14}}
-\@writefile{lof}{\contentsline {figure}{\numberline {11}{\ignorespaces Left: Brisk keypoint matching example, Right: Brisk Sampling Pattern \cite  {BRISK} \relax }}{14}}
-\newlabel{Brisk}{{11}{14}}
-\@writefile{toc}{\contentsline {section}{\numberline {4}Background, Object Tracking}{14}}
+\newlabel{imu_error_}{{26}{16}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.6.4}Keypoint Detection}{16}}
+\newlabel{BRISK_section}{{3.6.4}{16}}
+\@writefile{lof}{\contentsline {figure}{\numberline {13}{\ignorespaces Left: Brisk keypoint matching example, Right: Brisk Sampling Pattern \cite  {BRISK} \relax }}{16}}
+\newlabel{Brisk}{{13}{16}}
+\@writefile{toc}{\contentsline {section}{\numberline {4}Background, Object Tracking}{16}}
 \citation{Bradski98computervision}
 \citation{Ped_tract}
 \citation{Ped_tract}
 \citation{Ped_tract}
 \citation{Ped_tract}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}CamShift}{15}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Object Tracking Summary}{15}}
-\@writefile{lof}{\contentsline {figure}{\numberline {12}{\ignorespaces Pedestrian Tracking Module \cite  {Ped_tract} \relax }}{16}}
-\newlabel{Ped_tr_mod_fig}{{12}{16}}
-\@writefile{toc}{\contentsline {section}{\numberline {5}ROS}{16}}
-\@writefile{toc}{\contentsline {section}{\numberline {6}Frame-to-Frame Tracking}{16}}
-\@writefile{lof}{\contentsline {figure}{\numberline {13}{\ignorespaces ROI Old to New Frame Example.\relax }}{17}}
-\newlabel{roi_match}{{13}{17}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.1}Intersection Over Union}{17}}
-\@writefile{lof}{\contentsline {figure}{\numberline {14}{\ignorespaces Intersection Over Union Equation.\relax }}{17}}
-\newlabel{iou_fig}{{14}{17}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.2}BRISK - Selector}{17}}
-\newlabel{BRISK_matching}{{6.2}{17}}
-\@writefile{lof}{\contentsline {figure}{\numberline {15}{\ignorespaces Constant Bearing Reducing Distance.\relax }}{18}}
-\newlabel{cbrd}{{15}{18}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.3}Class Matching}{18}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.4}Kalman Filter ROI Matching}{18}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {6.4.1}Kalman Predictive Step}{18}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {6.4.2}Kalman Update Step}{19}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {6.4.3}Kalman Equations}{19}}
-\newlabel{Kalman_pred_eq}{{30}{19}}
-\newlabel{kalman_update_equs}{{31}{19}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {6.4.4}Kalman Matching ROIS}{19}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.5}ROI Lives}{20}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.6}Combining Matching Methods}{20}}
-\@writefile{toc}{\contentsline {section}{\numberline {7}Ethics Checklist}{21}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}CamShift}{17}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Object Tracking Summary}{17}}
+\@writefile{lof}{\contentsline {figure}{\numberline {14}{\ignorespaces Pedestrian Tracking Module \cite  {Ped_tract} \relax }}{18}}
+\newlabel{Ped_tr_mod_fig}{{14}{18}}
+\@writefile{toc}{\contentsline {section}{\numberline {5}Ethics}{18}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}Modification for Military Purposes}{18}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}Other Ethics Issues}{18}}
+\@writefile{toc}{\contentsline {section}{\numberline {6}ROS}{18}}
+\citation{kcf}
+\citation{kcf}
+\citation{kcf}
+\@writefile{toc}{\contentsline {section}{\numberline {7}Frame-to-Frame Tracking}{19}}
+\@writefile{lof}{\contentsline {figure}{\numberline {15}{\ignorespaces ROI Old to New Frame Example.\relax }}{19}}
+\newlabel{roi_match}{{15}{19}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.1}Kernelised Correlation Filter}{19}}
+\@writefile{lof}{\contentsline {figure}{\numberline {16}{\ignorespaces Illustration of circulant matrix.\cite  {kcf}\relax }}{20}}
+\newlabel{circular_data}{{16}{20}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {7.1.1}Kernels}{20}}
+\newlabel{gauss_kernel}{{32}{20}}
+\newlabel{kernel_soln}{{34}{20}}
+\newlabel{al_soln}{{35}{20}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.2}BRISK - Selector}{21}}
+\newlabel{BRISK_matching}{{7.2}{21}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.3}Class Matching}{21}}
+\newlabel{class_matching}{{7.3}{21}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.4}Kalman Filter ROI Matching}{21}}
+\newlabel{kalman_matching}{{7.4}{21}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {7.4.1}Kalman Predictive Step}{21}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {7.4.2}Kalman Update Step}{22}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {7.4.3}Kalman Equations}{22}}
+\newlabel{Kalman_pred_eq}{{44}{22}}
+\newlabel{kalman_update_equs}{{45}{22}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {7.4.4}Kalman Matching ROIS}{23}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.5}ROI Lives}{23}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.6}Combining Matching Methods}{23}}
+\newlabel{matching_combining_methods}{{7.6}{23}}
+\@writefile{toc}{\contentsline {section}{\numberline {8}System Evaluation}{24}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.1}Mask-RCNN}{24}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.2}Depth Camera}{24}}
+\@writefile{toc}{\contentsline {section}{\numberline {9}Ethics Checklist}{24}}
 \gdef \LT@i {\LT@entry 
     {1}{388.37627pt}\LT@entry 
     {1}{29.47182pt}\LT@entry 
@@ -185,10 +214,12 @@
 \bibcite{JMLR:v15:srivastava14a}{21}
 \bibcite{Bishop:2006:PRM:1162264}{22}
 \bibcite{DBLP:journals/corr/HeGDG17}{23}
-\bibcite{Okvis_1}{24}
-\bibcite{F_Durr_1}{25}
-\bibcite{F_Durr_Pt1}{26}
-\bibcite{Furgale}{27}
-\bibcite{BRISK}{28}
-\bibcite{Ped_tract}{29}
-\bibcite{Bradski98computervision}{30}
+\bibcite{opencv_camera_article}{24}
+\bibcite{Okvis_1}{25}
+\bibcite{F_Durr_1}{26}
+\bibcite{F_Durr_Pt1}{27}
+\bibcite{Furgale}{28}
+\bibcite{BRISK}{29}
+\bibcite{Ped_tract}{30}
+\bibcite{Bradski98computervision}{31}
+\bibcite{kcf}{32}

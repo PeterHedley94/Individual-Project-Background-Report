@@ -234,27 +234,111 @@ The sensors used in this project are an RGBD camera and an IMU. These are both a
 
 
 
-In order to fully understand the bike's location, the environment can be considered from two frames of reference, the world and camera frame. 
-\newline
+In order to fully understand the bike's location, the environment can be considered from two frames of reference, the world and camera frame. The camera, however cannot be assumed to produce the perfect image and is hence prone to distortion - some types of camera distortion are shown in (Figure \ref{distortion}).
+
+
+\noindent \begin{figure}[h!]
+	\includegraphics[width = 1\hsize]{figures/distortion_example.png} 
+	\caption{No Distortion (left)\cite{opencv_camera_article}, Positive/negative radial distortion (middle/right)}
+	\label{distortion}
+\end{figure}
+
+The model used in this paper is "radial-tangential" distortion. As the name implies there is both a radial and tangential component to the distortion (Equation \ref{raddis}) 
+
+\begin{equation}
+\begin{aligned}
+r^{2} = x_{1}^{'2} + x_{2}^{'2} \\
+\mathbf{x''} = \mathbf{d(x')} = \frac{1 + k_{1}r^{2} + k_{2}r^{4}+k_{3}r^{6}}{1+ k_{4}r^{2} + k_{5}r^{4}+k_{6}r^{6}}
+\begin{bmatrix}
+x'_{1} \\[0.3em]
+x'_{2}
+\end{bmatrix}
++ 
+\begin{bmatrix}
+2p_{1}x'_{1}x'_{2} + p_{2}(r^{2} + 2x_{1}^{'2}) \\[0.3em]
+p_{1}(r^{2} + 2x_{2}^{'2}) + 2p_{2}x'_{1}x'_{2}
+\end{bmatrix}
+\end{aligned}
+\label{raddis}
+\end{equation}
+
+where $x'_{1},x'_{2}$ is the 3d point mapped to the unit plane in z, $k_{1}-k_{6}$ are radial distortion parameters, $p_{1},p_{2}$ are tangential distortion parameters. The model parameters can be determined during camera calibration.
+
+\subsection{Projecting to Camera Frame}
+
+\subsubsection{Calculating the 3D Ray}
+
+\noindent \begin{figure}[h!]
+	\includegraphics[width = 1.0\hsize]{figures/pinhole_camera_model.png}
+	\caption{Pinhole Camera Model}
+	\label{pinhole_model}
+\end{figure}
+
+Assuming an object or a point on the camera image,it is important to be able to transform such a point into the world frame. To track and gain a 3d appreciation of the environment. Hence for visual context (Figure \ref{pinhole_model}) is a pinhole camera model. The only difference in practice in an intermediate un-distorting step to get the point's ray. Hence to find a ray describing a 3d point the image must first be scaled, (Equation \ref{camera_scale})
+
+
+\begin{equation}
+\begin{aligned}
+\mathbf{x''} = \mathbf{k^{-1}(u)} = 
+\begin{bmatrix}
+\frac{1}{f_{1}} & 0 \\[0.3em]
+0 & \frac{1}{f_{2}}
+\end{bmatrix}
++ 
+\bigg (
+\mathbf{u} -
+\begin{bmatrix}
+c_{1} \\[0.3em]
+c_{2}
+\end{bmatrix}
+\bigg )
+\end{aligned}
+\label{camera_scale}
+\end{equation}
+
+where $f_{1},f_{2}$ are x/y focal lengths in pixels, and $c_{1},c_{2}$ is the principal point (image centre) in pixels.The image is then undistorted using the reverse of Equation \ref{raddis}.
+
+\begin{equation}
+\mathbf{x'} = \mathbf{d^{-1}(x'')}
+\label{camera_scale}
+\end{equation}
+
+and finally the ray is calculated by remembering that z is of length 1.
+
+\begin{equation}
+\mathbf{x} = 
+\begin{bmatrix}
+\mathbf{x'} \\
+1
+\end{bmatrix}
+\label{to_3d_ray}
+\end{equation}
+
+\subsubsection{Calculating the 3D Location}
+
+Now that the ray has been determined we have a point on the 3d unit plane of $z=1$. To find the 3D point in the camera frame, a depth measurement, obtained from the depth camera at the same (undistorted pixel location) is required. Hence the final 3D point is:
+
+\begin{equation}
+\mathbf{x} = 
+\begin{bmatrix}
+\mathbf{x'} \\
+depth(\mathbf{x'})
+\end{bmatrix}
+\label{camera_scale}
+\end{equation}
+
+\subsection{Projecting to World Frame}
 
 
 \noindent \begin{figure}[h!]
 \includegraphics[width = 0.5\hsize]{figures/world_to_cam.jpg}
 \includegraphics[width = 0.35\hsize]{figures/quaternions.png}
-\caption{World vs Camera Frame \cite{Okvis_1}}
+\caption{World vs Camera Frame (left)\cite{Okvis_1}, Hamiltonian Quaternion (right)}
 \label{quat_wcs}
 \end{figure}
 
 
-\iffalse
-\begin{wrapfigure}{r}{0.5\textwidth}
-  \begin{center}
-    \includegraphics[width=0.48\textwidth]{figures/world_to_cam.jpg}
-  \end{center}
-  \caption{World vs Camera Frame \cite{Okvis_1}}
-\end{wrapfigure}
-\fi
-To convert between world (${\xrightarrow{F}}_{W}$), camera frame (${\xrightarrow{F}}_{C_{i}}$), and IMU frame (${\xrightarrow{F}}_{S}$), an appropriate method of describing the orientation, and location of an object in 3D space is needed. A Hamiltonian Quaternion is capable of correctly mapping an object in 3D space, it does this by use of a 4D representation of one real part, and 3 imaginary;  
+To convert between world (${\xrightarrow{F}}_{W}$), camera frame (${\xrightarrow{F}}_{C_{i}}$), and IMU frame (${\xrightarrow{F}}_{S}$), an appropriate method of describing the orientation, and location of an object in 3D space is needed. A Hamiltonian Quaternion is capable of correctly mapping the orientation of an object in 3D space, it does this by use of a 4D representation of one real part, and 3 imaginary;  
 
 \begin{equation}
 \begin{aligned}
@@ -264,7 +348,29 @@ i^{2}=j^{2}=k^{2}=ijk=-1
 \end{aligned}
 \end{equation}
 
-The Vectors expressed within a frame are denoted as $\textbf{p}_{A}$ or $\textbf{p}_{A}^{BC}$ where B and C are start and end points. A transformation between frames is represented as $\textbf{T}_{BA}$ where B and A represent reference frames, so $\textbf{T}_{WC}$ converts between the world frame and camera frame. A small rotation vector can easily be converted to quaternion, think of a small step $\delta \alpha \in \mathbb{R}^{3}$on a 2D plane mapped to a 3D sphere (Figure \ref{quaternion}, Equation \ref{quat_delta}). This can be altered for optimisation purposes by approximating $\delta \alpha$ as $\Delta \alpha$ (Equation \ref{quat_opt}).
+With this extra representation of orientation it is possible to map the camera frame to the world frame. Given a position vector in the camera frame $p_{c}$, it can be converted as follows:
+
+
+\begin{equation}
+\begin{aligned}
+T_{WC} = T_{WS} \times T_{SC} \\
+p_{W} = T_{WC} \times p_{C} \\
+\end{aligned}
+\end{equation}
+
+Where $T_{WC}$ is the matrix that transforms from the world to the camera frame. It is composed of a position and orientation transformation:
+
+\begin{equation}
+\begin{aligned}
+T_{WC} = 
+\begin{bmatrix}
+C_{WC} & r_{WC} \\
+0_{1 \times 3} & 1
+\end{bmatrix}
+\end{aligned}
+\end{equation}
+
+where $T_{WC} \in \mathbb{R}^{4 \times 4}$, the position translation matrix $r_{WC} \in \mathbb{R}^{1 \times 3}$, and the orientation matrix $C_{WC} \in \mathbb{R}^{3 \times 3}$. A transformation between frames is represented as $\textbf{T}_{BA}$ where B and A represent reference frames, so $\textbf{T}_{WC}$ converts between the world frame and camera frame. A small rotation vector can easily be converted to quaternion, think of a small step $\delta \alpha \in \mathbb{R}^{3}$on a 2D plane mapped to a 3D sphere (Figure \ref{quaternion}, Equation \ref{quat_delta}). This small translation can altered to quaternion space for optimisation purposes (used in later sections) by approximating $\delta \alpha$ as $\Delta \alpha$ (Equation \ref{quat_opt}).
 
 
 \begin{equation}
@@ -436,7 +542,7 @@ _{S}\textbf{$\omega$} =  _{S}\tilde{\textbf{$\omega$}} + \textbf{w}_{g} - \textb
 \end{bmatrix}
 \end{equation}
  
-This formulation of the error dynamics is then used to derive the IMU error term (Equation \ref{imu_error}), for further details see \cite{Okvis_1}.
+This formulation of the error dynamics is then used to derive the IMU error term (Equation \ref{imu_error_}), for further details see \cite{Okvis_1}.
 
 
 \begin{equation}
@@ -448,7 +554,7 @@ This formulation of the error dynamics is then used to derive the IMU error term
        
        \hat{\mathbf{x}}^{k+1}_{sb} - \mathbf{x}_{sb}^{k+1}
 \end{bmatrix}
-\label{imu_error}
+\label{imu_error_}
 \end{equation}
 
 
@@ -514,6 +620,15 @@ The method discussed in this section uses image segmentation, a predictive Kalma
 
 \newpage
 
+\section{Ethics}
+
+\subsection{Modification for Military Purposes}
+The code presented in this report, although strictly for civilian applications does have the potential to be modified for military use. It obviously provides the ability to track people and objects from frame-to-frame. This however, is not in a real-time context at present and would require significant modification for use in such an environment that would be conducive to a military application. However, that being said little modification is needed for a simple tracking application from CCTV data for example. This would not need to run at real time and could be a potential source of misuse.
+
+\subsection{Other Ethics Issues}
+
+The code developed is intended to offer a basis for an early warning system to cyclists in urban environments. Hence a number of the inherent ethical problems with, for example the autonomous vehicle space are also applicable to this project. The potential over-reliance on such a system of cyclists could be dangerous and allow for lack of attention and potential accidents when the system is unable to detect a collision. That having been said, it is evident that there is a need for such a system for cyclists and so the benefits would clearly outweighs the disadvantages in such a case.
+
 \section{ROS}
 
 The program is split into respective parts, camera driver, okvis, Mask RCNN and a tracking component. These are all required to communicate for a comprehensive system, hence, since the Mask RCNN implementation used is written in python and okvis plus the driver in c++ ROS is an easy method to transfer messages between nodes. ROS uses a subscriber and publisher methodology where a node can subscribe or publish to a topic. ROS is the de-facto standard library for robotics and allows cross-language compatibility between python and c++.
@@ -534,24 +649,88 @@ The method must both track objects in the frame, determine which objects are no-
 \end{figure}
 
 
+\subsection{Kernelised Correlation Filter}
 
-\subsection{Intersection Over Union}
+Object tracking has been recently advanced by means of discriminative learning methods, these methods try to distinguish between the object and the environment that it is in. The model must therefore be fed negative samples to understand the relevant environment. In the recent paper by Henriques et al. \cite{kcf} the tools are developed to supply thousands of negative samples without iterating over them explicitly. The paper makes use of circulant matrices to provide negative samples. These are obtained by translating the data using a \textit{cyclic shift operator}, which in the 1D signal case is:
 
-Intersection over union (IOU) is a simple method of comparing areas, Consider that there are a number of objects detected in one frame to the next. The majority of these objects can be assumed to have existed in the previous frame, excluding objects that pass out-of-frame and new objects that come into-frame. Hence, assuming a high enough frame rate an IOU score can be computed for each box in the old frame relative to the newer frame boxes. This, with a threshold value can be used to match objects between each frame. The threshold value therefore needs to be established, this will be dependent on frame rate and the relative speed of objects with respect to the camera. 
+\begin{equation}
+P = 
+\begin{bmatrix}
+0 & 0 & \dots & 0 & 1 \\
+1 & 0 & \dots & 0 & 0 \\
+0 & 1 & \dots & 0 & 0 \\
+\vdots & \vdots & \vdots & \ddots & \vdots \\
+0 & 0 & \dots & 1 & 0
+\end{bmatrix}
+\end{equation} 
+
+Therefore the product of $P\mathbf{x} = [x_{n},x_{1},x_{2},...,x_{n-1}]$ and any shift can be modelled using $P^{u}\mathbf{x}$. Because of its cyclic nature, the signal $\mathbf{x}$ repeats when $u=n$ and so the full set of shifted signals is obtained with ${P^{u}\mathbf{x} | u=0,...,n-1}$. An example of this is shown in the 1D case by Figure \ref{circular_data}.
 
 \noindent \begin{figure}[h!]
-	\includegraphics[width = 1.0\hsize]{figures/iou.png}
-	\caption{Intersection Over Union Equation.}
-	\label{iou_fig}
+	\includegraphics[width = 1.0\hsize]{figures/circular_shift.png}
+	\caption{Illustration of circulant matrix.\cite{kcf}}
+	\label{circular_data}
 \end{figure}
 
-The worst-case scenario is a person/object moving perpendicular to the camera, the best case directly towards the camera. Sailing has a concept known as constant bearing decreasing range (CBDR) Figure-\ref{cbrd} which is often used for collision detection between boats. It is a simple principle that is useful in this case, an object that is a hazard (there is a collision potential) will stay at a roughly constant angle to the bicycle. Hence the only objects we really care about are ones that IOU should be able to track as there is little movement perpendicular to the camera. This being said occlusions must still be dealt with as they may pass behind another object and need to be tracked. It can also not be assumed that the bike will be travelling in a straight line and steering movement will affect the camera angle significantly.
+Therefore to compute the regression with shifted samples, the data matrix $X$ takes the form:
 
-\noindent \begin{figure}[h!]
-	\includegraphics[width = 1.0\hsize]{figures/CBRD.png}
-	\caption{Constant Bearing Reducing Distance.}
-	\label{cbrd}
-\end{figure}
+\begin{equation}
+X = C(\mathbf{x}) = 
+\begin{bmatrix}
+x_{1} & x_{2} & \dots & x_{n-1} & x_{n} \\
+x_{n} & x_{1} & \dots & x_{n-2}  & x_{n-1}  \\
+x_{n-1} & x_{n} & \dots & x_{n-3} & x_{n-2}  \\
+\vdots & \vdots & \vdots & \ddots & \vdots \\
+x_{2}  & x_{3}  & \dots & x_{n} & x_{1} \\
+\end{bmatrix}
+\end{equation}
+
+Noting that all circulant matrices can be diagonalised by the Discrete Fourier Transform (DFT) $X$ can be written as:
+
+
+\begin{equation}
+\begin{aligned}
+\mathit{F}(\mathbf{z}) = \sqrt{n}F\mathbf{z} \\
+\hat{\mathbf{x}} = \mathit{F}(\mathbf{x}) \\
+X = F diag(\hat{\mathbf{x}}) F^{H}
+\end{aligned}
+\end{equation}
+
+This is possible because the DFT is a linear operation. 
+
+\subsubsection{Kernels}
+
+Using a kernel, the model can implicitly use a high-dimensional feature space. The kernel function used to do this (e.g. Gaussian), Equation \ref{gauss_kernel} creates an $n \times n$ kernel matrix $K_{i,j} = k(\mathbf{x}_{i},\mathbf{x}_{j})$
+
+\begin{equation}
+k(\mathbf{x},\mathbf{x}') = exp (\frac{1}{\sigma^{2}} ||\mathbf{x} - \mathbf{x}'||^{2})
+\label{gauss_kernel}
+\end{equation}
+
+and therefore the function becomes:
+
+\begin{equation}
+f(\mathbf{z}) = \mathbf{w}^{T}\mathbf{z} = \sum_{i=1}^{n} \alpha_{i}k(\mathbf{z},\mathbf{x}_{i})
+\end{equation}
+
+with the solution of kernelised Ridge Regression given by:
+
+\begin{equation}
+\mathbf{\alpha} = (K + \lambda I)^{-1} \mathbf{y}
+\label{kernel_soln}
+\end{equation}
+
+where $K$ is the kernel matrix and $\mathbf{\alpha}$ is the vector of coefficients $\alpha_{i}$. Given a kernel function that combines data through a commutative operation, it can be proven that given circulant data the kernel matrix $K$ is also circulant and therefore the DFT trick can be used. This leads to a diagonalisation of Equation \ref{kernel_soln} to Equation \ref{al_soln}.
+
+\begin{equation}
+\mathbf{\hat{\alpha}} = \frac{\mathbf{\hat{y}}}{\mathbf{\hat{k}}^{\mathbf{xx}} + \lambda}
+\label{al_soln}
+\end{equation}
+
+where $\mathbf{\hat{k}}^{\mathbf{xx}}$ is the first row of the kernel matrix $K = C(\mathbf{\hat{k}}^{\mathbf{xx}})$, and a $\hat{ }$ denotes the DFT of a vector. This means that only an $n \times 1$ kernel matrix needs to be computed, due to the circulant kernel property and DFT. This makes the method far faster than conventional kernel methods that require an $n \times n$ sized kernel matrix. Since the bbox prediction is so fast for the KCF tracker; it can be used in conjunction with the other tracking methods mentioned in Sections \ref{BRISK_matching}, \ref{class_matching}, and \ref{kalman_matching}.
+\newline
+\newline
+The kcf tracking algorithm outputs a bounding box which is the predicted coordinates of the object in the next frame. This can be compared to Mask-RCNNs output through a simple matching process. A box in the new frame predicted by Mask RCNN $[x_{mask},y_{mask},width_{mask},height_{mask}]$ can be scored by sampling the pdf from a multivariate Gaussian, in 4D, with mean $[x_{kcf},y_{kcf},width_{kcf},height_{kcf}]$ and covariance matrix $20 \times I_{4 \times 4}$ which translates to a $\sigma^{2} = 20$ for $x,y,width,height$ respectively. This score can then be used in Section \ref{matching_combining_methods} to be combined with the other tracking modules.
 
 
 \subsection{BRISK - Selector} \label{BRISK_matching}
@@ -559,10 +738,10 @@ BRISK as described earlier in Section-\ref{BRISK_section} is a binary descriptor
 
 
 
-\subsection{Class Matching}
+\subsection{Class Matching} \label{class_matching}
 An obvious additional requirement is the matching of classes between frames, as a person's ROI should not match to the ROI of a car in the next frame. Hence for each ROI, the class is stored for access by the next frame. This can both reduce expensive computation time of other metrics but provides an easy ROI comparison tool. It can be noted though that Mask RCNN is not perfect and often mis-classifies objects. It is, however, reliable enough to be assumed as correct.
 
-\subsection{Kalman Filter ROI Matching}
+\subsection{Kalman Filter ROI Matching} \label{kalman_matching}
 
 The Kalman filter has two main parts, a predictive step and an update. The predictive step tries to find a-priori estimates of the state for the next time-step by projecting forward the current state and error covariance estimates. This estimate is then updated using the measurements (camera) of the object location. The iterative process continues improving the Kalman filter estimates at each stage.
 
@@ -716,7 +895,7 @@ K_{threshold}-M \quad \textnormal{\textit{ otherwise}}
 \subsection{ROI Lives}
 Each region of interest may be tracked from one frame to the next. However, if that object is occluded then it may not be spotted in the next frame. This, unless accounted for could lead to information loss regarding that object's state. Therefore a life system is in place whereby an object has a number of lives that are used when the object is not spotted in the next frame. These are decremented until 0 when the object is forgotten and no longer tracked.  
 
-\subsection{Combining Matching Methods}
+\subsection{Combining Matching Methods} \label{matching_combining_methods}
 
 Taking the example provided in Figure \ref{roi_match}, there are three objects in the older frame and four in the new frame. BRISK (Section \ref{BRISK_matching}) is not reliable to match all objects from one frame to the next and sometimes cannot find matching keypoints between the same object in each frame (especially deformable objects such as people). Therefore, a system to combine methods is needed. For each $ROI_{old}$ and each $ROI_{new}$ the match metrics for each method (BRISK,Kalman) is calculated. This forms a matrix $matches \in \mathbb{R}^{new \times old \times methods}$ where $old,new$ are the number of ROIs in the old and new frames, and 
 $methods$ is the number of matching methods implemented (in this case two) but is designed to be easily extendible to more. The rules for the matching procedure are as follows:
@@ -732,6 +911,19 @@ $methods$ is the number of matching methods implemented (in this case two) but i
 	\item Find $ID_{max}$ of current objects being tracked.
 	\item For each new object set ID to $ID_{max}+1$ and increment $ID_{max}$
 \end{enumerate}
+
+
+\section{System Evaluation}
+
+\subsection{Mask-RCNN}
+In applying Mask-RCNN to the specific urban environment there have been a number of interesting outcomes. On the whole, the system is robust, often detecting images well and so there are rarely gaps when an object is detected in one frame and not the next. A number of incorrect classifications often provide a worry however, for example, the classification of road paint can cause a problem to the system (Figure ...). This often happens with road markings of bicycles that are relatively convincing examples. After experiencing this phenomenon, a number of examples were sought out to determine how the segmentation performs.
+
+
+\subsection{Depth Camera}
+
+The intel realsense depth camera is typically used in indoor environments as it operates with a small laser. This, as is expected works less well in highly lit environments. The extent of the problem, however is often drastic and can cause okvis to perform poor estimations of pose and hence is unable to determine the bicycle location. An example of these images can be seen in Figure... . It could quite easily be solved, however, with the use of a stero camera for depth perception. For example the realsense R... offers such capabilities which would mitigate the depth camera sensitivity to bright lighting conditions.
+
+
 
 
 \section{Ethics Checklist}

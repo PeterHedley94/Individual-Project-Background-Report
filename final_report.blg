@@ -9,49 +9,51 @@ Warning--entry type for "StanfordCS231_conv_filter" isn't style-file defined
 --line 86 of file bibliography.bib.bib
 Warning--entry type for "StanfordCS231_max_pool" isn't style-file defined
 --line 94 of file bibliography.bib.bib
+Warning--entry type for "opencv_camera_article" isn't style-file defined
+--line 325 of file bibliography.bib.bib
 Warning--empty journal in GH_CNN
 Warning--empty journal in F_Durr_1
 Warning--empty journal in F_Durr_Pt1
 Warning--empty journal in Furgale
-You've used 30 entries,
+You've used 32 entries,
             1876 wiz_defined-function locations,
-            650 strings with 8703 characters,
-and the built_in function-call counts, 6583 in all, are:
-= -- 578
-> -- 337
+            660 strings with 8935 characters,
+and the built_in function-call counts, 7044 in all, are:
+= -- 622
+> -- 355
 < -- 0
-+ -- 126
-- -- 96
-* -- 497
-:= -- 1016
-add.period$ -- 31
-call.type$ -- 30
-change.case$ -- 32
++ -- 133
+- -- 101
+* -- 528
+:= -- 1080
+add.period$ -- 33
+call.type$ -- 32
+change.case$ -- 34
 chr.to.int$ -- 0
-cite$ -- 34
-duplicate$ -- 321
-empty$ -- 636
-format.name$ -- 96
-if$ -- 1555
+cite$ -- 36
+duplicate$ -- 341
+empty$ -- 682
+format.name$ -- 101
+if$ -- 1670
 int.to.chr$ -- 0
-int.to.str$ -- 30
-missing$ -- 24
-newline$ -- 94
-num.names$ -- 30
-pop$ -- 111
+int.to.str$ -- 32
+missing$ -- 25
+newline$ -- 100
+num.names$ -- 32
+pop$ -- 119
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 0
-skip$ -- 172
+skip$ -- 191
 stack$ -- 0
-substring$ -- 288
-swap$ -- 93
+substring$ -- 316
+swap$ -- 102
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 0
 warning$ -- 4
-while$ -- 50
-width$ -- 32
-write$ -- 269
-(There were 7 warnings)
+while$ -- 54
+width$ -- 34
+write$ -- 286
+(There were 8 warnings)
