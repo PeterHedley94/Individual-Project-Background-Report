@@ -222,7 +222,7 @@ RoI pool as discussed in Section \ref{Fast_RCNN} is modified in this approach. I
 In order to detect collisions between the bike and obstacles the software must have an understanding of the global environment. The detection described in Section \ref{comp_vis_back} allows mapping, and tracking of dynamic objects in the frame, but distance, path prediction and eventually collision prediction rely strongly on an accurate understanding of 2.5-3D space.
 
 \subsection{Sensors}
-The sensors used in this project are an RGBD camera and an IMU. These are both available in the Intel Realsense Camera (ZR300, Figure \ref{realsense_camera}). This camera has a USB cable that both provides the power and sends camera information. An extension cable allows for a laptop to be attached to the camera, from a backpack whilst cycling. Potential problems with this setup are due to juddering of the bike during operation; this could cause tricky footage to analyse and can data loss when the hard-drive is writing to disk. The later issue can easily be solved by writing to an SSD while cycling.
+The sensors used in this project are an RGBD camera and an IMU. These are both available in the Intel Realsense Camera (ZR300, Figure \ref{realsense_camera}). This camera has a USB cable that both provides the power and sends camera information. An extension cable allows for a laptop to be attached to the camera, from a backpack whilst cycling. Potential problems with this setup are due to juddering of the bike during operation; this could cause tricky footage to analyse and can data loss when the hard-drive is writing to disk. The latter issue can easily be solved by writing to an SSD while cycling.
 
 \noindent \begin{figure}[h!]
 \includegraphics[width = 1.0\hsize]{./figures/intel_realsense.jpg}
@@ -230,11 +230,9 @@ The sensors used in this project are an RGBD camera and an IMU. These are both a
 \label{realsense_camera}
 \end{figure}
 
-\subsection{World and Camera Frame}
+\subsection{World and Camera Frame} \label{w_c_frame}
 
-
-
-In order to fully understand the bike's location, the environment can be considered from two frames of reference, the world and camera frame. The camera, however cannot be assumed to produce the perfect image and is hence prone to distortion - some types of camera distortion are shown in (Figure \ref{distortion}).
+In order to fully understand the bike's location, the environment can be considered from two frames of reference, the world and camera frame. The camera, however, cannot be assumed to produce a perfect image and is hence prone to distortion - some types of camera distortion are shown in (Figure \ref{distortion}).
 
 
 \noindent \begin{figure}[h!]
@@ -243,7 +241,7 @@ In order to fully understand the bike's location, the environment can be conside
 	\label{distortion}
 \end{figure}
 
-The model used in this paper is "radial-tangential" distortion. As the name implies there is both a radial and tangential component to the distortion (Equation \ref{raddis}) 
+A well-known distortion model is "radial-tangential" distortion. As the name implies there is both a radial and tangential component to the distortion (Equation \ref{raddis}) 
 
 \begin{equation}
 \begin{aligned}
@@ -274,7 +272,7 @@ where $x'_{1},x'_{2}$ is the 3d point mapped to the unit plane in z, $k_{1}-k_{6
 	\label{pinhole_model}
 \end{figure}
 
-Assuming an object or a point on the camera image,it is important to be able to transform such a point into the world frame. To track and gain a 3d appreciation of the environment. Hence for visual context (Figure \ref{pinhole_model}) is a pinhole camera model. The only difference in practice in an intermediate un-distorting step to get the point's ray. Hence to find a ray describing a 3d point the image must first be scaled, (Equation \ref{camera_scale})
+Assuming an object or a point on the camera image, it is important to be able to transform such a point into the world frame. To track and gain a 3d appreciation of the environment. Hence for visual context (Figure \ref{pinhole_model}) is a pinhole camera model. The only difference, in practice, in an intermediate un-distorting step to get the point's ray. This is due to the focal lens in the camera, which is not represented in the pinhole model. Hence to find a ray describing a 3d point the image must first be scaled, (Equation \ref{camera_scale})
 
 
 \begin{equation}
@@ -296,14 +294,14 @@ c_{2}
 \label{camera_scale}
 \end{equation}
 
-where $f_{1},f_{2}$ are x/y focal lengths in pixels, and $c_{1},c_{2}$ is the principal point (image centre) in pixels.The image is then undistorted using the reverse of Equation \ref{raddis}.
+where $f_{1},f_{2}$ are x/y focal lengths in pixels, and $c_{1},c_{2}$ is the principal point (image centre) in pixels. The point can be projected to its undistorted location using the reverse of Equation \ref{raddis}.
 
 \begin{equation}
 \mathbf{x'} = \mathbf{d^{-1}(x'')}
 \label{camera_scale}
 \end{equation}
 
-and finally the ray is calculated by remembering that z is of length 1.
+and finally the ray is calculated by remembering that the z component is of length 1.
 
 \begin{equation}
 \mathbf{x} = 
@@ -316,7 +314,7 @@ and finally the ray is calculated by remembering that z is of length 1.
 
 \subsubsection{Calculating the 3D Location}
 
-Now that the ray has been determined we have a point on the 3d unit plane of $z=1$. To find the 3D point in the camera frame, a depth measurement, obtained from the depth camera at the same (undistorted pixel location) is required. Hence the final 3D point is:
+Now that the ray has been determined we have a point on the 3D unit plane of $z=1$. To find the 3D point in the camera frame, a depth measurement, obtained from the depth camera at the same (undistorted pixel location) is required. Hence the final 3D point is:
 
 \begin{equation}
 \mathbf{x} = 
@@ -326,6 +324,8 @@ depth(\mathbf{x'})
 \end{bmatrix}
 \label{camera_scale}
 \end{equation}
+
+Assuming a static camera location, this would be all that is needed to map the space in-front of the camera. However, as the camera moves, the origin, and orientation of the camera frame changes with respect the world frame. Hence the software must not only determine the 3D location of a point in the camera frame but also translate that to a world frame representation.
 
 \subsection{Projecting to World Frame}
 
@@ -353,12 +353,12 @@ With this extra representation of orientation it is possible to map the camera f
 
 \begin{equation}
 \begin{aligned}
-T_{WC} = T_{WS} \times T_{SC} \\
-p_{W} = T_{WC} \times p_{C} \\
+T_{WC} = T_{WS} \cdot T_{SC} \\
+p_{W} = T_{WC} \cdot p_{C} \\
 \end{aligned}
 \end{equation}
 
-Where $T_{WC}$ is the matrix that transforms from the world to the camera frame. It is composed of a position and orientation transformation:
+A transformation between frames is represented as $\textbf{T}_{BA}$ where B and A represent reference frames, so $\textbf{T}_{WC}$ converts between the world frame and camera frame. It is composed of a position and orientation transformation:
 
 \begin{equation}
 \begin{aligned}
@@ -370,29 +370,11 @@ C_{WC} & r_{WC} \\
 \end{aligned}
 \end{equation}
 
-where $T_{WC} \in \mathbb{R}^{4 \times 4}$, the position translation matrix $r_{WC} \in \mathbb{R}^{1 \times 3}$, and the orientation matrix $C_{WC} \in \mathbb{R}^{3 \times 3}$. A transformation between frames is represented as $\textbf{T}_{BA}$ where B and A represent reference frames, so $\textbf{T}_{WC}$ converts between the world frame and camera frame. A small rotation vector can easily be converted to quaternion, think of a small step $\delta \alpha \in \mathbb{R}^{3}$on a 2D plane mapped to a 3D sphere (Figure \ref{quaternion}, Equation \ref{quat_delta}). This small translation can altered to quaternion space for optimisation purposes (used in later sections) by approximating $\delta \alpha$ as $\Delta \alpha$ (Equation \ref{quat_opt}).
-
-
-\begin{equation}
-\label{quat_delta}
-\delta \textbf{q} = \exp{ \bigg(
-    \begin{bmatrix}
-        \frac{1}{2}\delta \alpha \\[0.3em]
-       0
-     \end{bmatrix} \bigg) }= \begin{bmatrix}
-        \sin \Vert \frac{\delta \alpha}{2} \Vert \frac{\delta \alpha}{2} \\[0.3em]
-       \cos \Vert \frac{\delta \alpha}{2} \Vert
-     \end{bmatrix} ^{\oplus}
-\end{equation}
-
-\begin{equation}
-\label{quat_opt}
-\overline{q}^{k+1} = \delta \textbf{q}(\Delta \alpha) \otimes \overline{q}^{k}
-\end{equation}
+where $T_{WC} \in \mathbb{R}^{4 \times 4}$, the position translation matrix $r_{WC} \in \mathbb{R}^{3 \times 1}$, and the orientation matrix $C_{WC} \in \mathbb{R}^{3 \times 3}$. These transformation matrices must be determined from a SLAM algorithm such as OKVIS which is discussed in the following sections.
 
 \subsection{Bicycle States}
 
-At each taken image ($k$) the bike can be assumed to have a set state $\mathcal{X}_{R}^{k}$. Contained within $\mathcal{X}_{R}$ are a set of pose states, $\mathcal{X}_{T}$, and speed/bias states $\mathcal{X}_{sb}$, Equation \ref{states_1}. Landmarks are contained within the set $\mathcal{X}_{L}$.
+In order to find the bike location and orientation in each frame; a complete representation of the bike's state is needed. At each taken image ($k$) the bike can be assumed to have a set state $\mathcal{X}_{R}^{k}$. Contained within $\mathcal{X}_{R}$ are a set of pose states, $\mathcal{X}_{T}$, and speed/bias states $\mathcal{X}_{sb}$, Equation \ref{states_1}. Landmarks are contained within the set $\mathcal{X}_{L}$.
 
 \begin{equation}
 \begin{aligned}
@@ -403,7 +385,7 @@ At each taken image ($k$) the bike can be assumed to have a set state $\mathcal{
 \end{aligned}
 \end{equation}
 
-The elements $_{W}\textbf{r}_{S}^{T}$, $\textbf{{q}}_{W}^{T}$ are the position and the quaternion body orientation, $_{s}\textbf{{v}}^{T}$ the velocity, $\textbf{{b}}_{g}$ \& $\textbf{{b}}_{a}$ the accelerometer and gyroscope biases. Since $\delta \textbf{q}$ describes the axis-angle perturbation about the estimate $\overline{q}_{WS}$ it follows that $\textbf{q}_{WS} = \delta \textbf{q} \otimes \overline{q}_{WS}$. Hence the error states combining with (Equation \ref{quat_delta}) are:
+The elements $_{W}\textbf{r}_{S}^{T}$, $\textbf{{q}}_{W}^{T}$ are the position and the quaternion body orientation, $_{s}\textbf{{v}}^{T}$ the velocity, $\textbf{{b}}_{g}$ \& $\textbf{{b}}_{a}$ the accelerometer and gyroscope biases. Since $\delta \textbf{q}$ describes the axis-angle perturbation about the estimate $\overline{q}_{WS}$ it follows that $\textbf{q}_{WS} = \delta \textbf{q} \otimes \overline{q}_{WS}$ """"EXPAND THIS BIT """. Hence the error states combining with (Equation \ref{quat_delta}) are:
 
 \begin{equation}
 \begin{aligned}
@@ -421,26 +403,17 @@ If measurements were exact, mapping of an environment would be easy. This, howev
 
 \begin{equation}
 \begin{aligned}
-\tilde{z} = \textbf{b}_{c} + s\textbf{M}_{z} + \textbf{b} + \textbf{n} + \textbf{o}
+\mathbf{\tilde{z}} = \textbf{b}_{c} + s\textbf{M}_{z} + \textbf{b} + \textbf{n} + \textbf{o}
 \end{aligned}
+\label{measurement_model}
 \end{equation}
 
-where $\textbf{z}$ is the correct measurement, $\textbf{b}_{C}$ is a long-term constant bias, $s$ is scaling, $\textbf{M}$- misalignment, $\textbf{b}$- time varying bias, $n$ - noise, and $o$ is other un-modelled influences. This means that no measurement can be trusted exclusively for state-space information. When moving therefore, it was first assumed that errors have a compounding effect. The position of a bike, would become increasingly unknown as the environment is explored and the bike is displaced from the origin. This, however, is not the case as proved by Durrant-Whyte \cite{F_Durr_1} since there is a high degree of correlation between estimates of different landmarks and locations in a map, these correlations also increase with successive observations (Figure \ref{slam_prob_fig}). As an example of this (Figure \ref{slam_prob_fig} : Right) displays error in measurements of landmark observation, the mean error is common between all landmarks and so with successive landmark observations the errors in location estimates become highly correlated. This means that although $\textbf{m}_{i}$'s location may be quite uncertain but the relative location between two landmarks $\textbf{m}_{i}-\textbf{m}_{j}$ is almost certain.
+where $\textbf{z}$ is the correct measurement, $\textbf{b}_{c}$ is a long-term constant bias, $s$ is a scaling factor, $\textbf{M}$ - misalignment, $\textbf{b}$ - time varying bias, $n$ - noise, and $o$ contains other un-modelled influences. This means that no measurement can be trusted exclusively for state-space information. \newline\newline
+Historically, before the recent advances in SLAM, it was first assumed that errors have a compounding effect. The position of a bike, would become increasingly unknown as the environment is explored and the bike is displaced from the origin. This makes intuitive sense if say there is only IMU measurements available. At each step, more uncertainty is introduced from the noise and biases (shown in Equation \ref{measurement_model}) and the bike's position becomes more and more uncertain.
 
+For some time it was also presumed to be the case even when external measurements of the environment are taken. This, however, is not the case as proved by Durrant-Whyte \cite{F_Durr_1} since there is a high degree of correlation between estimates of different landmarks and locations in a map, these correlations also increase with successive observations (Figure \ref{slam_prob_fig}). As an example of this (Figure \ref{slam_prob_fig} : Right) displays error in measurements of landmark observation, the mean error is common between all landmarks and so with successive landmark observations, the errors in location estimates become highly correlated. This means that although $\textbf{m}_{i}$'s location may be quite uncertain but the relative location between two landmarks $\textbf{m}_{i}-\textbf{m}_{j}$ is almost certain.\newline\newline 
 
-
-
-The SLAM problem is therefore formulated using both re-projection error (from the camera measurements) $\textbf{e}_{r}$ and an inertial error term from the IMU $\textbf{e}_{s}$.  
-
-\begin{equation}
-\begin{aligned}
-J(x) := \sum_{i=1}^{I} \sum_{k=1}^{K}\sum_{j \in \mathcal{J}(i,k)} \textbf{e}_{r}^{i,j,k \textnormal{ } T} \textbf{W}_{r}^{i,j,k} \textbf{e}_{r}^{i,j,k} + 
-\sum_{k=1}^{K-1} \textbf{e}_{s}^{k \textnormal{ } T} \textbf{W}_{s}^{k} \textbf{e}_{s}^{k} 
-\end{aligned}
-\end{equation}
-
-where $i$ is the camera index, $k$ the camera frame index, $j$ the landmark index. Indices of landmarks in the $k$th frame and $i$th camera are in the set $\mathcal{J}(i,k)$. In the case of this project the error is only estimated with one camera, and the IMU. Any additional sensors used would also need to be included in this error state. 
-
+In the case of the bicycle set-up, there is both an IMU, and a camera. These provide the basic inputs to the OKVIS software \cite{Okvis_1}. Okvis is able to determine the bike's location by optimising the total error, hence combining both the camera and IMU error.
 
 \noindent \begin{figure}[h!]
 \includegraphics[width = 0.5\hsize]{figures/convergence_landmark_uncertainty.png}
@@ -450,13 +423,54 @@ where $i$ is the camera index, $k$ the camera frame index, $j$ the landmark inde
 \end{figure}
 
 
-\subsubsection{Camera Re-projection Error}
+\subsubsection{Batch NonLinear Least Squares}
 
-The camera uses a focal-lens to take a photograph. This, especially on cheaper cameras, can distort the image. The distortion is intrinsic to the camera and it needs to calibrated to determine a distortion model $\mathbf{h}(^{.})$. This is then used to determine the re-projection error \cite{Furgale}.
+Given an error function for the camera and IMU in the form:
 
 \begin{equation}
 \begin{aligned}
-\textbf{e}_{r}^{i,j,k} = \textbf{z}^{i,j,k} - \textbf{h}_{i} (\textbf{T}^{k}_{CiS} \textnormal{ } \textbf{T}^{k}_{SW} \textnormal{ } _{w}\textbf{l}^{j})
+J(\mathbf{x}) := \frac{1}{2} \sum_{n=1}^{N} \textbf{e}_{n} (\textbf{x})^{T} \textbf{W}_{n} \textbf{e}_{n}(\textbf{x}) 
+\end{aligned}
+\end{equation} 
+
+where $\textbf{e}_{n}(\cdot)$ is an error term that is weighted by $\textbf{W}_{n}$, and would consist, in this case of the camera and IMU error. The only way to minimise this error is through observations which are also presumed to have an associated noise term.
+
+\begin{equation}
+\begin{aligned}
+\textbf{z}_{n} = g_{n}(\textbf{x}) + \textbf{v}_{n},
+\end{aligned}
+\end{equation} 
+
+where $z_{n}$ is the observation, $g_{n}(\textbf{x})$ the observation model, and $v_{n} ~ \mathcal{N}(0,Q_{n})$ and are independent. Hence as $v_{n}$ is mean 0, the error can be simply formulated by:
+
+\begin{equation}
+\begin{aligned}
+\textbf{e}_{n}(\textbf{x}) = z_{n} - g_{n}(\textbf{x}), \\
+\mathit{error = observation - predicted \textnormal{ } observation}
+\end{aligned}
+\end{equation}
+
+Since observation noise between the IMU and camera $v_{n}$ are independent the covariance matrix is diagonal. Hence $W_{n} = E[\mathbf{e}_{n} \mathbf{e}_{n}^{T}]^{-1} = Q^{-1}$. The aim of least squares is to find the state vector $mathbf{x}$ that minimises the error function, hence the optimisation problem is posed as:
+
+\begin{equation}
+\begin{aligned}
+\textbf{x} = argmin(J(\mathbf{x}))
+\end{aligned}
+\end{equation}
+
+If the error term $\mathbf{e}_{n}(\mathbf{x})$ was linear w.r.t $\mathbf{x}$ the solution would be a simple as setting the $\frac{\delta J(\mathbf{x})^{T}}{\delta \mathbf{x}}$ to zero and solving the respective simultaneous equations. However this is often not the case, and so the solution to the equation must be solved iteratively, with for example, gauss-newton formulation of the equations and a solver such as google-ceres.
+
+\subsubsection{Frame to Frame Matching}
+
+
+
+\subsubsection{Camera Re-projection Error}
+
+As discussed in Section \ref{w_c_frame}, the camera uses a lens to take a photograph. This, especially on cheaper cameras, can distort the image. The distortion is intrinsic to the camera and it needs to calibrated to determine a distortion model $\mathbf{d}(^{.})$. This is then used to determine the re-projection error \cite{Furgale}.
+
+\begin{equation}
+\begin{aligned}
+\textbf{e}_{r}^{i,j,k} = \textbf{z}^{i,j,k} - \textbf{d}_{i} (\textbf{T}^{k}_{CiS} \textnormal{ } \textbf{T}^{k}_{SW} \textnormal{ } _{w}\textbf{l}^{j})
 \end{aligned}
 \end{equation}
 
@@ -917,6 +931,8 @@ $methods$ is the number of matching methods implemented (in this case two) but i
 
 \subsection{Mask-RCNN}
 In applying Mask-RCNN to the specific urban environment there have been a number of interesting outcomes. On the whole, the system is robust, often detecting images well and so there are rarely gaps when an object is detected in one frame and not the next. A number of incorrect classifications often provide a worry however, for example, the classification of road paint can cause a problem to the system (Figure ...). This often happens with road markings of bicycles that are relatively convincing examples. After experiencing this phenomenon, a number of examples were sought out to determine how the segmentation performs.
+
+\subsection{Okvis with Dynamic Objects}
 
 
 \subsection{Depth Camera}

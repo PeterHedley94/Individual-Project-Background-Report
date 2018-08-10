@@ -1,49 +1,52 @@
-\contentsline {section}{\numberline {1}Introduction}{3}
-\contentsline {section}{\numberline {2}Background, Computer Vision}{4}
-\contentsline {subsection}{\numberline {2.1}Deep Learning Preliminaries}{4}
-\contentsline {subsection}{\numberline {2.2}Convolutional Networks}{4}
-\contentsline {subsubsection}{\numberline {2.2.1}Convolutional Layers}{5}
-\contentsline {subsubsection}{\numberline {2.2.2}Pooling Layers}{5}
-\contentsline {subsection}{\numberline {2.3}Image Detection}{5}
-\contentsline {subsubsection}{\numberline {2.3.1}R-CNN}{6}
-\contentsline {subsubsection}{\numberline {2.3.2}Fast-RCNN}{6}
-\contentsline {subsubsection}{\numberline {2.3.3}Faster R-CNN}{7}
-\contentsline {subsection}{\numberline {2.4}Image Segmentation}{8}
-\contentsline {subsection}{\numberline {2.5}Instance Segmentation}{9}
-\contentsline {subsubsection}{\numberline {2.5.1}Mask R-CNN}{10}
-\contentsline {section}{\numberline {3}Background, SLAM}{10}
-\contentsline {subsection}{\numberline {3.1}Sensors}{11}
-\contentsline {subsection}{\numberline {3.2}World and Camera Frame}{11}
-\contentsline {subsection}{\numberline {3.3}Projecting to Camera Frame}{12}
-\contentsline {subsubsection}{\numberline {3.3.1}Calculating the 3D Ray}{12}
-\contentsline {subsubsection}{\numberline {3.3.2}Calculating the 3D Location}{13}
-\contentsline {subsection}{\numberline {3.4}Projecting to World Frame}{13}
-\contentsline {subsection}{\numberline {3.5}Bicycle States}{14}
-\contentsline {subsection}{\numberline {3.6}The SLAM Problem}{14}
-\contentsline {subsubsection}{\numberline {3.6.1}Camera Re-projection Error}{14}
-\contentsline {subsubsection}{\numberline {3.6.2}IMU Kinematics}{15}
-\contentsline {subsubsection}{\numberline {3.6.3}IMU Kinematics Linearised}{15}
-\contentsline {subsubsection}{\numberline {3.6.4}Keypoint Detection}{16}
-\contentsline {section}{\numberline {4}Background, Object Tracking}{16}
-\contentsline {subsection}{\numberline {4.1}CamShift}{17}
-\contentsline {subsection}{\numberline {4.2}Object Tracking Summary}{17}
-\contentsline {section}{\numberline {5}Ethics}{18}
-\contentsline {subsection}{\numberline {5.1}Modification for Military Purposes}{18}
-\contentsline {subsection}{\numberline {5.2}Other Ethics Issues}{18}
-\contentsline {section}{\numberline {6}ROS}{18}
-\contentsline {section}{\numberline {7}Frame-to-Frame Tracking}{19}
-\contentsline {subsection}{\numberline {7.1}Kernelised Correlation Filter}{19}
-\contentsline {subsubsection}{\numberline {7.1.1}Kernels}{20}
-\contentsline {subsection}{\numberline {7.2}BRISK - Selector}{21}
-\contentsline {subsection}{\numberline {7.3}Class Matching}{21}
-\contentsline {subsection}{\numberline {7.4}Kalman Filter ROI Matching}{21}
-\contentsline {subsubsection}{\numberline {7.4.1}Kalman Predictive Step}{21}
-\contentsline {subsubsection}{\numberline {7.4.2}Kalman Update Step}{22}
-\contentsline {subsubsection}{\numberline {7.4.3}Kalman Equations}{22}
-\contentsline {subsubsection}{\numberline {7.4.4}Kalman Matching ROIS}{23}
-\contentsline {subsection}{\numberline {7.5}ROI Lives}{23}
-\contentsline {subsection}{\numberline {7.6}Combining Matching Methods}{23}
-\contentsline {section}{\numberline {8}System Evaluation}{24}
-\contentsline {subsection}{\numberline {8.1}Mask-RCNN}{24}
-\contentsline {subsection}{\numberline {8.2}Depth Camera}{24}
-\contentsline {section}{\numberline {9}Ethics Checklist}{24}
+\contentsline {section}{\numberline {1}Introduction}{4}
+\contentsline {section}{\numberline {2}Background, Computer Vision}{5}
+\contentsline {subsection}{\numberline {2.1}Deep Learning Preliminaries}{5}
+\contentsline {subsection}{\numberline {2.2}Convolutional Networks}{5}
+\contentsline {subsubsection}{\numberline {2.2.1}Convolutional Layers}{6}
+\contentsline {subsubsection}{\numberline {2.2.2}Pooling Layers}{6}
+\contentsline {subsection}{\numberline {2.3}Image Detection}{6}
+\contentsline {subsubsection}{\numberline {2.3.1}R-CNN}{7}
+\contentsline {subsubsection}{\numberline {2.3.2}Fast-RCNN}{7}
+\contentsline {subsubsection}{\numberline {2.3.3}Faster R-CNN}{8}
+\contentsline {subsection}{\numberline {2.4}Image Segmentation}{9}
+\contentsline {subsection}{\numberline {2.5}Instance Segmentation}{10}
+\contentsline {subsubsection}{\numberline {2.5.1}Mask R-CNN}{11}
+\contentsline {section}{\numberline {3}Background, SLAM}{11}
+\contentsline {subsection}{\numberline {3.1}Sensors}{12}
+\contentsline {subsection}{\numberline {3.2}World and Camera Frame}{12}
+\contentsline {subsection}{\numberline {3.3}Projecting to Camera Frame}{13}
+\contentsline {subsubsection}{\numberline {3.3.1}Calculating the 3D Ray}{13}
+\contentsline {subsubsection}{\numberline {3.3.2}Calculating the 3D Location}{14}
+\contentsline {subsection}{\numberline {3.4}Projecting to World Frame}{14}
+\contentsline {subsection}{\numberline {3.5}Bicycle States}{15}
+\contentsline {subsection}{\numberline {3.6}The SLAM Problem}{15}
+\contentsline {subsubsection}{\numberline {3.6.1}Batch NonLinear Least Squares}{16}
+\contentsline {subsubsection}{\numberline {3.6.2}Frame to Frame Matching}{16}
+\contentsline {subsubsection}{\numberline {3.6.3}Camera Re-projection Error}{16}
+\contentsline {subsubsection}{\numberline {3.6.4}IMU Kinematics}{17}
+\contentsline {subsubsection}{\numberline {3.6.5}IMU Kinematics Linearised}{17}
+\contentsline {subsubsection}{\numberline {3.6.6}Keypoint Detection}{17}
+\contentsline {section}{\numberline {4}Background, Object Tracking}{18}
+\contentsline {subsection}{\numberline {4.1}CamShift}{18}
+\contentsline {subsection}{\numberline {4.2}Object Tracking Summary}{19}
+\contentsline {section}{\numberline {5}Ethics}{20}
+\contentsline {subsection}{\numberline {5.1}Modification for Military Purposes}{20}
+\contentsline {subsection}{\numberline {5.2}Other Ethics Issues}{20}
+\contentsline {section}{\numberline {6}ROS}{20}
+\contentsline {section}{\numberline {7}Frame-to-Frame Tracking}{20}
+\contentsline {subsection}{\numberline {7.1}Kernelised Correlation Filter}{20}
+\contentsline {subsubsection}{\numberline {7.1.1}Kernels}{22}
+\contentsline {subsection}{\numberline {7.2}BRISK - Selector}{22}
+\contentsline {subsection}{\numberline {7.3}Class Matching}{23}
+\contentsline {subsection}{\numberline {7.4}Kalman Filter ROI Matching}{23}
+\contentsline {subsubsection}{\numberline {7.4.1}Kalman Predictive Step}{23}
+\contentsline {subsubsection}{\numberline {7.4.2}Kalman Update Step}{23}
+\contentsline {subsubsection}{\numberline {7.4.3}Kalman Equations}{24}
+\contentsline {subsubsection}{\numberline {7.4.4}Kalman Matching ROIS}{24}
+\contentsline {subsection}{\numberline {7.5}ROI Lives}{25}
+\contentsline {subsection}{\numberline {7.6}Combining Matching Methods}{25}
+\contentsline {section}{\numberline {8}System Evaluation}{25}
+\contentsline {subsection}{\numberline {8.1}Mask-RCNN}{25}
+\contentsline {subsection}{\numberline {8.2}Okvis with Dynamic Objects}{26}
+\contentsline {subsection}{\numberline {8.3}Depth Camera}{26}
+\contentsline {section}{\numberline {9}Ethics Checklist}{26}

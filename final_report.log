@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2018.6.4)  7 AUG 2018 16:45
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2018.6.4)  10 AUG 2018 14:02
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -552,18 +552,18 @@ LaTeX Font Info:    Try loading font information for U+msb on input line 36.
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 ) [1
 
-{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] (./final_report.toc)
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] (./final_report.toc [2
+
+])
 \tf@toc=\write3
 \openout3 = `final_report.toc'.
 
- [2
-
-]
+ [3]
 Underfull \hbox (badness 10000) in paragraph at lines 49--52
 
  []
 
-[3
+[4
 
 ]
 Underfull \hbox (badness 10000) in paragraph at lines 56--59
@@ -575,14 +575,14 @@ Underfull \hbox (badness 10000) in paragraph at lines 61--64
 
  []
 
-<./figures/neural_net2.jpeg, id=18, 793.96625pt x 389.455pt>
+<./figures/neural_net2.jpeg, id=21, 793.96625pt x 389.455pt>
 File: ./figures/neural_net2.jpeg Graphic file (type jpg)
 
 <use ./figures/neural_net2.jpeg>
 Package pdftex.def Info: ./figures/neural_net2.jpeg used on input line 66.
 (pdftex.def)             Requested size: 241.84843pt x 118.63206pt.
 
-<./figures/cnn.jpeg, id=19, 571.13374pt x 202.7575pt>
+<./figures/cnn.jpeg, id=22, 571.13374pt x 202.7575pt>
 File: ./figures/cnn.jpeg Graphic file (type jpg)
  <use ./figures/cnn.jpeg>
 Package pdftex.def Info: ./figures/cnn.jpeg used on input line 67.
@@ -592,15 +592,15 @@ Overfull \hbox (2.43333pt too wide) in paragraph at lines 66--68
 [][] [] 
  []
 
-[4 <./figures/neural_net2.jpeg> <./figures/cnn.jpeg>]
-<./figures/conv_filter.jpg, id=23, 702.625pt x 327.2225pt>
+[5 <./figures/neural_net2.jpeg> <./figures/cnn.jpeg>]
+<./figures/conv_filter.jpg, id=26, 702.625pt x 327.2225pt>
 File: ./figures/conv_filter.jpg Graphic file (type jpg)
 
 <use ./figures/conv_filter.jpg>
 Package pdftex.def Info: ./figures/conv_filter.jpg used on input line 76.
 (pdftex.def)             Requested size: 241.84843pt x 112.63223pt.
 
-<./figures/maxpool.jpeg, id=24, 789.95125pt x 369.38pt>
+<./figures/maxpool.jpeg, id=27, 789.95125pt x 369.38pt>
 File: ./figures/maxpool.jpeg Graphic file (type jpg)
 
 <use ./figures/maxpool.jpeg>
@@ -626,8 +626,8 @@ Underfull \hbox (badness 10000) in paragraph at lines 94--97
 
  []
 
-[5 <./figures/conv_filter.jpg> <./figures/maxpool.jpeg>]
-<./figures/region_prop.png, id=29, 1190.4475pt x 335.2525pt>
+[6 <./figures/conv_filter.jpg> <./figures/maxpool.jpeg>]
+<./figures/region_prop.png, id=32, 1190.4475pt x 335.2525pt>
 File: ./figures/region_prop.png Graphic file (type png)
 
 <use ./figures/region_prop.png>
@@ -638,21 +638,21 @@ Underfull \hbox (badness 10000) in paragraph at lines 108--111
 
  []
 
-[6 <./figures/region_prop.png>]
-<./figures/arch.pdf, id=37, 963.6pt x 542.025pt>
+[7 <./figures/region_prop.png>]
+<./figures/arch.pdf, id=41, 963.6pt x 542.025pt>
 File: ./figures/arch.pdf Graphic file (type pdf)
  <use ./figures/arch.pdf>
 Package pdftex.def Info: ./figures/arch.pdf used on input line 137.
 (pdftex.def)             Requested size: 483.69687pt x 179.55455pt.
 
-<./figures/faster.png, id=39, 1606.0pt x 1206.5075pt>
+<./figures/faster.png, id=43, 1606.0pt x 1206.5075pt>
 File: ./figures/faster.png Graphic file (type png)
 
 <use ./figures/faster.png>
 Package pdftex.def Info: ./figures/faster.png used on input line 149.
 (pdftex.def)             Requested size: 217.66211pt x 163.51582pt.
 
-<./figures/rpn_faster.jpg, id=40, 1971.365pt x 1407.2575pt>
+<./figures/rpn_faster.jpg, id=44, 1971.365pt x 1407.2575pt>
 File: ./figures/rpn_faster.jpg Graphic file (type jpg)
 
 <use ./figures/rpn_faster.jpg>
@@ -667,20 +667,20 @@ Underfull \hbox (badness 10000) in paragraph at lines 155--158
 
  []
 
-[7 <./figures/arch.pdf>]
+[8 <./figures/arch.pdf>]
 Underfull \hbox (badness 10000) in paragraph at lines 176--179
 
  []
 
-[8 <./figures/faster.png> <./figures/rpn_faster.jpg>]
-<./figures/image_seg1.png, id=83, 2047.65pt x 1019.81pt>
+[9 <./figures/faster.png> <./figures/rpn_faster.jpg>]
+<./figures/image_seg1.png, id=86, 2047.65pt x 1019.81pt>
 File: ./figures/image_seg1.png Graphic file (type png)
 
 <use ./figures/image_seg1.png>
 Package pdftex.def Info: ./figures/image_seg1.png used on input line 184.
 (pdftex.def)             Requested size: 241.84843pt x 120.44235pt.
 
-<./figures/sem_im_seg1.jpg, id=84, 366.36874pt x 201.75375pt>
+<./figures/sem_im_seg1.jpg, id=87, 366.36874pt x 201.75375pt>
 File: ./figures/sem_im_seg1.jpg Graphic file (type jpg)
 
 <use ./figures/sem_im_seg1.jpg>
@@ -711,8 +711,8 @@ Underfull \hbox (badness 10000) in paragraph at lines 199--201
 
  []
 
-[9 <./figures/image_seg1.png> <./figures/sem_im_seg1.jpg>]
-<./figures/mask_arch.jpg, id=88, 752.8125pt x 232.87pt>
+[10 <./figures/image_seg1.png> <./figures/sem_im_seg1.jpg>]
+<./figures/mask_arch.jpg, id=91, 752.8125pt x 232.87pt>
 File: ./figures/mask_arch.jpg Graphic file (type jpg)
 
 <use ./figures/mask_arch.jpg>
@@ -728,30 +728,30 @@ Underfull \hbox (badness 10000) in paragraph at lines 217--220
 
  []
 
-[10 <./figures/mask_arch.jpg>]
-<./figures/intel_realsense.jpg, id=92, 500.87125pt x 114.4275pt>
+[11 <./figures/mask_arch.jpg>]
+<./figures/intel_realsense.jpg, id=95, 500.87125pt x 114.4275pt>
 File: ./figures/intel_realsense.jpg Graphic file (type jpg)
 
 <use ./figures/intel_realsense.jpg>
 Package pdftex.def Info: ./figures/intel_realsense.jpg used on input line 228.
 (pdftex.def)             Requested size: 483.69687pt x 110.50914pt.
 
-<figures/distortion_example.png, id=93, 722.7pt x 277.035pt>
+<figures/distortion_example.png, id=96, 722.7pt x 277.035pt>
 File: figures/distortion_example.png Graphic file (type png)
 
 <use figures/distortion_example.png>
-Package pdftex.def Info: figures/distortion_example.png used on input line 241.
+Package pdftex.def Info: figures/distortion_example.png used on input line 239.
 
 (pdftex.def)             Requested size: 483.69687pt x 185.41803pt.
- [11 <./figures/intel_realsense.jpg> <./figures/distortion_example.png>]
-<figures/pinhole_camera_model.png, id=99, 602.25pt x 424.58624pt>
+ [12 <./figures/intel_realsense.jpg> <./figures/distortion_example.png>]
+<figures/pinhole_camera_model.png, id=102, 602.25pt x 424.58624pt>
 File: figures/pinhole_camera_model.png Graphic file (type png)
 
 <use figures/pinhole_camera_model.png>
 Package pdftex.def Info: figures/pinhole_camera_model.png used on input line 27
-2.
+0.
 (pdftex.def)             Requested size: 483.69687pt x 341.01701pt.
- [12 <./figures/pinhole_camera_model.png>] <figures/world_to_cam.jpg, id=105, 1
+ [13 <./figures/pinhole_camera_model.png>] <figures/world_to_cam.jpg, id=109, 1
 81.3977pt x 95.3964pt>
 File: figures/world_to_cam.jpg Graphic file (type jpg)
 
@@ -759,98 +759,116 @@ File: figures/world_to_cam.jpg Graphic file (type jpg)
 Package pdftex.def Info: figures/world_to_cam.jpg used on input line 334.
 (pdftex.def)             Requested size: 241.84843pt x 127.19144pt.
 
-<figures/quaternions.png, id=106, 472.76625pt x 394.47375pt>
+<figures/quaternions.png, id=110, 472.76625pt x 394.47375pt>
 File: figures/quaternions.png Graphic file (type png)
 
 <use figures/quaternions.png>
 Package pdftex.def Info: figures/quaternions.png used on input line 335.
 (pdftex.def)             Requested size: 169.29684pt x 141.26405pt.
- [13 <./figures/world_to_cam.jpg> <./figures/quaternions.png>]
-<figures/convergence_landmark_uncertainty.png, id=113, 334.24875pt x 260.975pt>
+ [14 <./figures/world_to_cam.jpg> <./figures/quaternions.png>]
+
+LaTeX Warning: Reference `quat_delta' on page 15 undefined on input line 388.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 411--413
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 414--415
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 414--415
+
+ []
+
+
+<figures/convergence_landmark_uncertainty.png, id=116, 334.24875pt x 260.975pt>
 File: figures/convergence_landmark_uncertainty.png Graphic file (type png)
 <use figures/convergence_landmark_uncertainty.png>
 Package pdftex.def Info: figures/convergence_landmark_uncertainty.png used on i
-nput line 446.
+nput line 419.
 (pdftex.def)             Requested size: 241.84843pt x 188.83766pt.
 
-<figures/ess_slam.png, id=114, 595.22375pt x 473.77pt>
+<figures/ess_slam.png, id=117, 595.22375pt x 473.77pt>
 File: figures/ess_slam.png Graphic file (type png)
 
 <use figures/ess_slam.png>
-Package pdftex.def Info: figures/ess_slam.png used on input line 447.
+Package pdftex.def Info: figures/ess_slam.png used on input line 420.
 (pdftex.def)             Requested size: 241.84843pt x 192.4975pt.
 
-Overfull \hbox (2.43333pt too wide) in paragraph at lines 446--448
+Overfull \hbox (2.43333pt too wide) in paragraph at lines 419--421
 [][] [] 
  []
 
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
-[14] [15 <./figures/convergence_landmark_uncertainty.png> <./figures/ess_slam.p
-ng>] <figures/brisk.jpg, id=121, 470.50781pt x 172.39406pt>
+[15] [16 <./figures/convergence_landmark_uncertainty.png> <./figures/ess_slam.p
+ng>] <figures/brisk.jpg, id=125, 470.50781pt x 172.39406pt>
 File: figures/brisk.jpg Graphic file (type jpg)
 
 <use figures/brisk.jpg>
-Package pdftex.def Info: figures/brisk.jpg used on input line 567.
+Package pdftex.def Info: figures/brisk.jpg used on input line 580.
 (pdftex.def)             Requested size: 338.58632pt x 124.05786pt.
- <figures/brisk.png, id=122, 241.65282pt x 237.13594pt>
+ <figures/brisk.png, id=126, 241.65282pt x 237.13594pt>
 File: figures/brisk.png Graphic file (type png)
 
 <use figures/brisk.png>
-Package pdftex.def Info: figures/brisk.png used on input line 568.
+Package pdftex.def Info: figures/brisk.png used on input line 581.
 (pdftex.def)             Requested size: 125.75851pt x 123.40909pt.
-
-Underfull \hbox (badness 10000) in paragraph at lines 578--581
-
- []
-
-[16 <./figures/brisk.jpg> <./figures/brisk.png>]
-Underfull \hbox (badness 10000) in paragraph at lines 592--595
-
- []
-
-<figures/pedestrian_tracking_module.png, id=126, 1522.68875pt x 764.8575pt>
-File: figures/pedestrian_tracking_module.png Graphic file (type png)
-
-<use figures/pedestrian_tracking_module.png>
-Package pdftex.def Info: figures/pedestrian_tracking_module.png used on input l
-ine 616.
-(pdftex.def)             Requested size: 483.69687pt x 242.9621pt.
 
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
 [17]
-Underfull \hbox (badness 10000) in paragraph at lines 634--637
+Underfull \hbox (badness 10000) in paragraph at lines 591--594
 
  []
 
-[18 <./figures/pedestrian_tracking_module.png>]
-<figures/roi_match.png, id=133, 1032.85875pt x 318.18875pt>
+
+Underfull \hbox (badness 10000) in paragraph at lines 605--608
+
+ []
+
+[18 <./figures/brisk.jpg> <./figures/brisk.png>]
+<figures/pedestrian_tracking_module.png, id=133, 1522.68875pt x 764.8575pt>
+File: figures/pedestrian_tracking_module.png Graphic file (type png)
+
+<use figures/pedestrian_tracking_module.png>
+Package pdftex.def Info: figures/pedestrian_tracking_module.png used on input l
+ine 629.
+(pdftex.def)             Requested size: 483.69687pt x 242.9621pt.
+ [19 <./figures/pedestrian_tracking_module.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 647--650
+
+ []
+
+<figures/roi_match.png, id=138, 1032.85875pt x 318.18875pt>
 File: figures/roi_match.png Graphic file (type png)
 
 <use figures/roi_match.png>
-Package pdftex.def Info: figures/roi_match.png used on input line 646.
+Package pdftex.def Info: figures/roi_match.png used on input line 659.
 (pdftex.def)             Requested size: 483.69687pt x 149.0098pt.
-
-<figures/circular_shift.png, id=134, 1861.95625pt x 503.8825pt>
-File: figures/circular_shift.png Graphic file (type png)
-
-<use figures/circular_shift.png>
-Package pdftex.def Info: figures/circular_shift.png used on input line 670.
-(pdftex.def)             Requested size: 483.69687pt x 130.89871pt.
 
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
-[19 <./figures/roi_match.png>]
-Underfull \hbox (badness 10000) in paragraph at lines 730--734
+[20] <figures/circular_shift.png, id=142, 1861.95625pt x 503.8825pt>
+File: figures/circular_shift.png Graphic file (type png)
+
+<use figures/circular_shift.png>
+Package pdftex.def Info: figures/circular_shift.png used on input line 683.
+(pdftex.def)             Requested size: 483.69687pt x 130.89871pt.
+ [21 <./figures/roi_match.png> <./figures/circular_shift.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 743--747
 
  []
 
-[20 <./figures/circular_shift.png>] [21] [22] [23]
-Overfull \hbox (2.1377pt too wide) in paragraph at lines 941--941
+[22] [23] [24] [25]
+Overfull \hbox (2.1377pt too wide) in paragraph at lines 956--956
 []|\OT1/cmr/bx/n/10.95 Yes| 
  []
 
@@ -861,33 +879,36 @@ Missing character: There is no ‚ in font cmr10!
 Missing character: There is no Ä in font cmr10!
 Missing character: There is no ù in font cmr10!
 
-Underfull \vbox (badness 10000) detected at line 1000
+Underfull \vbox (badness 10000) detected at line 1015
  []
 
 Missing character: There is no ‚ in font cmr10!
 Missing character: There is no Ä in font cmr10!
 Missing character: There is no ì in font cmr10!
-[24] [25] [26] (./final_report.bbl
+[26] [27] (./final_report.bbl
 Missing character: There is no ‚ in font cmr10!
 Missing character: There is no Ä in font cmr10!
 Missing character: There is no ò in font cmr10!
- [27]
+ [28]
 Missing character: There is no ‚ in font cmr10!
 Missing character: There is no Ä in font cmr10!
 Missing character: There is no ì in font cmr10!
-) [28] (./final_report.aux)
+) [29] (./final_report.aux)
+
+LaTeX Warning: There were undefined references.
+
 
 LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 7085 strings out of 493029
- 102762 string characters out of 6136235
- 210209 words of memory out of 5000000
- 10454 multiletter control sequences out of 15000+600000
- 14282 words of font info for 53 fonts, out of 8000000 for 9000
+ 7087 strings out of 493029
+ 102796 string characters out of 6136235
+ 209211 words of memory out of 5000000
+ 10456 multiletter control sequences out of 15000+600000
+ 14631 words of font info for 54 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 42i,19n,77p,1280b,345s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 42i,19n,77p,1183b,345s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></us
 r/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/shar
 e/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx8.pfb></usr/share/texli
@@ -905,10 +926,10 @@ xlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/share/texlive/t
 exmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/share/texlive/texmf-d
 ist/fonts/type1/public/amsfonts/symbols/msam10.pfb></usr/share/texlive/texmf-di
 st/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on final_report.pdf (28 pages, 4640016 bytes).
+Output written on final_report.pdf (29 pages, 4641616 bytes).
 PDF statistics:
- 227 PDF objects out of 1000 (max. 8388607)
- 129 compressed objects within 2 object streams
+ 230 PDF objects out of 1000 (max. 8388607)
+ 131 compressed objects within 2 object streams
  0 named destinations out of 1000 (max. 500000)
  122 words of extra memory for PDF output out of 10000 (max. 10000000)
 
