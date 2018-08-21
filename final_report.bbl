@@ -118,14 +118,17 @@ H.~F.~Durrant-Whyte, ``Uncertain geometry in robotics,'' vol.~4, pp.~23 -- 31,
 T.~Bailey and H.~Durrant-Whyte, ``Simultaneous localization and mapping (slam):
   Part i,'' 10 2006.
 
-\bibitem{Furgale}
-P.~Furgale, ``Extensions to the visual odometry pipeline for the exploration of
-  planetary surfaces,'' 01 2011.
-
 \bibitem{BRISK}
 S.~Leutenegger, M.~Chli, and R.~Y. Siegwart, ``Brisk: Binary robust invariant
   scalable keypoints,'' in {\em 2011 International Conference on Computer
   Vision}, pp.~2548--2555, Nov 2011.
+
+\bibitem{opencv_harris_article}
+O.~docs, ``Images,'' 2012.
+
+\bibitem{Furgale}
+P.~Furgale, ``Extensions to the visual odometry pipeline for the exploration of
+  planetary surfaces,'' 01 2011.
 
 \bibitem{Ped_tract}
 L.~Guo, L.~Li, Y.~Zhao, and Z.~Zhao, ``Pedestrian tracking based on camshift

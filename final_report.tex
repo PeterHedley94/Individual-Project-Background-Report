@@ -230,8 +230,7 @@ The sensors used in this project are an RGBD camera and an IMU. These are both a
 \label{realsense_camera}
 \end{figure}
 
-\subsection{World and Camera Frame} \label{w_c_frame}
-
+\subsubsection{Camera Distortion}
 In order to fully understand the bike's location, the environment can be considered from two frames of reference, the world and camera frame. The camera, however, cannot be assumed to produce a perfect image and is hence prone to distortion - some types of camera distortion are shown in (Figure \ref{distortion}).
 
 
@@ -262,7 +261,8 @@ p_{1}(r^{2} + 2x_{2}^{'2}) + 2p_{2}x'_{1}x'_{2}
 
 where $x'_{1},x'_{2}$ is the 3d point mapped to the unit plane in z, $k_{1}-k_{6}$ are radial distortion parameters, $p_{1},p_{2}$ are tangential distortion parameters. The model parameters can be determined during camera calibration.
 
-\subsection{Projecting to Camera Frame}
+
+\subsection{Camera to World Frame}
 
 \subsubsection{Calculating the 3D Ray}
 
@@ -282,7 +282,6 @@ Assuming an object or a point on the camera image, it is important to be able to
 \frac{1}{f_{1}} & 0 \\[0.3em]
 0 & \frac{1}{f_{2}}
 \end{bmatrix}
-+ 
 \bigg (
 \mathbf{u} -
 \begin{bmatrix}
@@ -298,7 +297,7 @@ where $f_{1},f_{2}$ are x/y focal lengths in pixels, and $c_{1},c_{2}$ is the pr
 
 \begin{equation}
 \mathbf{x'} = \mathbf{d^{-1}(x'')}
-\label{camera_scale}
+\label{camera_scale2}
 \end{equation}
 
 and finally the ray is calculated by remembering that the z component is of length 1.
@@ -319,10 +318,10 @@ Now that the ray has been determined we have a point on the 3D unit plane of $z=
 \begin{equation}
 \mathbf{x} = 
 \begin{bmatrix}
-\mathbf{x'} \\
+\mathbf{x'} \times depth(\mathbf{x'})\\
 depth(\mathbf{x'})
 \end{bmatrix}
-\label{camera_scale}
+\label{camera_add_depth}
 \end{equation}
 
 Assuming a static camera location, this would be all that is needed to map the space in-front of the camera. However, as the camera moves, the origin, and orientation of the camera frame changes with respect the world frame. Hence the software must not only determine the 3D location of a point in the camera frame but also translate that to a world frame representation.
@@ -371,6 +370,15 @@ C_{WC} & r_{WC} \\
 \end{equation}
 
 where $T_{WC} \in \mathbb{R}^{4 \times 4}$, the position translation matrix $r_{WC} \in \mathbb{R}^{3 \times 1}$, and the orientation matrix $C_{WC} \in \mathbb{R}^{3 \times 3}$. These transformation matrices must be determined from a SLAM algorithm such as OKVIS which is discussed in the following sections.
+
+\subsubsection{Camera to World Summary}
+
+
+
+\subsection{World to Camera Frame} \label{w_c_frame}
+
+In order to correctly plot the Kalman filter an give other tracking algorithms the expected location on the picture the ability to transform from world to camera frame is needed. The process is similar to the camera to frame except the reverse, namely:
+
 
 \subsection{Bicycle States}
 
@@ -460,7 +468,78 @@ Since observation noise between the IMU and camera $v_{n}$ are independent the c
 
 If the error term $\mathbf{e}_{n}(\mathbf{x})$ was linear w.r.t $\mathbf{x}$ the solution would be a simple as setting the $\frac{\delta J(\mathbf{x})^{T}}{\delta \mathbf{x}}$ to zero and solving the respective simultaneous equations. However this is often not the case, and so the solution to the equation must be solved iteratively, with for example, gauss-newton formulation of the equations and a solver such as google-ceres.
 
-\subsubsection{Frame to Frame Matching}
+\subsubsection{Frame to Frame Matching}\label{BRISK_section}
+
+\paragraph{Keypoint Detection}
+
+The Okvis \cite{Okvis_1} paper uses an corner detection method to determine keypoints and then matches these keypoints using a binary descriptor (BRISK \cite{BRISK}). In the BRISK paper a modification of the FAST feature extractor is used, however, in the OKVIS implementation a modified Harris Corner detection algorithm is utilised. A simplistic way to think of this is how one would go about determining a corner in an image. Imagine an edge, it is simply a location on an image where the brightness gradient changes rapidly in one direction (perpendicular to the edge). Hence a corner is a similar change but in two such directions. Imagine a location $(x,y)$ and a small displacement from that location $(x+ \Delta x, y + \Delta y)$. An area of rapid gradient change would have very different intensity values at $(x,y)$ and surrounding points. Hence a corner will maximise the sum of squared differences between points.
+
+\begin{equation}
+\begin{aligned}
+f(x,y) = \sum_{x_{k},y_{k} \in W} (I(x_{k},y_{k}) - I(x_{k} + \Delta x,y_{k} + \Delta y))^{2}
+\end{aligned}
+\end{equation}
+
+This can be further distilled by the Taylor expansion to:
+
+\begin{equation}
+\begin{aligned}
+f(x,y) = \sum_{(x,y)\in W} (I_{x}(x,y) \Delta x + I_{y}(x,y) \Delta y )^{2}
+\end{aligned}
+\end{equation}
+
+or in matrix form:
+
+\begin{equation}
+\begin{aligned}
+M = 
+\begin{bmatrix}
+\sum_{(x,y) \in W} I_{x}^{2} & \sum_{(x,y) \in W} I_{x}I_{y} \\
+\sum_{(x,y)\in W} I_{x}I_{y}& 
+\sum_{(x,y)\in W} I_{y}^{2}
+\end{bmatrix} = 
+R^{T}
+\begin{bmatrix}
+\lambda_{1} & 0 \\
+0 & \lambda_{2}
+\end{bmatrix}
+R
+ \\
+f(x,y) = (\Delta x \textnormal{ } \Delta y) M 
+\begin{bmatrix}
+\Delta \mathbf{x} \\
+\Delta \mathbf{y}
+\end{bmatrix}
+\end{aligned}
+\end{equation}
+
+where M is the structure tensor (also commonly known as the Second Moment Matrix). The Harris corner response then is taken from the eigenvalues of M, intuitively since the gradient changes rapidly the second moment matrix eigenvalues are large in that direction Figure \ref{Harris}.
+
+
+\begin{equation}
+\begin{aligned}
+R = det(M) - \mathit{k}trace(M)^{2} = \lambda_{1}\lambda_{2} - \mathit{k}(\lambda_{1} + \lambda_{2})^{2}
+\end{aligned}
+\end{equation}
+
+\noindent \begin{figure}[h!] 
+	\includegraphics[width = 0.5\hsize]{figures/harris_region.jpg}
+	\includegraphics[width = 0.45\hsize]{figures/harris_result.jpg}
+	\caption{Left: Structure Tensor Eigenvalues, Right: Harris corner detection result \cite{opencv_harris_article} }
+	\label{Harris}
+\end{figure}
+
+\paragraph{Keypoint Matching}
+Binary descriptors use a sampling pattern to create pairs of points (lines). The algorithm then compares the two points ($p1,p2$) and if $p1 > p2$ a 1 is recorded and otherwise 0. This creates a binary string, that along with orientation representation describe a keypoint. When matching keypoints between images a simple, and fast $\sum XOR(img1,img2)$ reveals keypoint similarity from which a threshold can be used to determine matches.
+
+\noindent \begin{figure}[h!] 
+	\includegraphics[width = 0.7\hsize]{figures/brisk.jpg}
+	\includegraphics[width = 0.26\hsize]{figures/brisk.png}
+	\caption{Left: Brisk keypoint matching example, Right: Brisk Sampling Pattern \cite{BRISK} }
+	\label{Brisk}
+\end{figure}
+
+The BRISK sampling pattern (Figure \ref{Brisk}: Right) uses a standard Gaussian smoothing at each sample point. The standard deviation of the sample is represented by the red circles in the figure. This ensures the sample is less prone to noise than other traditional binary detectors e.g. BRIEF.
 
 
 
@@ -573,18 +652,7 @@ This formulation of the error dynamics is then used to derive the IMU error term
 
 
 
-\subsubsection{Keypoint Detection}\label{BRISK_section}
 
-The Okvis \cite{Okvis_1} paper uses an corner detection method to determine keypoints and then matches these keypoints using a binary descriptor (BRISK \cite{BRISK}). Binary descriptors use a sampling pattern to create pairs of points (lines). The algorithm then compares the two points ($p1,p2$) and if $p1 > p2$ a 1 is recorded and otherwise 0. This creates a binary string, that along with orientation representation describe a keypoint. When matching keypoints between images a simple, and fast $\sum XOR(img1,img2)$ reveals keypoint similarity from which a threshold can be used to determine matches.
-
-\noindent \begin{figure}[h!] 
-\includegraphics[width = 0.7\hsize]{figures/brisk.jpg}
-\includegraphics[width = 0.26\hsize]{figures/brisk.png}
-\caption{Left: Brisk keypoint matching example, Right: Brisk Sampling Pattern \cite{BRISK} }
-\label{Brisk}
-\end{figure}
-
-The BRISK sampling pattern (Figure \ref{Brisk}: Right) uses a standard Gaussian smoothing at each sample point. The standard deviation of the sample is represented by the red circles in the figure. This ensures the sample is less prone to noise than other traditional binary detectors e.g. BRIEF.
 
 
 \section{Background, Object Tracking}
@@ -712,7 +780,7 @@ X = F diag(\hat{\mathbf{x}}) F^{H}
 
 This is possible because the DFT is a linear operation. 
 
-\subsubsection{Kernels}
+\subsubsection{Kernels}\label{kcf_kernels}
 
 Using a kernel, the model can implicitly use a high-dimensional feature space. The kernel function used to do this (e.g. Gaussian), Equation \ref{gauss_kernel} creates an $n \times n$ kernel matrix $K_{i,j} = k(\mathbf{x}_{i},\mathbf{x}_{j})$
 
@@ -741,10 +809,28 @@ where $K$ is the kernel matrix and $\mathbf{\alpha}$ is the vector of coefficien
 \label{al_soln}
 \end{equation}
 
-where $\mathbf{\hat{k}}^{\mathbf{xx}}$ is the first row of the kernel matrix $K = C(\mathbf{\hat{k}}^{\mathbf{xx}})$, and a $\hat{ }$ denotes the DFT of a vector. This means that only an $n \times 1$ kernel matrix needs to be computed, due to the circulant kernel property and DFT. This makes the method far faster than conventional kernel methods that require an $n \times n$ sized kernel matrix. Since the bbox prediction is so fast for the KCF tracker; it can be used in conjunction with the other tracking methods mentioned in Sections \ref{BRISK_matching}, \ref{class_matching}, and \ref{kalman_matching}.
-\newline
-\newline
-The kcf tracking algorithm outputs a bounding box which is the predicted coordinates of the object in the next frame. This can be compared to Mask-RCNNs output through a simple matching process. A box in the new frame predicted by Mask RCNN $[x_{mask},y_{mask},width_{mask},height_{mask}]$ can be scored by sampling the pdf from a multivariate Gaussian, in 4D, with mean $[x_{kcf},y_{kcf},width_{kcf},height_{kcf}]$ and covariance matrix $20 \times I_{4 \times 4}$ which translates to a $\sigma^{2} = 20$ for $x,y,width,height$ respectively. This score can then be used in Section \ref{matching_combining_methods} to be combined with the other tracking modules.
+where $\mathbf{\hat{k}}^{\mathbf{xx}}$ is the first row of the kernel matrix $K = C(\mathbf{\hat{k}}^{\mathbf{xx}})$, and a $\hat{ }$ denotes the DFT of a vector. This means that only an $n \times 1$ kernel matrix needs to be computed, due to the circulant kernel property and DFT. This makes the method far faster than conventional kernel methods that require an $n \times n$ sized kernel matrix.
+
+
+\subsubsection{Detection}
+
+The basic premise is that the $\alpha$ term in Equation \ref{al_soln} is now initialised to a learnt set of coefficients that correctly describe the object. Therefore, in order to detect the object of interest the regression function $f(\mathbf{z})$ must be evaluated at a number of candidate patches.  These patches can themselves also be described by circulant shifts. Defining the kernel matrix $K^{z}$ between cyclic shifts of base samples $x$ and $z$, with elements $k(P^{i-1}z,P^{j-1}x)$. The cyclic property, as described in Section \ref{kcf_kernels} allows only the first row of the kernel matrix to be relevant, and hence :
+
+\begin{equation}
+K^{z} = C(\mathbf{k^{xz}})
+\end{equation}
+
+where $k^{xz}$ is the kernel correlation of $x$ and $z$. Finally the regression equation can be computed for all candidate patches by:
+
+\begin{equation}
+f(z) = (K^{z})^{T} \alpha
+\end{equation}
+
+This can be further sped up by the correct choice of kernel function and a clever kernel trick to modify the computational cost of kernel computation to $O(nlogn)$. 
+
+\subsubsection{Modifications}
+
+Since the bbox prediction is so fast for the KCF tracker; it can be used in conjunction with the other tracking methods mentioned in Sections \ref{BRISK_matching}, \ref{class_matching}, and \ref{kalman_matching}. The kcf tracking algorithm outputs a bounding box which is the predicted coordinates of the object in the next frame. This can be compared to Mask-RCNNs output through a simple matching process. A box in the new frame predicted by Mask RCNN $[x_{mask},y_{mask},width_{mask},height_{mask}]$ can be scored by sampling the pdf from a multivariate Gaussian, in 4D, with mean $[x_{kcf},y_{kcf},width_{kcf},height_{kcf}]$ and covariance matrix $20 \times I_{4 \times 4}$ which translates to a $\sigma^{2} = 20$ for $x,y,width,height$ respectively. This score can then be used in Section \ref{matching_combining_methods} to be combined with the other tracking modules.
 
 
 \subsection{BRISK - Selector} \label{BRISK_matching}
