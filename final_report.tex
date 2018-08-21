@@ -13,6 +13,10 @@
 \usepackage{amssymb}
 \usepackage{longtable}
 \usepackage[section]{placeins}
+\usepackage[]{setspace}
+\usepackage[ruled]{algorithm2e}
+\newcommand\mycommfont[1]{\footnotesize\ttfamily\textcolor{gray}{#1}}
+\SetCommentSty{mycommfont}
 
 \usepackage[nodayofweek]{datetime}
 \longdate
@@ -262,7 +266,7 @@ p_{1}(r^{2} + 2x_{2}^{'2}) + 2p_{2}x'_{1}x'_{2}
 where $x'_{1},x'_{2}$ is the 3d point mapped to the unit plane in z, $k_{1}-k_{6}$ are radial distortion parameters, $p_{1},p_{2}$ are tangential distortion parameters. The model parameters can be determined during camera calibration.
 
 
-\subsection{Camera to World Frame}
+\subsection{Camera to World Frame} \label{cam2world}
 
 \subsubsection{Calculating the 3D Ray}
 
@@ -347,7 +351,7 @@ i^{2}=j^{2}=k^{2}=ijk=-1
 \end{aligned}
 \end{equation}
 
-With this extra representation of orientation it is possible to map the camera frame to the world frame. Given a position vector in the camera frame $p_{c}$, it can be converted as follows:
+With this extra representation of orientation it is possible to map the camera frame to the world frame. Given a position vector in the camera frame $p_{c} = [x,y,z,1]$, it can be converted as follows:
 
 
 \begin{equation}
@@ -355,6 +359,7 @@ With this extra representation of orientation it is possible to map the camera f
 T_{WC} = T_{WS} \cdot T_{SC} \\
 p_{W} = T_{WC} \cdot p_{C} \\
 \end{aligned}
+\label{matmul_w2c}
 \end{equation}
 
 A transformation between frames is represented as $\textbf{T}_{BA}$ where B and A represent reference frames, so $\textbf{T}_{WC}$ converts between the world frame and camera frame. It is composed of a position and orientation transformation:
@@ -369,15 +374,83 @@ C_{WC} & r_{WC} \\
 \end{aligned}
 \end{equation}
 
-where $T_{WC} \in \mathbb{R}^{4 \times 4}$, the position translation matrix $r_{WC} \in \mathbb{R}^{3 \times 1}$, and the orientation matrix $C_{WC} \in \mathbb{R}^{3 \times 3}$. These transformation matrices must be determined from a SLAM algorithm such as OKVIS which is discussed in the following sections.
+where $T_{WC} \in \mathbb{R}^{4 \times 4}$, the position translation matrix $r_{WC} \in \mathbb{R}^{3 \times 1}$, and the orientation matrix $C_{WC} \in \mathbb{R}^{3 \times 3}$. Note alsp that the inverse of this matrix can be easily calculated as $C_{WC}$ is symmetric and therefore positive definite and it holds that $C_{CW}=C_{WC}^{-1}= C_{WC}^{T}$.Therefore:
+
+\begin{equation}
+\begin{aligned}
+T_{CW} = T_{WC}^{-1} = 
+\begin{bmatrix}
+C_{WC}^{T} & -C_{WC}^{T}r_{WC} \\
+0_{1 \times 3} & 1
+\end{bmatrix}
+\end{aligned}
+\label{invert_tmatrix}
+\end{equation}
+
+These transformation matrices must be determined from a SLAM algorithm such as OKVIS which is discussed in the following sections.
 
 \subsubsection{Camera to World Summary}
 
-
+\begin{algorithm}
+	\DontPrintSemicolon
+	\SetAlgoLined
+	\setstretch{1.3}
+	\SetKwInOut{Input}{Input}
+	\SetKwInOut{Output}{Output}
+	\underline{cam2world} $(cameraPoints,focalMatrix,imageCentre,T_{ws},T_{sc},cameraModel)$\;
+	\Input{ \texttt{\\}
+		$\mathit{cameraPoints}$ \tcp*[r]{$N$ points in the camera frame $\in R^{3 \times N}$}
+		$\mathit{focalMatrix},\mathit{imageCentre}$ \tcp*[r]{Focal Length Matrix, Principal Points [x,y]}
+		$\mathit{T_{ws}},\mathit{T_{sc}}$ \tcp*[r]{IMU to World/Camera Matrix}
+		$cameraModel$ \tcp*[r]{Camera Model $\in  R^{4 \times 4}$}
+	}
+	\Output{$N$ points in the world frame $worldPoints \in \mathbb{R}^{3,N}$}
+	
+	\texttt{\\}
+	$x = \mathit{scale\text{\textunderscore}point(imageCentre,focalMatrix,cameraPoints)}$ \tcc*[r]{\text{Equation (\ref{camera_scale})}}
+	$x = \mathit{undistort(cameraModel,x)}$ \tcc*[r]{Equation (\ref{raddis})}
+	$T_{wc} = matrix\text{\textunderscore}multiply(T_{ws},T_{sc})$
+	\texttt{\\}
+	$x = \mathit{add\text{\textunderscore}depth(depth,x)}$ \tcc*[r]{Equation (\ref{camera_add_depth}), and Vstack [depth,1] to bottom of x}
+	$\mathit{worldPoints} = \mathit{transform\text{\textunderscore}to\text{\textunderscore}world(T_{wc},x)}$ \tcc*[r]{Equation (\ref{matmul_w2c})}
+	\texttt{\\}
+	\caption{Algorithm to transform camera point to world frame}
+	\label{alg:weights}
+\end{algorithm}
 
 \subsection{World to Camera Frame} \label{w_c_frame}
 
 In order to correctly plot the Kalman filter an give other tracking algorithms the expected location on the picture the ability to transform from world to camera frame is needed. The process is similar to the camera to frame except the reverse, namely:
+
+\begin{algorithm}
+	\DontPrintSemicolon
+	\SetAlgoLined
+	\setstretch{1.3}
+	\SetKwInOut{Input}{Input}
+	\SetKwInOut{Output}{Output}
+	\underline{world2cam} $(worldPoints,focalMatrix,imageCentre,T_{ws},T_{sc},cameraModel)$\;
+	\Input{ \texttt{\\}
+		$\mathit{worldPoints}$ \tcp*[r]{$N$ points in the camera frame $\in R^{3 \times N}$}
+		$\mathit{focalMatrix},\mathit{imageCentre}$ \tcp*[r]{Focal Length Matrix, Principal Points [x,y]}
+		$\mathit{T_{ws}},\mathit{T_{sc}}$ \tcp*[r]{IMU to World/Camera Matrix}
+		$cameraModel$ \tcp*[r]{Camera Model $\in  R^{4 \times 4}$}
+	}
+	\Output{$N$ points in the camera frame $cameraPoints \in \mathbb{R}^{3,N}$}
+	
+	\texttt{\\}
+	$T_{wc} = matrix\text{\textunderscore}multiply(T_{ws},T_{sc})$
+	\texttt{\\}
+	$T_{cw} = inverse(T_{wc})$ \tcc*[r]{Equation (\ref{invert_tmatrix})}
+	$\mathit{x} = \mathit{transform\text{\textunderscore}to\text{\textunderscore}camera(T_{cw},worldPoints)}$ \tcc*[r]{Equation (\ref{matmul_w2c})}
+	$x = \mathit{distort(cameraModel,x)}$ \tcc*[r]{Equation (\ref{raddis})}
+	$x = \mathit{remove\text{\textunderscore}depth(depth,x)}$ \tcc*[r]{Reverse Equation (\ref{camera_add_depth})}
+	$cameraPoints = \mathit{scale\text{\textunderscore}point(imageCentre,focalMatrix,x)}$ \tcc*[r]{\text{Equation (\ref{camera_scale})}}
+	 
+	\texttt{\\}
+	\texttt{\\}
+	\caption{Algorithm to transform world point to camera frame}
+	\label{alg:weights}
+\end{algorithm}
 
 
 \subsection{Bicycle States}
@@ -651,10 +724,6 @@ This formulation of the error dynamics is then used to derive the IMU error term
 \end{equation}
 
 
-
-
-
-
 \section{Background, Object Tracking}
 
 Once an object is found (Section \ref{comp_vis_back}) and the 3d world coordinates of the object in question (bike, car, pedestrian etc.) are determined (Section \ref{back_slam}) the path of the object needs to be calculated. This requires the ability to track an object from frame-to-frame and transfer that knowledge to 3D space. Mask-RCNN as an instance segmentation solution (Section \ref{comp_vis_back}) and runs slower than real-time unless on a powerful GPU system, which cannot be feasibly carried on a bike. So once an object is detected it is preferable to learn simpler features and track it with more basic but faster techniques. An object from frame-to-frame can be easily distinguished if the features of that object are not occluded and colour balance (for example sunny to shaded regions) is minimal. This, however, is not the case in real-world environments and so the tracking task is less simple than it appears.
@@ -711,13 +780,135 @@ The code presented in this report, although strictly for civilian applications d
 
 The code developed is intended to offer a basis for an early warning system to cyclists in urban environments. Hence a number of the inherent ethical problems with, for example the autonomous vehicle space are also applicable to this project. The potential over-reliance on such a system of cyclists could be dangerous and allow for lack of attention and potential accidents when the system is unable to detect a collision. That having been said, it is evident that there is a need for such a system for cyclists and so the benefits would clearly outweighs the disadvantages in such a case.
 
-\section{ROS}
+\section{Poor Sensors}
 
-The program is split into respective parts, camera driver, okvis, Mask RCNN and a tracking component. These are all required to communicate for a comprehensive system, hence, since the Mask RCNN implementation used is written in python and okvis plus the driver in c++ ROS is an easy method to transfer messages between nodes. ROS uses a subscriber and publisher methodology where a node can subscribe or publish to a topic. ROS is the de-facto standard library for robotics and allows cross-language compatibility between python and c++.
-\newline \newline
-The ROS library is optimised for development of robotics applications with useful graphing, message passing and debugging capabilities. In particular ROS supports a rosbag capability which allows the recording and playback of data. This should allow for easy testing of the application in less-than real-time as Mask RCNN operates at 0.2s/frame on a dedicated GPU.
+In order to get the depth measurement of an object, the mask output from Mask R-CNN is overlayed onto the depth map and a mean depth is taken. A number of points are not detected and therefore large quantities of the depth map is 0. Therefore, the mean depth is selected only from coordinates at which $depth>0$. Figure \ref{DCO} shows some examples of a depth camera image taken in the Imperial Library.
+
+\noindent \begin{figure}[h!]
+	\includegraphics[width = 0.5\hsize]{figures/depth_image_1.png}
+	\includegraphics[width = 0.5\hsize]{figures/depth_image_2.png}
+	\caption{Depth Camera Output}
+	\label{DCO}
+\end{figure}
+
+As can be seen from Figure \ref{DCO} the data is sparse and unreliable for objects at a distance. This is less so as the depth is scaled [0-255] for a picture and so some measurements seem less reliable than they are but it is still a challenge. Often when the depth measurements are incorrect an unfeasibly large value is returned > 50m. This is a real problem for tracking objects, not necessarily after a period of successful tracking as the value can be discarded as an outlier but on initialisation or after only a couple of data points. Not only is the depth incorrect but that problem is in both x and y when transformed to the world frame. Am example of this phenomenon is displayed in Figure \ref{bottle} where a bottle is tracked from frame to frame, which also demonstrates the ability of the tracking method to be non-cycling domain specific.
+
+ \noindent \begin{figure}[h!]
+ 	\includegraphics[width = 0.5\hsize]{figures/bottle2.jpg}
+ 	\includegraphics[width = 0.5\hsize]{figures/bottle1.jpg}
+ 	\caption{Left: Bottle with working depth, Right: Incorrect Depth measurement. In both cases the white dot is the bottle's location, the green dot is the Kalman filter prediction, blue dots are previous locations (the bottle did not move), and the white line is the camera location.}
+ 	\label{bottle}
+ \end{figure}
+
+This can occur in a number of instances and far away objects are most prone as there is little area covered on the depth image to measure the distance from. However, since the object is defined by a bounding box, prior knowledge of the classes can be used to detect such an outlier. Intuitively if two objects are the same size in an image and the first is closer than the second, then the latter object must be larger than the first. Hence using the camera to world model, if the depth is incorrectly large the height of the object in the world frame will be far larger than is known to be possible i.e. a 10m tall human.
+
+Given the knowledge that human sizes roughly vary from a 4ft child to a 7ft adult, poor depth predictions convert people to outside of that range. If that is the case then it must be modified to an approximate value, say the depth of an averagely sized human $1.5m$. This logic can be extended to other objects such as cars and bikes. Therefore, assuming a bounding box of $[x_{tl},y_{tl},x_{br},y_{br}]$, where $tl$ denotes top-left corner and $br$ is the bottom right, the matrix P can be formed.
+
+\begin{equation}
+\mathbf{P} = 
+\begin{bmatrix}
+x_{tl} & x_{tl}\\
+y_{tl} & y_{br} \\
+\end{bmatrix}
+\label{check__depth_eq1}
+\end{equation}
+
+Completing the initial steps of Cam2World (Section \ref{cam2world}) until Equation \ref{camera_add_depth}, and adding the 1 required for the proceeding transform, the process yields:
+
+\begin{equation}
+\mathbf{K} = 
+\begin{bmatrix}
+k_{(1,1)}\mathit{d} & k_{(1,2)}\mathit{d}\\
+k_{(2,1)}\mathit{d} & k_{(2,2)}\mathit{d}\\
+\mathit{d} & \mathit{d}\\
+1 & 1
+\end{bmatrix}
+\label{check__depth_eq2}
+\end{equation}
+
+Where $[k_{(1,1)},k_{(2,1)}]$ are from $[x_{tl},y_{tl}]$, $[k_{(1,2)}, k_{(2,2)}]$  from $[x_{tl},y_{br}]$, and $\mathit{d} = depth(\mathbf{x'})$ from the depth image. For the next steps, the transformation matrix $T_{WC}$ is used to calculate the world position.
+
+\begin{equation}
+\mathbf{T_{WC}} = 
+\begin{bmatrix}
+\dots r_{1} \dots \\
+\dots r_{2} \dots \\
+\dots r_{3} \dots \\
+\dots r_{4} \dots \\
+\end{bmatrix}
+\label{check__depth_eq2}
+\end{equation}
+ 
+where $r_{i}$ denotes row $i$ of $T_{WC}$, and $r_{4} =[0_{3 \times 1},1]$. Therefore replicating a simple matrix multiplication in Equation \ref{check__depth_eq3}, the row $r_{3}$ is the only row from $\mathbf{T}_{WC}$ that is needed for the object height.
+
+\begin{equation}
+\mathbf{WorldPoints} = 
+\begin{bmatrix}
+x_{w,tl} &  x_{w,bl}\\
+y_{w,tl} & y_{w,bl}\\
+z_{w,tl} & z_{w,bl} \\
+\end{bmatrix} = 
+\mathbf{T}_{WC}\mathbf{K} =
+\begin{bmatrix}
+\dots r_{1} \dots \\
+\dots r_{2} \dots \\
+\dots r_{3} \dots \\
+\dots r_{4} \dots \\
+\end{bmatrix}
+\begin{bmatrix}
+k_{(1,1)}\mathit{d} & k_{(1,2)}\mathit{d}\\
+k_{(2,1)}\mathit{d} & k_{(2,2)}\mathit{d}\\
+\mathit{d} & \mathit{d}\\
+1 & 1
+\end{bmatrix} 
+\label{check__depth_eq3}
+\end{equation}
+
+Hence the height of the object $z_{w,tl}-z_{w,bl}$ is obtained from:
+
+\begin{equation}
+\begin{aligned}
+z_{w,tl}-z_{w,bl} = r_{3} \mathbf{K}[:,1] - r_{3} \mathbf{K}[:,2]\\
+z_{w,tl}-z_{w,bl} = r_{3} (\mathbf{K}[:,1]- \mathbf{K}[:,2])
+\end{aligned}
+\end{equation}
+
+where $\mathbf{K}[:,1]$ defines the first column of K, and defining vector $A$ as:
+
+\begin{equation}
+\begin{aligned}
+A\mathit{d} = \mathbf{K}[:,1]- \mathbf{K}[:,2] = 
+\begin{bmatrix}
+	k_{(1,1)}\mathit{d} - k_{(1,2)}\mathit{d}\\
+	k_{(2,1)}\mathit{d} - k_{(2,2)}\mathit{d}\\
+	0\\
+	0
+\end{bmatrix}
+= 
+\mathit{d}
+\begin{bmatrix}
+	k_{(1,1)} - k_{(1,2)}\\
+	k_{(2,1)} - k_{(2,2)}\\
+	0\\
+	0
+\end{bmatrix}
+\end{aligned}
+\end{equation}
+
+then an approximation of the depth, given the average object height $o_{av}$ is:
+
+\begin{equation}
+\begin{aligned}
+depth \approx \frac{o_{av}}{r_{3}A} 
+\end{aligned}
+\end{equation}
+
+Once this depth approximation is found the relevant models can get a depth update that is approximately correct unlike the actual camera depth measurement. This allows better modelling and tracking of object movement from frame-to-frame.
 
 
+\subsubsection{Depth stuff summary}
+
+hello
 \section{Frame-to-Frame Tracking}
 
 For each frame Mask RCNN outputs a set of bounding boxes, and masks. These are not within any particular order and so a method must be devised to track objects from one frame to the next. This is a hard challenge due to object occlusion, variation in shadow/lighting conditions and rapid in-frame movement. An obvious method is intersection over union (IOU) of the bounding boxes on a frame-by-frame basis. This is good in theory, however, it lacks the ability to compensate for rapid movement (of the object and the camera angle), occlusion and object overlapping. A set of methods have therefore been developed to overcome this problem, which combined provide a robust tracking system.
@@ -843,7 +1034,9 @@ An obvious additional requirement is the matching of classes between frames, as 
 
 \subsection{Kalman Filter ROI Matching} \label{kalman_matching}
 
-The Kalman filter has two main parts, a predictive step and an update. The predictive step tries to find a-priori estimates of the state for the next time-step by projecting forward the current state and error covariance estimates. This estimate is then updated using the measurements (camera) of the object location. The iterative process continues improving the Kalman filter estimates at each stage.
+The Kalman filter has two main parts, a predictive step and an update. The predictive step tries to find a-priori estimates of the state for the next time-step by projecting forward the current state and error covariance estimates. This estimate is then updated using the measurements (camera) of the object location. The iterative process continues improving the Kalman filter estimates at each stage. 
+\newline \newline
+This was first tested with just a camera frame state i.e. using the [x, y, width, height] positions and distances in pixels of each ROI on the input image. It was quickly discovered that the model was not sufficiently robust as it did not take into account the bike movement. Hence the filter was unable to track objects efficiently. Hence, once the Okvis framework was added, the filter was converted into tracking world frame coordinates which is far more successful.
 
 \subsubsection{Kalman Predictive Step}
 Assuming a linear system with Gaussian process, the state can be modelled as:
@@ -858,11 +1051,11 @@ where $k$ is the time step, $\hat{X}_{k} \in \mathbb{R}^{n}$ is the state vector
 
 \begin{equation}
 \begin{aligned}
-\hat{X}_{k} =  [Cx,Cy,w,h,Cx_{vel},Cy_{vel},w_{vel},h_{vel}]
+\hat{X}_{k} =  [Cx,Cy,Cz,w,h,Cx_{vel},Cy_{vel},Cz_{vel},w_{vel},h_{vel}]
 \end{aligned}
 \end{equation}
 
-where $(Cx,Cy)$ is the centre point of the bounding box of the object, $w$ the width and $h$ the height. $Cx_{vel}$ describes the centre point velocity in the x direction, and $Cy_{vel},w_{vel},h_{vel}$ the y direction, w the width and h the height. $[Cx,Cy,w,h]$ describe the measurable variables of the system, and there are no controllable parameters in this system. From basic equations of motion, a general measurable parameter $\gamma$, and corresponding velocity  $\gamma_{vel}$ follows the update rule:
+where $(Cx,Cy)$ is the centre point of the bounding box of the object,$Cz$ is the mean distance of the masked ROI, $w$ the width and $h$ the height. $Cx_{vel}$ describes the centre point velocity in the x direction, and $Cy_{vel},Cz_{vel},w_{vel},h_{vel}$ the y/z direction, w the width and h the height. $[Cx,Cy,w,h]$ describe the measurable variables of the system, and there are no controllable parameters in this system. From basic equations of motion, a general measurable parameter $\gamma$, and corresponding velocity  $\gamma_{vel}$ follows the update rule:
 
 \begin{equation}
 \begin{aligned}
@@ -871,14 +1064,14 @@ where $(Cx,Cy)$ is the centre point of the bounding box of the object, $w$ the w
 \end{aligned}
 \end{equation}
 
-where $\Delta t$ is the time step between each frame. Therefore, the update matrix for the filter $F_{k} \in R^{8 \times 8}$ is as follows:
+where $\Delta t$ is the time step between each frame. Therefore, the update matrix for the filter $F_{k} \in R^{10 \times 10}$ is as follows:
 
 \begin{equation}
 F_{k} = 
 \begin{bmatrix}
-I_{4} & \Delta t \times I_{4} \\[0.3em]
+I_{5} & \Delta t \times I_{5} \\[0.3em]
 
-0_{4 \times 4} & I_{4} \\[0.3em]
+0_{5 \times 5} & I_{5} \\[0.3em]
 \end{bmatrix}
 \end{equation}
 
@@ -886,16 +1079,16 @@ The final term $w_{k} = \mathcal{N}(0,Q)$ describes the process noise in the sys
 
 \begin{equation}
 \begin{aligned}
-v = [5,5,5,5,10,10,10,10] \\
+v = [5,5,5,5,5,10,10,10,10,10] \\
 Q_{k} = diag(v)
 \end{aligned}
 \end{equation}
 
-where $Q_{k} \in \mathbb{R}^{8 \times 8}$ and is the diagonalised matrix of v. 
+where $Q_{k} \in \mathbb{R}^{10 \times 10}$ and is the diagonalised matrix of v. 
 
 \subsubsection{Kalman Update Step}
 
-The measurement step can also predict the current state. With $Z_{k} \in \mathbb{R}^{8}$ as the system measurement vector:
+The measurement step can also predict the current state. With $Z_{k} \in \mathbb{R}^{10}$ as the system measurement vector:
 
 \begin{equation}
 \begin{aligned}
@@ -903,7 +1096,7 @@ Z_{k} =  H_{k} X_{k} + v_{k}
 \end{aligned}
 \end{equation}
 
-where $H_{k}$ is an $8 \times 4$ measurement matrix relating $X_{k}$ to the measurement $Z_{k}$, and $v_{k}$ is $\mathcal{N}(0,R)$. Since only the $Cx,Cy,w,h$ is measurable $H_{k}$ takes the form:
+where $H_{k}$ is an $10 \times 5$ measurement matrix relating $X_{k}$ to the measurement $Z_{k}$, and $v_{k}$ is $\mathcal{N}(0,R)$. Since only the $Cx,Cy,Cz,w,h$ is measurable $H_{k}$ takes the form:
 
 
 
@@ -911,7 +1104,7 @@ where $H_{k}$ is an $8 \times 4$ measurement matrix relating $X_{k}$ to the meas
 \begin{aligned}
 H_{k} = 
 \begin{bmatrix}
-I_{4} &  0_{4 \times 4}
+I_{5} &  0_{5 \times 5}
 \end{bmatrix}
 \end{aligned}
 \end{equation}
@@ -920,12 +1113,12 @@ and the measurement noise $v_{k} = \mathcal{N}(0,R_{k})$ is set with covariance 
 
 \begin{equation}
 \begin{aligned}
-r = [5,5,5,5] \\
+r = [5,5,5,5,5] \\
 R_{k} = diag(v)
 \end{aligned}
 \end{equation}
 
-where $R_{k} \in \mathbb{R}^{4 \times 4}$ and is the diagonalised matrix of r. 
+where $R_{k} \in \mathbb{R}^{5 \times 5}$ and is the diagonalised matrix of r. 
 
 \subsubsection{Kalman Equations}
 The prior estimates for the next time step by the Kalman predictions step (no control vector):
@@ -961,7 +1154,7 @@ where $K_{k}$ is the $n \times m$ Kalman gain matrix, $\hat{X}_{k}(+)$ is the po
 
 \subsubsection{Kalman Matching ROIS}
 
-From one frame to another it can be assumed that a number of bounding boxes (ROIS) are consistent in both frames. Hence a metric to match a box from a prior frame to the current frame is required. Using the Kalman filter, a prediction of where the ROI is at time $k$ is easily obtained. But this does not give a likelihood measure of the boxes in the new frame. However, in the kalman update step $\tilde{y}_{k}$, the innovation residual, and $S_{k}$, the innovation covariance matrix are calculated. These can be used to determine the marginal likelihood of a newer ROI's $Cx,Cy,w,h$ given the kalman $P_{k}(-)$ and $\hat{X}_{k}(-)$. Skipping the formulation, the log-marginal likelihood is:
+From one frame to another it can be assumed that a number of bounding boxes (ROIS) are consistent in both frames. Hence a metric to match a box from a prior frame to the current frame is required. Using the Kalman filter, a prediction of where the ROI is at time $k$ is easily obtained. But this does not give a likelihood measure of the boxes in the new frame. However, in the kalman update step $\tilde{y}_{k}$, the innovation residual, and $S_{k}$, the innovation covariance matrix are calculated. These can be used to determine the marginal likelihood of a newer ROI's $[Cx,Cy,w,h]$ given the kalman $P_{k}(-)$ and $\hat{X}_{k}(-)$. Skipping the formulation, the log-marginal likelihood is:
 
 \begin{equation}
 \begin{aligned}
@@ -995,11 +1188,13 @@ K_{threshold}-M \quad \textnormal{\textit{ otherwise}}
 \subsection{ROI Lives}
 Each region of interest may be tracked from one frame to the next. However, if that object is occluded then it may not be spotted in the next frame. This, unless accounted for could lead to information loss regarding that object's state. Therefore a life system is in place whereby an object has a number of lives that are used when the object is not spotted in the next frame. These are decremented until 0 when the object is forgotten and no longer tracked.  
 
+
 \subsection{Combining Matching Methods} \label{matching_combining_methods}
 
 Taking the example provided in Figure \ref{roi_match}, there are three objects in the older frame and four in the new frame. BRISK (Section \ref{BRISK_matching}) is not reliable to match all objects from one frame to the next and sometimes cannot find matching keypoints between the same object in each frame (especially deformable objects such as people). Therefore, a system to combine methods is needed. For each $ROI_{old}$ and each $ROI_{new}$ the match metrics for each method (BRISK,Kalman) is calculated. This forms a matrix $matches \in \mathbb{R}^{new \times old \times methods}$ where $old,new$ are the number of ROIs in the old and new frames, and 
 $methods$ is the number of matching methods implemented (in this case two) but is designed to be easily extendible to more. The rules for the matching procedure are as follows:
 
+%%TODO make this a proper algorithm
 \begin{enumerate}
 	\item Multiply along $methods$ axis to form a $new \times old$ dimension matrix.
 	\item Check max element in array is greater than a threshold value.
@@ -1011,6 +1206,9 @@ $methods$ is the number of matching methods implemented (in this case two) but i
 	\item Find $ID_{max}$ of current objects being tracked.
 	\item For each new object set ID to $ID_{max}+1$ and increment $ID_{max}$
 \end{enumerate}
+
+\section{Movement Prediction}
+
 
 
 \section{System Evaluation}
@@ -1027,7 +1225,7 @@ The intel realsense depth camera is typically used in indoor environments as it 
 
 
 
-
+\newpage
 \section{Ethics Checklist}
 
 % You need the following added in your includes:

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2018.6.4)  21 AUG 2018 15:25
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2018.6.4)  21 AUG 2018 21:18
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -297,44 +297,7 @@ LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
 \WF@everypar=\toks24
 Package: wrapfig 2003/01/31  v 3.6
 )
-(/usr/share/texlive/texmf-dist/tex/latex/algorithms/algorithm.sty
-Package: algorithm 2009/08/24 v0.1 Document Style `algorithm' - floating enviro
-nment
-
-(/usr/share/texlive/texmf-dist/tex/latex/float/float.sty
-Package: float 2001/11/08 v1.3d Float enhancements (AL)
-\c@float@type=\count109
-\float@exts=\toks25
-\float@box=\box30
-\@float@everytoks=\toks26
-\@floatcapt=\box31
-)
-(/usr/share/texlive/texmf-dist/tex/latex/base/ifthen.sty
-Package: ifthen 2014/09/29 v1.1c Standard LaTeX ifthen package (DPC)
-)
-\@float@every@algorithm=\toks27
-\c@algorithm=\count110
-)
-(/usr/share/texlive/texmf-dist/tex/latex/algorithmicx/algpseudocode.sty
-Package: algpseudocode 
-
-(/usr/share/texlive/texmf-dist/tex/latex/algorithmicx/algorithmicx.sty
-Package: algorithmicx 2005/04/27 v1.2 Algorithmicx
-
-Document Style algorithmicx 1.2 - a greatly improved `algorithmic' style
-\c@ALG@line=\count111
-\c@ALG@rem=\count112
-\c@ALG@nested=\count113
-\ALG@tlm=\skip58
-\ALG@thistlm=\skip59
-\c@ALG@Lnr=\count114
-\c@ALG@blocknr=\count115
-\c@ALG@storecount=\count116
-\c@ALG@tmpcounter=\count117
-\ALG@tmplength=\skip60
-)
-Document Style - pseudocode environments for use with the `algorithmicx' style
-) (/usr/share/texlive/texmf-dist/tex/latex/xcolor/xcolor.sty
+(/usr/share/texlive/texmf-dist/tex/latex/xcolor/xcolor.sty
 Package: xcolor 2007/01/21 v2.11 LaTeX color extensions (UK)
 
 (/usr/share/texlive/texmf-dist/tex/latex/latexconfig/color.cfg
@@ -344,10 +307,10 @@ Package xcolor Info: Driver file: pdftex.def on input line 225.
 
 (/usr/share/texlive/texmf-dist/tex/latex/colortbl/colortbl.sty
 Package: colortbl 2012/02/13 v1.0a Color table columns (DPC)
-\everycr=\toks28
-\minrowclearance=\skip61
+\everycr=\toks25
+\minrowclearance=\skip58
 )
-\rownum=\count118
+\rownum=\count109
 Package xcolor Info: Model `cmy' substituted by `cmy0' on input line 1337.
 Package xcolor Info: Model `hsb' substituted by `rgb' on input line 1341.
 Package xcolor Info: Model `RGB' extended on input line 1353.
@@ -363,31 +326,90 @@ Package: amssymb 2013/01/14 v3.01 AMS font symbols
 )
 (/usr/share/texlive/texmf-dist/tex/latex/tools/longtable.sty
 Package: longtable 2014/10/28 v4.11 Multi-page Table package (DPC)
-\LTleft=\skip62
-\LTright=\skip63
-\LTpre=\skip64
-\LTpost=\skip65
-\LTchunksize=\count119
+\LTleft=\skip59
+\LTright=\skip60
+\LTpre=\skip61
+\LTpost=\skip62
+\LTchunksize=\count110
 \LTcapwidth=\dimen139
-\LT@head=\box32
-\LT@firsthead=\box33
-\LT@foot=\box34
-\LT@lastfoot=\box35
-\LT@cols=\count120
-\LT@rows=\count121
-\c@LT@tables=\count122
-\c@LT@chunks=\count123
-\LT@p@ftn=\toks29
+\LT@head=\box30
+\LT@firsthead=\box31
+\LT@foot=\box32
+\LT@lastfoot=\box33
+\LT@cols=\count111
+\LT@rows=\count112
+\c@LT@tables=\count113
+\c@LT@chunks=\count114
+\LT@p@ftn=\toks26
 )
 (/usr/share/texlive/texmf-dist/tex/latex/placeins/placeins.sty
 Package: placeins 2005/04/18  v 2.2
 )
-(/usr/share/texlive/texmf-dist/tex/latex/datetime/datetime.sty
+(/usr/share/texlive/texmf-dist/tex/latex/setspace/setspace.sty
+Package: setspace 2011/12/19 v6.7a set line spacing
+)
+(/usr/share/texlive/texmf-dist/tex/latex/algorithm2e/algorithm2e.sty
+Package: algorithm2e 2013/01/06 v5.00 algorithms environments
+\c@AlgoLine=\count115
+
+(/usr/share/texlive/texmf-dist/tex/latex/base/ifthen.sty
+Package: ifthen 2014/09/29 v1.1c Standard LaTeX ifthen package (DPC)
+)
+\algocf@hangindent=\skip63
+
+(/usr/share/texlive/texmf-dist/tex/latex/tools/xspace.sty
+Package: xspace 2014/10/28 v1.13 Space after command names (DPC,MH)
+)
+(/usr/share/texlive/texmf-dist/tex/latex/relsize/relsize.sty
+Package: relsize 2013/03/29 ver 4.1
+)
+********************************************************
+Package `algorithm2e' Release 5.1 -- october 19 2015 --
+- algorithm2e-announce@lirmm.fr mailing list for announcement about releases
+- algorithm2e-discussion@lirmm.fr mailing list for discussion about package
+subscribe by emailing sympa@lirmm.fr with 'subscribe <list> <firstname name>'
+- Author: Christophe Fiorio (christophe.fiorio@umontpellier.fr)
+********************************************************
+\skiptotal=\skip64
+\skiplinenumber=\skip65
+\skiprule=\skip66
+\skiphlne=\skip67
+\skiptext=\skip68
+\skiplength=\skip69
+\algomargin=\skip70
+\skipalgocfslide=\skip71
+\algowidth=\dimen140
+\inoutsize=\dimen141
+\inoutindent=\dimen142
+\interspacetitleruled=\dimen143
+\interspacealgoruled=\dimen144
+\interspacetitleboxruled=\dimen145
+\algocf@ruledwidth=\skip72
+\algocf@inoutbox=\box34
+\algocf@inputbox=\box35
+\AlCapSkip=\skip73
+\AlCapHSkip=\skip74
+\algoskipindent=\skip75
+\algocf@nlbox=\box36
+\algocf@hangingbox=\box37
+\algocf@untilbox=\box38
+\algocf@skipuntil=\skip76
+\algocf@capbox=\box39
+\algoheightruledefault=\skip77
+\algoheightrule=\skip78
+\algotitleheightruledefault=\skip79
+\algotitleheightrule=\skip80
+\c@algocfline=\count116
+\c@algocfproc=\count117
+\c@algocf=\count118
+\algocf@algoframe=\box40
+\algocf@algobox=\box41
+) (/usr/share/texlive/texmf-dist/tex/latex/datetime/datetime.sty
 Package: datetime 2015/03/20 v2.60 Date Time Package
 
 (/usr/share/texlive/texmf-dist/tex/latex/etoolbox/etoolbox.sty
 Package: etoolbox 2015/08/02 v2.2a e-TeX tools for LaTeX (JAW)
-\etb@tempcnta=\count124
+\etb@tempcnta=\count119
 )
 (/usr/share/texlive/texmf-dist/tex/latex/fmtcount/fmtcount.sty
 Package: fmtcount 2015/05/05 v3.01
@@ -397,10 +419,10 @@ Package: xkeyval 2014/12/03 v2.7a package option processing (HA)
 
 (/usr/share/texlive/texmf-dist/tex/generic/xkeyval/xkeyval.tex
 (/usr/share/texlive/texmf-dist/tex/generic/xkeyval/xkvutils.tex
-\XKV@toks=\toks30
-\XKV@tempa@toks=\toks31
+\XKV@toks=\toks27
+\XKV@tempa@toks=\toks28
 )
-\XKV@depth=\count125
+\XKV@depth=\count120
 File: xkeyval.tex 2014/12/03 v2.7a key=value parser (HA)
 ))
 (/usr/share/texlive/texmf-dist/tex/latex/fmtcount/fcprefix.sty
@@ -408,17 +430,17 @@ Package: fcprefix 2012/09/28
 
 (/usr/share/texlive/texmf-dist/tex/latex/fmtcount/fcnumparser.sty
 Package: fcnumparser 2012/09/28
-\fc@digit@counter=\count126
+\fc@digit@counter=\count121
 ))
-\c@padzeroesN=\count127
-\fc@tmpcatcode=\count128
-\@DT@modctr=\count129
-\@ordinalctr=\count130
-\@orgargctr=\count131
-\@strctr=\count132
-\@tmpstrctr=\count133
-\@DT@loopN=\count134
-\@DT@X=\count135
+\c@padzeroesN=\count122
+\fc@tmpcatcode=\count123
+\@DT@modctr=\count124
+\@ordinalctr=\count125
+\@orgargctr=\count126
+\@strctr=\count127
+\@tmpstrctr=\count128
+\@DT@loopN=\count129
+\@DT@X=\count130
 
 (/usr/share/texlive/texmf-dist/tex/latex/fmtcount/fc-english.def
 File: fc-english.def 2013/08/17
@@ -426,55 +448,55 @@ File: fc-english.def 2013/08/17
 (/usr/share/texlive/texmf-dist/tex/latex/datetime/datetime-defaults.sty
 Package: datetime-defaults 2013/09/10
 )
-\@day=\count136
-\@month=\count137
-\@year=\count138
-\c@HOUR=\count139
-\c@HOURXII=\count140
-\c@MINUTE=\count141
-\c@TOHOUR=\count142
-\c@TOMINUTE=\count143
-\c@SECOND=\count144
-\currenthour=\count145
-\currentminute=\count146
-\currentsecond=\count147
+\@day=\count131
+\@month=\count132
+\@year=\count133
+\c@HOUR=\count134
+\c@HOURXII=\count135
+\c@MINUTE=\count136
+\c@TOHOUR=\count137
+\c@TOMINUTE=\count138
+\c@SECOND=\count139
+\currenthour=\count140
+\currentminute=\count141
+\currentsecond=\count142
 Package datetime Info: No datetime.cfg file found, using default settings on in
 put line 308.
-\@dtctr=\count148
-\dayofyear=\count149
-\dayofweek=\count150
+\@dtctr=\count143
+\dayofyear=\count144
+\dayofweek=\count145
 LaTeX Info: Redefining \today on input line 736.
-\dt@a=\toks32
-\dt@b=\toks33
+\dt@a=\toks29
+\dt@b=\toks30
 )
 (./final_report.aux
 
-LaTeX Warning: Label `camera_scale' multiply defined.
+LaTeX Warning: Label `alg:weights' multiply defined.
 
 
-LaTeX Warning: Label `camera_scale' multiply defined.
+LaTeX Warning: Label `check__depth_eq2' multiply defined.
 
 )
 \openout1 = `final_report.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 41.
-LaTeX Font Info:    ... okay on input line 41.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 41.
-LaTeX Font Info:    ... okay on input line 41.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 41.
-LaTeX Font Info:    ... okay on input line 41.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 41.
-LaTeX Font Info:    ... okay on input line 41.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 41.
-LaTeX Font Info:    ... okay on input line 41.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 41.
-LaTeX Font Info:    ... okay on input line 41.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 41.
-LaTeX Font Info:    Try loading font information for TS1+cmr on input line 41.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 39.
+LaTeX Font Info:    ... okay on input line 39.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 39.
+LaTeX Font Info:    ... okay on input line 39.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 39.
+LaTeX Font Info:    ... okay on input line 39.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 39.
+LaTeX Font Info:    ... okay on input line 39.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 39.
+LaTeX Font Info:    ... okay on input line 39.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 39.
+LaTeX Font Info:    ... okay on input line 39.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 39.
+LaTeX Font Info:    Try loading font information for TS1+cmr on input line 39.
  (/usr/share/texlive/texmf-dist/tex/latex/base/ts1cmr.fd
 File: ts1cmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
-LaTeX Font Info:    ... okay on input line 41.
+LaTeX Font Info:    ... okay on input line 39.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -512,17 +534,17 @@ LaTeX Font Info:    ... okay on input line 41.
 
 (/usr/share/texlive/texmf-dist/tex/context/base/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count151
-\scratchdimen=\dimen140
-\scratchbox=\box36
-\nofMPsegments=\count152
-\nofMParguments=\count153
-\everyMPshowfont=\toks34
-\MPscratchCnt=\count154
-\MPscratchDim=\dimen141
-\MPnumerator=\count155
-\makeMPintoPDFobject=\count156
-\everyMPtoPDFconversion=\toks35
+\scratchcounter=\count146
+\scratchdimen=\dimen146
+\scratchbox=\box42
+\nofMPsegments=\count147
+\nofMParguments=\count148
+\everyMPshowfont=\toks31
+\MPscratchCnt=\count149
+\MPscratchDim=\dimen147
+\MPnumerator=\count150
+\makeMPintoPDFobject=\count151
+\everyMPtoPDFconversion=\toks32
 ) (/usr/share/texlive/texmf-dist/tex/generic/oberdiek/pdftexcmds.sty
 Package: pdftexcmds 2011/11/29 v0.20 Utility functions of pdfTeX for LuaTeX (HO
 )
@@ -568,7 +590,6 @@ File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
 Package caption Info: Begin \AtBeginDocument code.
-Package caption Info: float package is loaded.
 Package caption Info: longtable package is loaded.
 
 (/usr/share/texlive/texmf-dist/tex/latex/caption/ltcaption.sty
@@ -576,12 +597,12 @@ Package: ltcaption 2013/06/09 v1.4-94 longtable captions (AR)
 )
 Package caption Info: wrapfig package is loaded.
 Package caption Info: End \AtBeginDocument code.
-LaTeX Font Info:    Try loading font information for U+msa on input line 42.
+LaTeX Font Info:    Try loading font information for U+msa on input line 40.
 
 (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 42.
+LaTeX Font Info:    Try loading font information for U+msb on input line 40.
 
 (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
@@ -594,19 +615,19 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 \openout3 = `final_report.toc'.
 
  [3]
-Underfull \hbox (badness 10000) in paragraph at lines 55--58
+Underfull \hbox (badness 10000) in paragraph at lines 53--56
 
  []
 
 [4
 
 ]
-Underfull \hbox (badness 10000) in paragraph at lines 62--65
+Underfull \hbox (badness 10000) in paragraph at lines 60--63
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 67--70
+Underfull \hbox (badness 10000) in paragraph at lines 65--68
 
  []
 
@@ -614,16 +635,16 @@ Underfull \hbox (badness 10000) in paragraph at lines 67--70
 File: ./figures/neural_net2.jpeg Graphic file (type jpg)
 
 <use ./figures/neural_net2.jpeg>
-Package pdftex.def Info: ./figures/neural_net2.jpeg used on input line 72.
+Package pdftex.def Info: ./figures/neural_net2.jpeg used on input line 70.
 (pdftex.def)             Requested size: 241.84843pt x 118.63206pt.
 
 <./figures/cnn.jpeg, id=22, 571.13374pt x 202.7575pt>
 File: ./figures/cnn.jpeg Graphic file (type jpg)
  <use ./figures/cnn.jpeg>
-Package pdftex.def Info: ./figures/cnn.jpeg used on input line 73.
+Package pdftex.def Info: ./figures/cnn.jpeg used on input line 71.
 (pdftex.def)             Requested size: 241.84843pt x 85.85677pt.
 
-Overfull \hbox (2.43333pt too wide) in paragraph at lines 72--74
+Overfull \hbox (2.43333pt too wide) in paragraph at lines 70--72
 [][] [] 
  []
 
@@ -632,32 +653,32 @@ Overfull \hbox (2.43333pt too wide) in paragraph at lines 72--74
 File: ./figures/conv_filter.jpg Graphic file (type jpg)
 
 <use ./figures/conv_filter.jpg>
-Package pdftex.def Info: ./figures/conv_filter.jpg used on input line 82.
+Package pdftex.def Info: ./figures/conv_filter.jpg used on input line 80.
 (pdftex.def)             Requested size: 241.84843pt x 112.63223pt.
 
 <./figures/maxpool.jpeg, id=27, 789.95125pt x 369.38pt>
 File: ./figures/maxpool.jpeg Graphic file (type jpg)
 
 <use ./figures/maxpool.jpeg>
-Package pdftex.def Info: ./figures/maxpool.jpeg used on input line 83.
+Package pdftex.def Info: ./figures/maxpool.jpeg used on input line 81.
 (pdftex.def)             Requested size: 241.84843pt x 113.08627pt.
 
-Overfull \hbox (2.43333pt too wide) in paragraph at lines 82--84
+Overfull \hbox (2.43333pt too wide) in paragraph at lines 80--82
 [][] [] 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 89--92
+Underfull \hbox (badness 10000) in paragraph at lines 87--90
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 94--97
+Underfull \hbox (badness 10000) in paragraph at lines 92--95
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 100--103
+Underfull \hbox (badness 10000) in paragraph at lines 98--101
 
  []
 
@@ -666,10 +687,10 @@ Underfull \hbox (badness 10000) in paragraph at lines 100--103
 File: ./figures/region_prop.png Graphic file (type png)
 
 <use ./figures/region_prop.png>
-Package pdftex.def Info: ./figures/region_prop.png used on input line 105.
+Package pdftex.def Info: ./figures/region_prop.png used on input line 103.
 (pdftex.def)             Requested size: 483.69687pt x 136.21645pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 114--117
+Underfull \hbox (badness 10000) in paragraph at lines 112--115
 
  []
 
@@ -677,33 +698,33 @@ Underfull \hbox (badness 10000) in paragraph at lines 114--117
 <./figures/arch.pdf, id=41, 963.6pt x 542.025pt>
 File: ./figures/arch.pdf Graphic file (type pdf)
  <use ./figures/arch.pdf>
-Package pdftex.def Info: ./figures/arch.pdf used on input line 143.
+Package pdftex.def Info: ./figures/arch.pdf used on input line 141.
 (pdftex.def)             Requested size: 483.69687pt x 179.55455pt.
 
 <./figures/faster.png, id=43, 1606.0pt x 1206.5075pt>
 File: ./figures/faster.png Graphic file (type png)
 
 <use ./figures/faster.png>
-Package pdftex.def Info: ./figures/faster.png used on input line 155.
+Package pdftex.def Info: ./figures/faster.png used on input line 153.
 (pdftex.def)             Requested size: 217.66211pt x 163.51582pt.
 
 <./figures/rpn_faster.jpg, id=44, 1971.365pt x 1407.2575pt>
 File: ./figures/rpn_faster.jpg Graphic file (type jpg)
 
 <use ./figures/rpn_faster.jpg>
-Package pdftex.def Info: ./figures/rpn_faster.jpg used on input line 156.
+Package pdftex.def Info: ./figures/rpn_faster.jpg used on input line 154.
 (pdftex.def)             Requested size: 217.66211pt x 155.3571pt.
 
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 161--164
+Underfull \hbox (badness 10000) in paragraph at lines 159--162
 
  []
 
 [8 <./figures/arch.pdf>]
-Underfull \hbox (badness 10000) in paragraph at lines 182--185
+Underfull \hbox (badness 10000) in paragraph at lines 180--183
 
  []
 
@@ -712,37 +733,37 @@ Underfull \hbox (badness 10000) in paragraph at lines 182--185
 File: ./figures/image_seg1.png Graphic file (type png)
 
 <use ./figures/image_seg1.png>
-Package pdftex.def Info: ./figures/image_seg1.png used on input line 190.
+Package pdftex.def Info: ./figures/image_seg1.png used on input line 188.
 (pdftex.def)             Requested size: 241.84843pt x 120.44235pt.
 
 <./figures/sem_im_seg1.jpg, id=87, 366.36874pt x 201.75375pt>
 File: ./figures/sem_im_seg1.jpg Graphic file (type jpg)
 
 <use ./figures/sem_im_seg1.jpg>
-Package pdftex.def Info: ./figures/sem_im_seg1.jpg used on input line 191.
+Package pdftex.def Info: ./figures/sem_im_seg1.jpg used on input line 189.
 (pdftex.def)             Requested size: 241.84843pt x 133.18251pt.
 
-Overfull \hbox (2.43333pt too wide) in paragraph at lines 190--192
+Overfull \hbox (2.43333pt too wide) in paragraph at lines 188--190
 [][] [] 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 196--201
+Underfull \hbox (badness 10000) in paragraph at lines 194--199
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 196--201
+Underfull \hbox (badness 10000) in paragraph at lines 194--199
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 205--207
+Underfull \hbox (badness 10000) in paragraph at lines 203--205
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 205--207
+Underfull \hbox (badness 10000) in paragraph at lines 203--205
 
  []
 
@@ -751,15 +772,15 @@ Underfull \hbox (badness 10000) in paragraph at lines 205--207
 File: ./figures/mask_arch.jpg Graphic file (type jpg)
 
 <use ./figures/mask_arch.jpg>
-Package pdftex.def Info: ./figures/mask_arch.jpg used on input line 209.
+Package pdftex.def Info: ./figures/mask_arch.jpg used on input line 207.
 (pdftex.def)             Requested size: 483.69687pt x 149.62613pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 208--217
+Underfull \hbox (badness 10000) in paragraph at lines 206--215
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 223--226
+Underfull \hbox (badness 10000) in paragraph at lines 221--224
 
  []
 
@@ -768,14 +789,14 @@ Underfull \hbox (badness 10000) in paragraph at lines 223--226
 File: ./figures/intel_realsense.jpg Graphic file (type jpg)
 
 <use ./figures/intel_realsense.jpg>
-Package pdftex.def Info: ./figures/intel_realsense.jpg used on input line 234.
+Package pdftex.def Info: ./figures/intel_realsense.jpg used on input line 232.
 (pdftex.def)             Requested size: 483.69687pt x 110.50914pt.
 
 <figures/distortion_example.png, id=96, 722.7pt x 277.035pt>
 File: figures/distortion_example.png Graphic file (type png)
 
 <use figures/distortion_example.png>
-Package pdftex.def Info: figures/distortion_example.png used on input line 244.
+Package pdftex.def Info: figures/distortion_example.png used on input line 242.
 
 (pdftex.def)             Requested size: 483.69687pt x 185.41803pt.
  [12 <./figures/intel_realsense.jpg> <./figures/distortion_example.png>]
@@ -784,191 +805,234 @@ File: figures/pinhole_camera_model.png Graphic file (type png)
 
 <use figures/pinhole_camera_model.png>
 Package pdftex.def Info: figures/pinhole_camera_model.png used on input line 27
-6.
+4.
 (pdftex.def)             Requested size: 483.69687pt x 341.01701pt.
  [13 <./figures/pinhole_camera_model.png>] <figures/world_to_cam.jpg, id=109, 1
 81.3977pt x 95.3964pt>
 File: figures/world_to_cam.jpg Graphic file (type jpg)
 
 <use figures/world_to_cam.jpg>
-Package pdftex.def Info: figures/world_to_cam.jpg used on input line 339.
+Package pdftex.def Info: figures/world_to_cam.jpg used on input line 337.
 (pdftex.def)             Requested size: 241.84843pt x 127.19144pt.
 
 <figures/quaternions.png, id=110, 472.76625pt x 394.47375pt>
 File: figures/quaternions.png Graphic file (type png)
 
 <use figures/quaternions.png>
-Package pdftex.def Info: figures/quaternions.png used on input line 340.
+Package pdftex.def Info: figures/quaternions.png used on input line 338.
 (pdftex.def)             Requested size: 169.29684pt x 141.26405pt.
+ [14 <./figures/world_to_cam.jpg> <./figures/quaternions.png>]
 
-! Missing $ inserted.
-<inserted text> 
-                $
-l.386 		\State $\textit{focal_matrix}
-                                      \gets \text{Focal lengths matrix}$
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
+LaTeX Warning: Reference `quat_delta' on page 15 undefined on input line 469.
 
-! Extra }, or forgotten $.
-\textdef@ ...th {#1}\let \f@size #2\selectfont #3}
-                                                  }
-l.386 		\State $\textit{focal_matrix}
-                                      \gets \text{Focal lengths matrix}$
-I've deleted a group-closing symbol because it seems to be
-spurious, as in `$x}$'. But perhaps the } is legitimate and
-you forgot something else, as in `\hbox{$x}'. In such cases
-the way to recover is to insert both the forgotten and the
-deleted material, e.g., by typing `I$}'.
+[15]
+Underfull \hbox (badness 10000) in paragraph at lines 492--494
 
-! Extra }, or forgotten $.
-\textdef@ ...h {#1}\let \f@size #2\selectfont #3}}
-                                                  
-l.386 		\State $\textit{focal_matrix}
-                                      \gets \text{Focal lengths matrix}$
-I've deleted a group-closing symbol because it seems to be
-spurious, as in `$x}$'. But perhaps the } is legitimate and
-you forgot something else, as in `\hbox{$x}'. In such cases
-the way to recover is to insert both the forgotten and the
-deleted material, e.g., by typing `I$}'.
+ []
 
-! Extra }, or forgotten $.
-\text@ ...e {\textdef@ \displaystyle \f@size {#1}}
-                                                  {\textdef@ \textstyle \f@s...
-l.386 		\State $\textit{focal_matrix}
-                                      \gets \text{Focal lengths matrix}$
-I've deleted a group-closing symbol because it seems to be
-spurious, as in `$x}$'. But perhaps the } is legitimate and
-you forgot something else, as in `\hbox{$x}'. In such cases
-the way to recover is to insert both the forgotten and the
-deleted material, e.g., by typing `I$}'.
 
-! Missing $ inserted.
-<inserted text> 
-                $
-l.386 		\State $\textit{focal_matrix}
-                                      \gets \text{Focal lengths matrix}$
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
+Underfull \hbox (badness 10000) in paragraph at lines 495--496
 
-! Extra }, or forgotten $.
-\textdef@ ...th {#1}\let \f@size #2\selectfont #3}
-                                                  }
-l.386 		\State $\textit{focal_matrix}
-                                      \gets \text{Focal lengths matrix}$
-I've deleted a group-closing symbol because it seems to be
-spurious, as in `$x}$'. But perhaps the } is legitimate and
-you forgot something else, as in `\hbox{$x}'. In such cases
-the way to recover is to insert both the forgotten and the
-deleted material, e.g., by typing `I$}'.
+ []
 
-! Extra }, or forgotten $.
-\textdef@ ...h {#1}\let \f@size #2\selectfont #3}}
-                                                  
-l.386 		\State $\textit{focal_matrix}
-                                      \gets \text{Focal lengths matrix}$
-I've deleted a group-closing symbol because it seems to be
-spurious, as in `$x}$'. But perhaps the } is legitimate and
-you forgot something else, as in `\hbox{$x}'. In such cases
-the way to recover is to insert both the forgotten and the
-deleted material, e.g., by typing `I$}'.
 
-! Extra }, or forgotten $.
-\text@ ...xtstyle \f@size {\firstchoice@false #1}}
-                                                  {\textdef@ \textstyle \sf@...
-l.386 		\State $\textit{focal_matrix}
-                                      \gets \text{Focal lengths matrix}$
-I've deleted a group-closing symbol because it seems to be
-spurious, as in `$x}$'. But perhaps the } is legitimate and
-you forgot something else, as in `\hbox{$x}'. In such cases
-the way to recover is to insert both the forgotten and the
-deleted material, e.g., by typing `I$}'.
+Underfull \hbox (badness 10000) in paragraph at lines 495--496
 
-! Missing $ inserted.
-<inserted text> 
-                $
-l.386 		\State $\textit{focal_matrix}
-                                      \gets \text{Focal lengths matrix}$
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
+ []
 
-! Extra }, or forgotten $.
-\textdef@ ...th {#1}\let \f@size #2\selectfont #3}
-                                                  }
-l.386 		\State $\textit{focal_matrix}
-                                      \gets \text{Focal lengths matrix}$
-I've deleted a group-closing symbol because it seems to be
-spurious, as in `$x}$'. But perhaps the } is legitimate and
-you forgot something else, as in `\hbox{$x}'. In such cases
-the way to recover is to insert both the forgotten and the
-deleted material, e.g., by typing `I$}'.
 
-! Extra }, or forgotten $.
-\textdef@ ...h {#1}\let \f@size #2\selectfont #3}}
-                                                  
-l.386 		\State $\textit{focal_matrix}
-                                      \gets \text{Focal lengths matrix}$
-I've deleted a group-closing symbol because it seems to be
-spurious, as in `$x}$'. But perhaps the } is legitimate and
-you forgot something else, as in `\hbox{$x}'. In such cases
-the way to recover is to insert both the forgotten and the
-deleted material, e.g., by typing `I$}'.
+<figures/convergence_landmark_uncertainty.png, id=124, 334.24875pt x 260.975pt>
+File: figures/convergence_landmark_uncertainty.png Graphic file (type png)
+<use figures/convergence_landmark_uncertainty.png>
+Package pdftex.def Info: figures/convergence_landmark_uncertainty.png used on i
+nput line 500.
+(pdftex.def)             Requested size: 241.84843pt x 188.83766pt.
 
-! Extra }, or forgotten $.
-\text@ ...tstyle \sf@size {\firstchoice@false #1}}
-                                                  {\textdef@ \textstyle \ssf...
-l.386 		\State $\textit{focal_matrix}
-                                      \gets \text{Focal lengths matrix}$
-I've deleted a group-closing symbol because it seems to be
-spurious, as in `$x}$'. But perhaps the } is legitimate and
-you forgot something else, as in `\hbox{$x}'. In such cases
-the way to recover is to insert both the forgotten and the
-deleted material, e.g., by typing `I$}'.
+<figures/ess_slam.png, id=125, 595.22375pt x 473.77pt>
+File: figures/ess_slam.png Graphic file (type png)
 
-! Missing $ inserted.
-<inserted text> 
-                $
-l.386 		\State $\textit{focal_matrix}
-                                      \gets \text{Focal lengths matrix}$
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
+<use figures/ess_slam.png>
+Package pdftex.def Info: figures/ess_slam.png used on input line 501.
+(pdftex.def)             Requested size: 241.84843pt x 192.4975pt.
 
-! Extra }, or forgotten $.
-\textdef@ ...th {#1}\let \f@size #2\selectfont #3}
-                                                  }
-l.386 		\State $\textit{focal_matrix}
-                                      \gets \text{Focal lengths matrix}$
-I've deleted a group-closing symbol because it seems to be
-spurious, as in `$x}$'. But perhaps the } is legitimate and
-you forgot something else, as in `\hbox{$x}'. In such cases
-the way to recover is to insert both the forgotten and the
-deleted material, e.g., by typing `I$}'.
+Overfull \hbox (2.43333pt too wide) in paragraph at lines 500--502
+[][] [] 
+ []
 
-! Extra }, or forgotten $.
-\textdef@ ...h {#1}\let \f@size #2\selectfont #3}}
-                                                  
-l.386 		\State $\textit{focal_matrix}
-                                      \gets \text{Focal lengths matrix}$
-I've deleted a group-closing symbol because it seems to be
-spurious, as in `$x}$'. But perhaps the } is legitimate and
-you forgot something else, as in `\hbox{$x}'. In such cases
-the way to recover is to insert both the forgotten and the
-deleted material, e.g., by typing `I$}'.
+[16] [17 <./figures/convergence_landmark_uncertainty.png> <./figures/ess_slam.p
+ng>] <figures/harris_region.jpg, id=132, 433.62pt x 417.56pt>
+File: figures/harris_region.jpg Graphic file (type jpg)
 
-! Extra }, or forgotten $.
-\text@ ...style \ssf@size {\firstchoice@false #1}}
-                                                  \check@mathfonts }
-l.386 		\State $\textit{focal_matrix}
-                                      \gets \text{Focal lengths matrix}$
-I've deleted a group-closing symbol because it seems to be
-spurious, as in `$x}$'. But perhaps the } is legitimate and
-you forgot something else, as in `\hbox{$x}'. In such cases
-the way to recover is to insert both the forgotten and the
-deleted material, e.g., by typing `I$}'.
+<use figures/harris_region.jpg>
+Package pdftex.def Info: figures/harris_region.jpg used on input line 599.
+(pdftex.def)             Requested size: 241.84843pt x 232.89539pt.
 
-! Extra }, or forgotten $.
-\text@ ...firstchoice@false #1}}\check@mathfonts }
-                                                  
-l.386 		\State $\textit{focal_matrix}
-                                      \gets \text{Focal lengths matrix}$
-I've deleted a group-closing symbol because it seems to be
-spurious, as in `$x}$'. But perha
+<figures/harris_result.jpg, id=133, 451.6875pt x 445.665pt>
+File: figures/harris_result.jpg Graphic file (type jpg)
+
+<use figures/harris_result.jpg>
+Package pdftex.def Info: figures/harris_result.jpg used on input line 600.
+(pdftex.def)             Requested size: 217.66211pt x 214.7668pt.
+
+<figures/brisk.jpg, id=134, 470.50781pt x 172.39406pt>
+File: figures/brisk.jpg Graphic file (type jpg)
+ <use figures/brisk.jpg>
+Package pdftex.def Info: figures/brisk.jpg used on input line 609.
+(pdftex.def)             Requested size: 338.58632pt x 124.05786pt.
+
+<figures/brisk.png, id=135, 241.65282pt x 237.13594pt>
+File: figures/brisk.png Graphic file (type png)
+ <use figures/brisk.png>
+Package pdftex.def Info: figures/brisk.png used on input line 610.
+(pdftex.def)             Requested size: 125.75851pt x 123.40909pt.
+
+[18 <./figures/harris_region.jpg> <./figures/harris_result.jpg>] [19 <./figures
+/brisk.jpg> <./figures/brisk.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 733--736
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 747--750
+
+ []
+
+[20]
+<figures/pedestrian_tracking_module.png, id=146, 1522.68875pt x 764.8575pt>
+File: figures/pedestrian_tracking_module.png Graphic file (type png)
+
+<use figures/pedestrian_tracking_module.png>
+Package pdftex.def Info: figures/pedestrian_tracking_module.png used on input l
+ine 771.
+(pdftex.def)             Requested size: 483.69687pt x 242.9621pt.
+ [21 <./figures/pedestrian_tracking_module.png>] <figures/depth_image_1.png, id
+=150, 642.4pt x 481.8pt>
+File: figures/depth_image_1.png Graphic file (type png)
+
+<use figures/depth_image_1.png>
+Package pdftex.def Info: figures/depth_image_1.png used on input line 792.
+(pdftex.def)             Requested size: 241.84843pt x 181.38766pt.
+
+<figures/depth_image_2.png, id=151, 642.4pt x 481.8pt>
+File: figures/depth_image_2.png Graphic file (type png)
+
+<use figures/depth_image_2.png>
+Package pdftex.def Info: figures/depth_image_2.png used on input line 793.
+(pdftex.def)             Requested size: 241.84843pt x 181.38766pt.
+
+Overfull \hbox (2.43333pt too wide) in paragraph at lines 792--794
+[][] [] 
+ []
+
+<figures/bottle2.jpg, id=152, 481.8pt x 542.025pt>
+File: figures/bottle2.jpg Graphic file (type jpg)
+ <use figures/bottle2.jpg>
+Package pdftex.def Info: figures/bottle2.jpg used on input line 801.
+(pdftex.def)             Requested size: 241.84843pt x 272.07874pt.
+
+<figures/bottle1.jpg, id=153, 481.8pt x 542.025pt>
+File: figures/bottle1.jpg Graphic file (type jpg)
+ <use figures/bottle1.jpg>
+Package pdftex.def Info: figures/bottle1.jpg used on input line 802.
+(pdftex.def)             Requested size: 241.84843pt x 272.07874pt.
+
+Overfull \hbox (2.43333pt too wide) in paragraph at lines 801--803
+[][] [] 
+ []
+
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+[22 <./figures/depth_image_1.png (PNG copy)> <./figures/depth_image_2.png (PNG 
+copy)>] [23 <./figures/bottle2.jpg> <./figures/bottle1.jpg>]
+<figures/roi_match.png, id=160, 1032.85875pt x 318.18875pt>
+File: figures/roi_match.png Graphic file (type png)
+
+<use figures/roi_match.png>
+Package pdftex.def Info: figures/roi_match.png used on input line 923.
+(pdftex.def)             Requested size: 483.69687pt x 149.0098pt.
+
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+[24] <figures/circular_shift.png, id=164, 1861.95625pt x 503.8825pt>
+File: figures/circular_shift.png Graphic file (type png)
+
+<use figures/circular_shift.png>
+Package pdftex.def Info: figures/circular_shift.png used on input line 947.
+(pdftex.def)             Requested size: 483.69687pt x 130.89871pt.
+ [25 <./figures/roi_match.png> <./figures/circular_shift.png>] [26]
+Underfull \hbox (badness 10000) in paragraph at lines 1041--1044
+
+ []
+
+[27] [28] [29] [30]
+Overfull \hbox (2.1377pt too wide) in paragraph at lines 1245--1245
+[]|\OT1/cmr/bx/n/10.95 Yes| 
+ []
+
+Missing character: There is no ‚ in font cmr10!
+Missing character: There is no Ä in font cmr10!
+Missing character: There is no ú in font cmr10!
+Missing character: There is no ‚ in font cmr10!
+Missing character: There is no Ä in font cmr10!
+Missing character: There is no ù in font cmr10!
+
+Underfull \vbox (badness 10000) detected at line 1304
+ []
+
+Missing character: There is no ‚ in font cmr10!
+Missing character: There is no Ä in font cmr10!
+Missing character: There is no ì in font cmr10!
+[31] [32] (./final_report.bbl
+Missing character: There is no ‚ in font cmr10!
+Missing character: There is no Ä in font cmr10!
+Missing character: There is no ò in font cmr10!
+ [33]
+Missing character: There is no ‚ in font cmr10!
+Missing character: There is no Ä in font cmr10!
+Missing character: There is no ì in font cmr10!
+) [34] (./final_report.aux)
+
+LaTeX Warning: There were undefined references.
+
+
+LaTeX Warning: There were multiply-defined labels.
+
+ ) 
+Here is how much of TeX's memory you used:
+ 8092 strings out of 493029
+ 119232 string characters out of 6136235
+ 233014 words of memory out of 5000000
+ 11433 multiletter control sequences out of 15000+600000
+ 17164 words of font info for 64 fonts, out of 8000000 for 9000
+ 1141 hyphenation exceptions out of 8191
+ 42i,19n,77p,1183b,501s stack positions out of 5000i,500n,10000p,200000b,80000s
+</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></us
+r/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/shar
+e/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx8.pfb></usr/share/texli
+ve/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/tex
+mf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dis
+t/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/share/texlive/texmf-dist/fonts
+/type1/public/amsfonts/cm/cmmi8.pfb></usr/share/texlive/texmf-dist/fonts/type1/
+public/amsfonts/cm/cmmi9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/
+amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfont
+s/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cm
+r17.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb>
+</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/sh
+are/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/te
+xlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/share/texlive/t
+exmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/share/texlive/texmf-di
+st/fonts/type1/public/amsfonts/cm/cmsy9.pfb></usr/share/texlive/texmf-dist/font
+s/type1/public/amsfonts/cm/cmti10.pfb></usr/share/texlive/texmf-dist/fonts/type
+1/public/amsfonts/cm/cmti8.pfb></usr/share/texlive/texmf-dist/fonts/type1/publi
+c/amsfonts/cm/cmtt9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfo
+nts/symbols/msam10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfon
+ts/symbols/msbm10.pfb>
+Output written on final_report.pdf (34 pages, 5081504 bytes).
+PDF statistics:
+ 268 PDF objects out of 1000 (max. 8388607)
+ 154 compressed objects within 2 object streams
+ 0 named destinations out of 1000 (max. 500000)
+ 152 words of extra memory for PDF output out of 10000 (max. 10000000)
+
