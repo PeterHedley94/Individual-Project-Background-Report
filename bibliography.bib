@@ -37,7 +37,7 @@ year = {2016}
 }
 
 @article{ILSVRC15,
-Author = {Olga Russakovsky and Jia Deng and Hao Su and Jonathan Krause and Sanjeev Satheesh and Sean Ma and Zhiheng Huang and Andrej Karpathy and Aditya Khosla and Michael Bernstein and Alexander C. Berg and Li Fei-Fei},
+Author = {Olga Russakovsky et al.and Jia Deng and Hao Su and Jonathan Krause and Sanjeev Satheesh and Sean Ma and Zhiheng Huang and Andrej Karpathy and Aditya Khosla and Michael Bernstein and Alexander C. Berg and Li Fei-Fei},
 Title = {{ImageNet Large Scale Visual Recognition Challenge}},
 Year = {2015},
 journal   = {International Journal of Computer Vision (IJCV)},
@@ -77,7 +77,7 @@ booktitle = {Neural Information Processing Systems}
 @online{StanfordCS231_1,
   author = {Andrej Karpathy},
   title = {Networks},
-  year = 2017,
+  year = {2017},
   url = {http://cs231n.github.io/convolutional-networks/},
   urldate = {2018-05-30}
 }
@@ -86,7 +86,7 @@ booktitle = {Neural Information Processing Systems}
 @online{StanfordCS231_conv_filter,
   author = {Andrej Karpathy},
   title = {Networks},
-  year = 2017,
+  year = {2017},
   url = {http://cs231n.github.io/assets/cnn/depthcol.jpeg},
   urldate = {2018-05-30}
 }
@@ -94,7 +94,7 @@ booktitle = {Neural Information Processing Systems}
 @online{StanfordCS231_max_pool,
   author = {Andrej Karpathy},
   title = {Networks},
-  year = 2017,
+  year = {2017},
   url = {http://cs231n.github.io/assets/cnn/maxpool.jpeg},
   urldate = {2018-05-30}
 }
@@ -141,39 +141,21 @@ R-CNN
 }
 
 @Article{Uijlings2013,
-author="Uijlings, J. R. R.
+author={"Uijlings, J. R. R.
 and van de Sande, K. E. A.
 and Gevers, T.
-and Smeulders, A. W. M.",
-title="Selective Search for Object Recognition",
-journal="International Journal of Computer Vision",
-year="2013",
-month="Sep",
-day="01",
-volume="104",
-number="2",
-pages="154--171",
-abstract="This paper addresses the problem of generating possible object locations for use in object recognition. We introduce selective search which combines the strength of both an exhaustive search and segmentation. Like segmentation, we use the image structure to guide our sampling process. Like exhaustive search, we aim to capture all possible object locations. Instead of a single technique to generate possible object locations, we diversify our search and use a variety of complementary image partitionings to deal with as many image conditions as possible. Our selective search results in a small set of data-driven, class-independent, high quality locations, yielding 99 {\%} recall and a Mean Average Best Overlap of 0.879 at 10,097 locations. The reduced number of locations compared to an exhaustive search enables the use of stronger machine learning techniques and stronger appearance models for object recognition. In this paper we show that our selective search enables the use of the powerful Bag-of-Words model for recognition. The selective search software is made publicly available (Software:                   http://disi.unitn.it/{\textasciitilde}uijlings/SelectiveSearch.html                                  ).",
-issn="1573-1405",
-doi="10.1007/s11263-013-0620-5",
-url="https://doi.org/10.1007/s11263-013-0620-5"
+and Smeulders, A. W. M."},
+title={"Selective Search for Object Recognition"},
+journal={"International Journal of Computer Vision"},
+year={"2013"}
 }
 
 @Article{Felzenszwalb2004,
-author="Felzenszwalb, Pedro F.
-and Huttenlocher, Daniel P.",
-title="Efficient Graph-Based Image Segmentation",
-journal="International Journal of Computer Vision",
-year="2004",
-month="Sep",
-day="01",
-volume="59",
-number="2",
-pages="167--181",
-abstract="This paper addresses the problem of segmenting an image into regions. We define a predicate for measuring the evidence for a boundary between two regions using a graph-based representation of the image. We then develop an efficient segmentation algorithm based on this predicate, and show that although this algorithm makes greedy decisions it produces segmentations that satisfy global properties. We apply the algorithm to image segmentation using two different kinds of local neighborhoods in constructing the graph, and illustrate the results with both real and synthetic images. The algorithm runs in time nearly linear in the number of graph edges and is also fast in practice. An important characteristic of the method is its ability to preserve detail in low-variability image regions while ignoring detail in high-variability regions.",
-issn="1573-1405",
-doi="10.1023/B:VISI.0000022288.19776.77",
-url="https://doi.org/10.1023/B:VISI.0000022288.19776.77"
+author={"Felzenszwalb, Pedro F.
+and Huttenlocher, Daniel P."},
+title={"Efficient Graph-Based Image Segmentation"},
+journal={"International Journal of Computer Vision"},
+year={"2004"}
 }
 
 @article{DBLP:journals/corr/Girshick15,
@@ -213,7 +195,7 @@ url="https://doi.org/10.1023/B:VISI.0000022288.19776.77"
                Kaiming He and
                Ross B. Girshick and
                Jian Sun},
-  title     = {Faster {R-CNN:} Towards Real-Time Object Detection with Region Proposal
+  title     = {Faster R-CNN: Towards Real-Time Object Detection with Region Proposal
                Networks},
   journal   = {CoRR},
   volume    = {abs/1506.01497},
@@ -275,7 +257,7 @@ Image Segmentation
  pages = {III-1058--III-1066},
  url = {http://dl.acm.org/citation.cfm?id=3042817.3043055},
  acmid = {3043055},
- publisher = {JMLR.org},
+ publisher = {JMLR.org}
 } 
 
 @article{JMLR:v15:srivastava14a,
@@ -294,7 +276,7 @@ Image Segmentation
  year = {2006},
  isbn = {0387310738},
  publisher = {Springer-Verlag},
- address = {Berlin, Heidelberg},
+ address = {Berlin, Heidelberg}
 } 
 
 #################################################################
@@ -319,13 +301,31 @@ Instance Segmentation
 }
 
 
-##############################################
-WORLD to Camera Stuff
+
+%###############################################################
+%Bayesian Optimisation
+
+@other{Marc_Deisenroth_Notes,
+	author = {Marc Deisenroth},
+	title = {Gaussian Processes and Bayesian Optimisation},
+	year = {2018}
+}
+
+@article{SrinivasNiranjan2010GPOi,
+	publisher = {Omnipress},
+	year = {2010},
+	title = {Gaussian Process Optimization in the Bandit Setting: No Regret and Experimental Design},
+	language = {eng},
+	author = {Srinivas, Niranjan and Krause, Andreas and Kakade, Sham and Seeger, Matthias},
+}
+
+%##############################################
+%WORLD to Camera Stuff
 
 @online{opencv_camera_article,
 	author = {OpenCV docs},
 	title = {Images},
-	year = 2012,
+	year = {2012},
 	url = {https://docs.opencv.org/2.4/modules/calib3d/doc/camera_calibration_and_3d_reconstruction.html},
 	urldate = {2018-08-08}
 }
@@ -341,19 +341,7 @@ journal = {The International Journal of Robotics Research},
 volume = {34},
 number = {3},
 pages = {314-334},
-year = {2015},
-doi = {10.1177/0278364914554813},
-
-URL = { 
-        https://doi.org/10.1177/0278364914554813
-    
-},
-eprint = { 
-        https://doi.org/10.1177/0278364914554813
-    
-}
-,
-    abstract = { Combining visual and inertial measurements has become popular in mobile robotics, since the two sensing modalities offer complementary characteristics that make them the ideal choice for accurate visual–inertial odometry or simultaneous localization and mapping (SLAM). While historically the problem has been addressed with filtering, advancements in visual estimation suggest that nonlinear optimization offers superior accuracy, while still tractable in complexity thanks to the sparsity of the underlying problem. Taking inspiration from these findings, we formulate a rigorously probabilistic cost function that combines reprojection errors of landmarks and inertial terms. The problem is kept tractable and thus ensuring real-time operation by limiting the optimization to a bounded window of keyframes through marginalization. Keyframes may be spaced in time by arbitrary intervals, while still related by linearized inertial terms. We present evaluation results on complementary datasets recorded with our custom-built stereo visual–inertial hardware that accurately synchronizes accelerometer and gyroscope measurements with imagery. A comparison of both a stereo and monocular version of our algorithm with and without online extrinsics estimation is shown with respect to ground truth. Furthermore, we compare the performance to an implementation of a state-of-the-art stochastic cloning sliding-window filter. This competitive reference implementation performs tightly coupled filtering-based visual–inertial odometry. While our approach declaredly demands more computation, we show its superior performance in terms of accuracy. }
+year = {2015}
 }
 
 @article{F_Durr_1,
@@ -399,16 +387,14 @@ title={BRISK: Binary Robust invariant scalable keypoints},
 year={2011}, 
 volume={}, 
 number={}, 
-pages={2548-2555}, 
-keywords={computer vision;feature extraction;image matching;transforms;BRISK method;SIFT algorithm;SURF algorithm;binary robust invariant scalable keypoints;bit-string descriptor;computer vision application;image transformation;keypoint description;keypoint detection;keypoint generation;keypoint matching;scale-space FAST-based detector;Boats;Brightness;Complexity theory;Detectors;Feature extraction;Kernel;Robustness}, 
-doi={10.1109/ICCV.2011.6126542}, 
+pages={2548-2555},
 ISSN={1550-5499}, 
-month={Nov},}
+month={Nov}}
 
 @online{opencv_harris_article,
 	author = {OpenCV docs},
 	title = {Images},
-	year = 2012,
+	year = {2012},
 	url = {http://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_feature2d/py_features_harris/py_features_harris.html},
 	urldate = {2018-08-08}
 }
@@ -424,18 +410,7 @@ volume = {13},
 number = {3},
 pages = {120},
 year = {2016},
-doi = {10.5772/62758},
-
-URL = { 
-        https://doi.org/10.5772/62758
-    
-},
-eprint = { 
-        https://doi.org/10.5772/62758
-    
-}
-,
-    abstract = { Pedestrian detection and tracking is the key to autonomous vehicle navigation systems avoiding potentially dangerous situations. Firstly, the probability distribution of colour information is established after a pedestrian is located in an image. Then the detected results are utilized to initialize a Kalman filter to predict the possible position of the pedestrian centroid in the future frame. A Camshift tracking algorithm is used to track the pedestrian in the specific search window of the next frame based on the prediction results. The actual position of the pedestrian centroid is output from the Camshift tracking algorithm to update the gain and error covariance matrix of the Kalman filter. Experimental results in real traffic situations show the proposed pedestrian tracking algorithm can achieve good performance even when they are partly occluded in inconsistent illumination circumstances. }
+doi = {10.5772/62758}
 }
 
 
@@ -454,8 +429,24 @@ Tracking - Not background
 	year={2015}, 
 	volume={37}, 
 	number={3}, 
-	pages={583-596}, 
-	keywords={Complexity theory;Correlation;Discrete Fourier transforms;Kernel;Target tracking;Training;Vectors;Visual tracking;circulant matrices;correlation filters;discrete Fourier transform;kernel methods;ridge regression}, 
-	doi={10.1109/TPAMI.2014.2345390}, 
-	ISSN={0162-8828}, 
-	month={March},}
+	pages={583-596},
+	month={March}}
+
+
+###########################################
+Model
+
+@article{DBLP:journals/corr/KingmaB14,
+	author    = {Diederik P. Kingma and
+	Jimmy Ba},
+	title     = {Adam: {A} Method for Stochastic Optimization},
+	journal   = {CoRR},
+	volume    = {abs/1412.6980},
+	year      = {2014},
+	url       = {http://arxiv.org/abs/1412.6980},
+	archivePrefix = {arXiv},
+	eprint    = {1412.6980},
+	timestamp = {Mon, 13 Aug 2018 16:47:35 +0200},
+	biburl    = {https://dblp.org/rec/bib/journals/corr/KingmaB14},
+	bibsource = {dblp computer science bibliography, https://dblp.org}
+}
