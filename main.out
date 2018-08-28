@@ -7,35 +7,38 @@
 \BOOKMARK [2][]{subsection.24}{2.1.4 Image Segmentation}{section.5}% 7
 \BOOKMARK [2][]{subsection.26}{2.1.5 Instance Segmentation}{section.5}% 8
 \BOOKMARK [2][]{subsection.30}{2.1.6 Recurrent Neural Networks:}{section.5}% 9
-\BOOKMARK [2][]{subsection.31}{2.1.7 Bayesian Optimisation Layer Dimensions:}{section.5}% 10
-\BOOKMARK [1][]{section.40}{2.2 Background, SLAM}{chapter.4}% 11
-\BOOKMARK [2][]{subsection.41}{2.2.1 Sensors}{section.40}% 12
-\BOOKMARK [2][]{subsection.46}{2.2.2 Camera to World Frame}{section.40}% 13
-\BOOKMARK [2][]{subsection.54}{2.2.3 Projecting to World Frame}{section.40}% 14
-\BOOKMARK [2][]{subsection.63}{2.2.4 World to Camera Frame}{section.40}% 15
-\BOOKMARK [2][]{subsection.66}{2.2.5 Bicycle States}{section.40}% 16
-\BOOKMARK [2][]{subsection.69}{2.2.6 The SLAM Problem}{section.40}% 17
-\BOOKMARK [1][]{section.95}{2.3 Background Object Tracking}{chapter.4}% 18
-\BOOKMARK [2][]{subsection.96}{2.3.1 Kernelised Correlation Filter}{section.95}% 19
-\BOOKMARK [0][]{chapter.109}{3 Contribution}{}% 20
-\BOOKMARK [1][]{section.110}{3.1 Depth Measurement Outlier Removal}{chapter.109}% 21
-\BOOKMARK [1][]{section.121}{3.2 Frame-to-Frame Tracking}{chapter.109}% 22
-\BOOKMARK [2][]{subsection.123}{3.2.1 Kernelised Correlation Filter}{section.121}% 23
-\BOOKMARK [2][]{subsection.125}{3.2.2 BRISK - Selector}{section.121}% 24
-\BOOKMARK [2][]{subsection.126}{3.2.3 Class Matching}{section.121}% 25
-\BOOKMARK [2][]{subsection.127}{3.2.4 Kalman Filter ROI Matching}{section.121}% 26
-\BOOKMARK [2][]{subsection.146}{3.2.5 ROI Lives}{section.121}% 27
-\BOOKMARK [2][]{subsection.147}{3.2.6 Combining Matching Methods}{section.121}% 28
-\BOOKMARK [1][]{section.156}{3.3 Movement Prediction}{chapter.109}% 29
-\BOOKMARK [2][]{subsection.157}{3.3.1 Objects Prediction}{section.156}% 30
-\BOOKMARK [2][]{subsection.161}{3.3.2 Bike Model}{section.156}% 31
-\BOOKMARK [1][]{section.173}{3.4 System Evaluation}{chapter.109}% 32
-\BOOKMARK [2][]{subsection.174}{3.4.1 Mask-RCNN}{section.173}% 33
-\BOOKMARK [2][]{subsection.175}{3.4.2 Okvis with Dynamic Objects}{section.173}% 34
-\BOOKMARK [2][]{subsection.176}{3.4.3 Depth Camera}{section.173}% 35
-\BOOKMARK [0][]{chapter.177}{4 Ethics}{}% 36
-\BOOKMARK [1][]{subsection.178}{4.0.1 Modification for Military Purposes}{chapter.177}% 37
-\BOOKMARK [2][]{subsection.179}{4.0.2 Other Ethics Issues}{subsection.178}% 38
-\BOOKMARK [1][]{section.180}{4.1 Ethics Checklist}{chapter.177}% 39
-\BOOKMARK [0][]{chapter.182}{5 Experimental Results}{}% 40
-\BOOKMARK [0][]{chapter.183}{6 Conclusion}{}% 41
+\BOOKMARK [2][]{subsection.42}{2.1.7 Bayesian Optimisation of Layer Dimensions:}{section.5}% 10
+\BOOKMARK [1][]{section.51}{2.2 Background, SLAM}{chapter.4}% 11
+\BOOKMARK [2][]{subsection.52}{2.2.1 Sensors}{section.51}% 12
+\BOOKMARK [2][]{subsection.57}{2.2.2 Camera to World Frame}{section.51}% 13
+\BOOKMARK [2][]{subsection.65}{2.2.3 Projecting to World Frame}{section.51}% 14
+\BOOKMARK [2][]{subsection.74}{2.2.4 World to Camera Frame}{section.51}% 15
+\BOOKMARK [2][]{subsection.77}{2.2.5 Bicycle States}{section.51}% 16
+\BOOKMARK [2][]{subsection.80}{2.2.6 The SLAM Problem}{section.51}% 17
+\BOOKMARK [1][]{section.106}{2.3 Background Object Tracking}{chapter.4}% 18
+\BOOKMARK [2][]{subsection.107}{2.3.1 Kernelised Correlation Filter}{section.106}% 19
+\BOOKMARK [0][]{chapter.120}{3 Contribution}{}% 20
+\BOOKMARK [1][]{section.121}{3.1 Software Solution}{chapter.120}% 21
+\BOOKMARK [1][]{section.126}{3.2 Depth Measurement Outlier Removal}{chapter.120}% 22
+\BOOKMARK [1][]{section.137}{3.3 Frame-to-Frame Tracking}{chapter.120}% 23
+\BOOKMARK [2][]{subsection.139}{3.3.1 Kernelised Correlation Filter}{section.137}% 24
+\BOOKMARK [2][]{subsection.141}{3.3.2 BRISK - Selector}{section.137}% 25
+\BOOKMARK [2][]{subsection.142}{3.3.3 Class Matching}{section.137}% 26
+\BOOKMARK [2][]{subsection.143}{3.3.4 Kalman Filter ROI Matching}{section.137}% 27
+\BOOKMARK [2][]{subsection.162}{3.3.5 ROI Lives}{section.137}% 28
+\BOOKMARK [2][]{subsection.163}{3.3.6 Combining Matching Methods}{section.137}% 29
+\BOOKMARK [1][]{section.164}{3.4 Movement Prediction}{chapter.120}% 30
+\BOOKMARK [2][]{subsection.165}{3.4.1 Objects Prediction}{section.164}% 31
+\BOOKMARK [2][]{subsection.169}{3.4.2 Bike Model}{section.164}% 32
+\BOOKMARK [0][]{chapter.183}{4 Experimental Results}{}% 33
+\BOOKMARK [1][]{section.184}{4.1 System Evaluation}{chapter.183}% 34
+\BOOKMARK [2][]{subsection.185}{4.1.1 Mask-RCNN}{section.184}% 35
+\BOOKMARK [2][]{subsection.186}{4.1.2 Cyclist Model}{section.184}% 36
+\BOOKMARK [2][]{subsection.187}{4.1.3 Depth Camera}{section.184}% 37
+\BOOKMARK [2][]{subsection.188}{4.1.4 Okvis with Dynamic Objects}{section.184}% 38
+\BOOKMARK [0][]{chapter.189}{5 Ethics}{}% 39
+\BOOKMARK [1][]{subsection.190}{5.0.1 Modification for Military Purposes}{chapter.189}% 40
+\BOOKMARK [2][]{subsection.191}{5.0.2 Other Ethics Issues}{subsection.190}% 41
+\BOOKMARK [1][]{section.192}{5.1 Ethics Checklist}{chapter.189}% 42
+\BOOKMARK [0][]{chapter.194}{6 Conclusion}{}% 43
+\BOOKMARK [0][]{chapter.195}{7 Appendix}{}% 44

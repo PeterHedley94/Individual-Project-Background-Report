@@ -9,56 +9,63 @@ Warning--entry type for "StanfordCS231_conv_filter" isn't style-file defined
 --line 86 of file bibliography.bib.bib
 Warning--entry type for "StanfordCS231_max_pool" isn't style-file defined
 --line 94 of file bibliography.bib.bib
-Warning--entry type for "Marc_Deisenroth_Notes" isn't style-file defined
+Warning--entry type for "Christopher_Olah_Blog" isn't style-file defined
 --line 308 of file bibliography.bib.bib
+I was expecting a `,' or a `}'---line 312 of file bibliography.bib.bib
+ :  
+ :  year = {2015}
+(Error may have been on previous line)
+I'm skipping whatever remains of this entry
+Warning--entry type for "Marc_Deisenroth_Notes" isn't style-file defined
+--line 318 of file bibliography.bib.bib
 Warning--entry type for "opencv_camera_article" isn't style-file defined
---line 325 of file bibliography.bib.bib
+--line 335 of file bibliography.bib.bib
 Warning--entry type for "opencv_harris_article" isn't style-file defined
---line 394 of file bibliography.bib.bib
+--line 404 of file bibliography.bib.bib
 Warning--empty journal in GH_CNN
 Warning--empty journal in SrinivasNiranjan2010GPOi
 Warning--empty journal in F_Durr_1
 Warning--empty journal in F_Durr_Pt1
 Warning--empty journal in Furgale
-You've used 33 entries,
+You've used 35 entries,
             1876 wiz_defined-function locations,
-            656 strings with 8923 characters,
-and the built_in function-call counts, 6717 in all, are:
-= -- 569
-> -- 356
+            665 strings with 9144 characters,
+and the built_in function-call counts, 6985 in all, are:
+= -- 590
+> -- 368
 < -- 0
-+ -- 134
-- -- 101
-* -- 496
-:= -- 1051
-add.period$ -- 34
-call.type$ -- 33
-change.case$ -- 35
++ -- 139
+- -- 104
+* -- 510
+:= -- 1092
+add.period$ -- 35
+call.type$ -- 35
+change.case$ -- 37
 chr.to.int$ -- 0
-cite$ -- 38
-duplicate$ -- 325
-empty$ -- 674
-format.name$ -- 101
-if$ -- 1583
+cite$ -- 40
+duplicate$ -- 338
+empty$ -- 709
+format.name$ -- 104
+if$ -- 1648
 int.to.chr$ -- 0
-int.to.str$ -- 33
-missing$ -- 25
-newline$ -- 103
-num.names$ -- 33
-pop$ -- 136
+int.to.str$ -- 35
+missing$ -- 26
+newline$ -- 109
+num.names$ -- 35
+pop$ -- 144
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 0
-skip$ -- 158
+skip$ -- 168
 stack$ -- 0
 substring$ -- 246
-swap$ -- 79
+swap$ -- 80
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 0
 warning$ -- 5
-while$ -- 48
-width$ -- 35
-write$ -- 285
-(There were 11 warnings)
+while$ -- 50
+width$ -- 37
+write$ -- 300
+(There was 1 error message)

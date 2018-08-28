@@ -260,7 +260,64 @@ RoI pool as discussed in Section \ref{Fast_RCNN} is modified in this approach. I
 
 \subsection{Recurrent Neural Networks:}
 
-\subsection{Bayesian Optimisation Layer Dimensions:}
+\paragraph{Traditional RNN Layer:}A normal dense network layer has no memory of the previous features that pass through it. This would mean that in order to classify a sequence the data must be passed through the layer simultaneously. The advantage of a recurrent layer its ability to remember. An LSTM (Long-Short Term memory) layer has a weighted channel that inputs the output of the previous state as part of the next see Figure \ref{rnn_unrolled} for more details. Each state $ \{ 1,2,...,t-1,t \}$ is connected to one another almost like a chain, the output of the cell at time $t$, from inputs $x_{t}$ is $h_{t}$.
+
+\noindent \begin{figure}[h!]
+	\includegraphics[width = 1.0\hsize]{./figures/RNN-unrolled.png}
+	\caption{A Recurrent Layer \cite{Christopher_Olah_Blog}}
+	\label{rnn_unrolled}
+\end{figure}
+
+The main issue with this recurrent layer is how far back the network is capable of remembering. In short sequences the information will pass effectively through the chain, but often in longer sequences the network is less capable of remembering previous states. 
+
+\subsubsection{LSTM Layer} 
+LSTM layers contain a cell state which passes through the layer, a forget, input, and output gates. These gates determine whether to modify the cell state of the layer, this acts as the memory of the later and is similar to the links in the RNN chain (Figure \ref{rnn_unrolled}). The gates contain sigmoid functions which can evaluate between to 0 and 1, and determine how much of a component is to be let through.
+
+\noindent \begin{figure}[h!]
+	\includegraphics[width = 1.0\hsize]{./figures/LSTM3-chain.png}
+	\caption{A LSTM (Long-Short Term Memory) Layer \cite{Christopher_Olah_Blog}}
+	\label{rnn_unrolled}
+\end{figure}
+
+
+\paragraph{Forget Gate}
+The forget gate determines how much of the cell state to keep by looking at $h_{t-1}$ and $x_{t}$. The gate simply acts like a network layer, multiplying inputs by a weight, adding a bias and then passing the result through the activation (Sigmoid) function (Equation \ref{forget_gate}). 
+
+\begin{equation}
+\label{forget_gate}
+f_{t} = \sigma (W_{f} \cdot [h_{t-1},x_{t}] + b_{f})
+\end{equation}
+
+Once again $h_{t-1}$ is the output of the layer from the last state, and $x_{t}$ is the layer input at time $t$.
+
+\paragraph{Input Gate} Once the gate has determined what to forget from the last state it needs to decide what to add from the new state $x_{t}$ for a correct prediction $h_{t}$. This introduces the next gate in the system which combines an input sigmoid gate that decides which values of $x_{t}$ to add and a $tanh$ section that creates the new vector $\tilde{C}_{t}$ to add to the current state $C_{t}$, Equation \ref{input_gate}.
+
+
+\begin{equation}
+\begin{aligned}
+\mathit{i}_{t} = \sigma (W_{i} \cdot [h_{t-1},x_{t}] + b_{i}) \\
+\tilde{C}_{t} = tanh(W_{C} \cdot [h_{t-1},x_{t}] + b_{C})
+\end{aligned}
+\label{input_gate}
+\end{equation}
+
+The input gate and forget gate then influence the state via weighting $C_{t-1}$ by the forget metric $f_{t}$ and $\tilde{C}_{t}$ by the input scale.
+
+\begin{equation}
+C_{t} = f_{t} \times C_{t-1} + i_{t} \times \tilde{C}_{t}
+\label{forget_gate}
+\end{equation}
+
+\paragraph{Output gate} The final step of a LSTM is to decide the output. This involves deciding which parts of the cell state to output and scaling to (-1,1) via the use of another $tanh$ function.
+
+
+\begin{equation}
+o_{t} = \sigma (W_{o}[h_{t-1},x_{t}] + b_{o}) \\
+h_{t} = o_{t} \times tanh(C_{t})
+\label{forget_gate}
+\end{equation}
+ 
+\subsection{Bayesian Optimisation of Layer Dimensions:}
 In order to get the best network architecture and hyper-parameters such as learning rate it is possible to naively try combinations and record which performs the best. However, when trying to optimise networks efficiently it is better to provide a range of possible working parameters and optimise them in an informed and, more importantly, automated manner. Bayesian optimisation allows such a method and can quickly check the parameter space for a good combination to minimise the network loss. Bayesian optimisation uses an acquisition function which evaluates a Gaussian process. It is cheaper to evaluate the proxy function that approximates the true function rather than run the neural network. Hence it is a very fast and effective method of optimisation.
 
 \paragraph{Gaussian Processes:}
@@ -943,6 +1000,27 @@ This can be further sped up by the correct choice of kernel function and a cleve
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Contribution}
 
+
+\section{Software Solution}
+The system consists of a number of modules, each responsible for a specific aspect see Figure \ref{software_soln} for more details. These will now be summarised below, then a more in-depth review will occur in upcoming sections of the report. The realsense camera feeds data into three modules, Okvis for SLAM and a global representation of the environment, the cyclist model for path prediction and finally Mask-RCNN to segment the image and detect objects in the camera frame. Okvis also provides information into the cyclist model which needs to understand the bike's location in the world frame to predict future positions.
+
+\noindent \begin{figure}[h!]
+	\includegraphics[width = 1.0\hsize]{figures/software_architecture.png}
+	\caption{System Design}
+	\label{software_soln}
+\end{figure}
+
+\paragraph{Tracking Module}
+
+The tracking module takes the segmented image masks from Mask-RCNN, the passed-on depth image and Okvis pose output to determine the location of a detected object. The distance of an object is inferred from the depth camera, and masks which can then be converted into the world frame using the Okvis pose. From these outputs and a passed image, various features from objects can be matched from frame-to-frame. These features include global position, BRISK keypoints, and the KCF model of the object. Once the objects from the previous frame are correctly identified and new object added the object model can begin to predict an object's future movement.
+
+\paragraph{Collision Module}
+The collision module takes predicted positions from the object models and cyclist models. It then determines whether there is a large likelihood of intersection between the cyclist and objects in the future. The idea of this is to then notify both the object (possibly a person or car) that they are about to collide and the cyclist, hopefully both parties, once aware of the unfolding situation can take preventive measures to avoid eachother.
+
+\paragraph{Limitations}
+Sadly the system currently cannot run in realtime due to Mask-RCNN, the current state of the art segmentation network taking c. 0.5s to predict an image. There is a future possibility of incorporating a simpler, and faster network such as YOLO which foregoes the advantage of segmentation (useful for depth approximation) but would run in real-time.
+
+
 \section{Depth Measurement Outlier Removal}
 
 In order to get the depth measurement of an object, the mask output from Mask R-CNN is overlayed onto the depth map and a mean depth is taken. A number of points are not detected and therefore large quantities of the depth map is 0. Therefore, the median depth is selected only from coordinates at which $depth>0$. Figure \ref{DCO} shows some examples of a depth camera image taken in the Imperial Library.
@@ -1268,162 +1346,17 @@ Each region of interest may be tracked from one frame to the next. However, if t
 Taking the example provided in Figure \ref{roi_match}, there are three objects in the older frame and four in the new frame. BRISK (Section \ref{BRISK_matching}) is not reliable to match all objects from one frame to the next and sometimes cannot find matching keypoints between the same object in each frame (especially deformable objects such as people). Therefore, a system to combine methods is needed. For each $ROI_{old}$ and each $ROI_{new}$ the match metrics for each method (KCF,BRISK,Kalman) is calculated. This forms a matrix $matches \in \mathbb{R}^{new \times old \times methods}$ where $old,new$ are the number of ROIs in the old and new frames, and 
 $methods$ is the number of matching methods implemented (in this case two) but is designed to be easily extendible to more. The rules for the matching procedure are as follows:
 
-\begin{algorithm}
-	\DontPrintSemicolon
-	\SetAlgoLined
-	\setstretch{1.3}
-	\SetKwInOut{Input}{Input}
-	\SetKwInOut{Output}{Output}
-	\underline{match} $(old$\textunderscore$frame),new$\textunderscore$frame,[matching$\textunderscore$methods(oldROI,newROI))],matches,threshold)$\;
-	\Input{
-		\texttt{\\}
-		$old$\textunderscore$frame$ \tcp*[r]{ROIs as structures from the old frame}
-		$new$\textunderscore$frame$ \tcp*[r]{ROIs as structures from the new frame}
-		$[matching$\textunderscore$methods(oldROI,newROI)]$ \tcp*[r]{List of pointers to functions for matching ROIs}
-		\tcp*[r]{(KCF,Kalman Filter,Brisk)}
-		$matches$ \tcp*[r]{A matrix of zeros $\in \mathbb{R}^{(methods,oldROIs,newROIs)}$}
-		$threshold$ \tcp*[r]{The minimum match score considered to denote an inter-frame ROI match}
-	}
-	\Output{
-		\texttt{\\}
-		$old$\textunderscore$matched$ \tcp*[r]{A list of matched oldROIs, $old$\textunderscore$matched[i]$ matches to $new$\textunderscore$matched[i]$}
-		$new$\textunderscore$matched$ \tcp*[r]{A list of matched newROIs, $new$\textunderscore$matched[i]$ matches to $old$\textunderscore$matched[i]$}
-	}
-	\texttt{\\}
-	\tcp{Calculate score of match ($oldROI \to newROI$) for each $method,oldROI,newROI$}
-	\ForEach(\tcc*[f]{For every ROI in last frame}){$oldROI \in old$\textunderscore$frame$}{
-		\ForEach(\tcc*[f]{For every ROI in current frame}){$newROI \in new$\textunderscore$frame$}{
-			\ForEach(\tcc*[f]{For each method}){$method \in matching$\textunderscore$methods(oldROI,newROI)$}{
-				$matches[method_{i},oldROI_{i},newROI_{i}] = matching$\textunderscore$methods(oldROI,newROI)$
-			}
-		}
-	}
-	\tcp{\textbf{Multiply along methods axis to produce one combined match matrix.}}
-	\ForEach(\tcc*[f]{For every method}){$method \in matching$\textunderscore$methods(oldROI,newROI)$}{
-		\uIf(\tcc*[f]{If method index is > 0}){$method_{i} > 0$}{
-			$matches[0,:,:] = mult(matches[0,:,:],matches[method_{i},:,:])$ \tcc*[r]{Multiply along axis}
-		}
-	}
-	
-	$matches = matches[0,:,:]$
-	\texttt{\\}
-	\tcp{\textbf{Match new and old ROIS.}}
-	max = matches.max() \texttt{\\}
-	\While(){$max > threshold \text{ and } len(new$\textunderscore$matched)<len(new$\textunderscore$frame$)}{
-		$old,new = matches.max()_{i,j}$ \tcc*[r]{Find index of max element}
-		\uIf(\tcc*[f]{If not already matched}){$old \notin old$\textunderscore$matched$ and $new \notin new$\textunderscore$matched$}{
-			$new$\textunderscore$matched.append(new)$ \tcc*[f]{Add new index to already matched list}
-			$old$\textunderscore$matched.append(old)$ \tcc*[f]{Add old index to already matched list}
-		}
-		\texttt{\\}
-		$matches[new,old] = -1$ \texttt{\\}
-		$max = matches.max()$
-	}
-	\texttt{\\}
-	\caption{Algorithm to match old and new frames}
-	\label{alg:weights}
-\end{algorithm}
 
 After the matching process is complete, there are a number of extra steps that must take place before continuing to the next frame. For example, any oldROIs that are not detected in the new frame must have a life decremented and be added to the list of new frame ROIs with the relevant location and information.
 
-\begin{algorithm}
-	\DontPrintSemicolon
-	\SetAlgoLined
-	\setstretch{1.3}
-	\SetKwInOut{Input}{Input}
-	\SetKwInOut{Output}{Output}
-	\underline{add\textunderscore old\textunderscore rois} $($old$\textunderscore$matched$,old$\textunderscore$frame,new$\textunderscore$frame)$\;
-	\Input{ \texttt{\\}
-		$old$\textunderscore$matched$ \tcp*[r]{A list of matched oldROIs, $old$\textunderscore$matched[i]$ matches to $new$\textunderscore$matched[i]$}
-		$old$\textunderscore$frame$ \tcp*[r]{ROIs as structures from the old frame}
-		$new$\textunderscore$frame$ \tcp*[r]{ROIs as structures from the new frame}
-	}
-	\Output{ \texttt{\\}
-		$new$\textunderscore$frame$ \tcp*[r]{An updated list of newROI objects}
-	}
-	
-	\texttt{\\}
-	\tcp{\textbf{Update newROIs to include undetected ROIs from old frame.}}
-	\ForEach(\tcc*[f]{For every old roi not found in new frame}){$old \notin old$\textunderscore$matched$}{
-		$older = old$\textunderscore$frame[old]$ \tcc*[r]{Get olderROI object}
-		\uIf(\tcc*[f]{If the ROI has a life to spare}){$older.lives > 1$}{
-			$older.lives$ -= $1$ \tcc*[r]{Decrement a life}
-			$update$\textunderscore$location(older,T_{CW})$  \tcc*[r]{Update camera/world location from Kalman prediction}
-			$update$\textunderscore$model(older,T_{CW})$  \tcc*[r]{Update pedestrian model from Kalman prediction}
-			$add$\textunderscore$information(new$\textunderscore$frame,older)$ \tcc*[r]{Append older ROI information to new frame} \tcc*[r]{(masks,lives,id,class,colour,briskKeypoints,briskDescriptors,KCFtracker)}
-		}
-	}
-	\texttt{\\}
-	\caption{Algorithm to append oldROIs that aren't detected in new frame}
-	\label{alg:weights}
-\end{algorithm}
+
 
 Then the matched ROIs pairs from the old and new frame must exchange relevant information in preparation for the next frame:
 
-\begin{algorithm}
-	\DontPrintSemicolon
-	\SetAlgoLined
-	\setstretch{1.3}
-	\SetKwInOut{Input}{Input}
-	\SetKwInOut{Output}{Output}
-	\underline{update\textunderscore matched\textunderscore rois} ($old$\textunderscore$matched,new$\textunderscore$matched,old$\textunderscore$frame,new$\textunderscore$frame)$\;
-	\Input{ \texttt{\\}
-		$old$\textunderscore$matched$ \tcp*[r]{A list of matched oldROIs, $old$\textunderscore$matched[i]$ matches to $new$\textunderscore$matched[i]$}
-		$new$\textunderscore$matched$ \tcp*[r]{A list of matched newROIs, $new$\textunderscore$matched[i]$ matches to $old$\textunderscore$matched[i]$}
-		$old$\textunderscore$frame$ \tcp*[r]{ROIs as structures from the old frame}
-		$new$\textunderscore$frame$ \tcp*[r]{ROIs as structures from the new frame}
-	}
-	\Output{ \texttt{\\}
-		$new$\textunderscore$frame$ \tcp*[r]{An updated list of newROI objects}
-	}
-	\texttt{\\}
-	\tcp{\textbf{Add older ROI details to matched new ROI}}
-	\ForEach(\tcc*[f]{For every matched old/new ROI pair}){$old,new \in old$\textunderscore$matched,new$\textunderscore$matched$}{
-		$older = oldROIs[old]$ \tcc*[r]{Get olderROI object}
-		$newer = newROIs[new]$ \tcc*[r]{Get newerROI object}
-		$newState = newer.worldPoint$ \tcc*[r]{Get new location of ROI}
-		$older.kalman.correct(newState)$ \tcc*[r]{Update Kalman Filter with new location}
-		$older.model.add$\textunderscore$points(newState)$ \tcc*[r]{Add new points to movement model}
-		\uIf(\tcc*[f]{If lives < threshold}){$older.lives < lifeThreshold$}{
-			$older.lives$ += $1$
-		}
-		$update$\textunderscore$object(newer,older)$ \tcc*[r]{Update new ROI with older ROI information} \tcc*[r]{(Kalman Filter,lives,colour,id,model)}
-	}
-	\texttt{\\}
-	\caption{Algorithm to update newROIs with matched oldROIs}
-	\label{alg:weights}
-\end{algorithm}
 
 Finally any new ROIs that were not in the old frame need to be assigned an individual ID to be recognised over the next frames.
 
-\begin{algorithm}
-	\DontPrintSemicolon
-	\SetAlgoLined
-	\setstretch{1.3}
-	\SetKwInOut{Input}{Input}
-	\SetKwInOut{Output}{Output}
-	\underline{update\textunderscore matched\textunderscore rois} ($old$\textunderscore$matched,new$\textunderscore$matched,old$\textunderscore$frame,new$\textunderscore$frame)$\;
-	\Input{ \texttt{\\}
-		$old$\textunderscore$matched$ \tcp*[r]{A list of matched oldROIs, $old$\textunderscore$matched[i]$ matches to $new$\textunderscore$matched[i]$}
-		$new$\textunderscore$matched$ \tcp*[r]{A list of matched newROIs, $new$\textunderscore$matched[i]$ matches to $old$\textunderscore$matched[i]$}
-		$new$\textunderscore$frame$ \tcp*[r]{ROIs as structures from the new frame}
-	}
-	\Output{ \texttt{\\}
-		$new$\textunderscore$frame$ \tcp*[r]{An updated list of newROI objects}
-	}
-	\texttt{\\}
-	\tcp{Note that if there are no objects in old frame $new$\textunderscore$frame.id$ = zeros}
-	$maxId = new$\textunderscore$frame.id.max()+1$ \tcc*[r]{Get current maximum ID + 1}
-	
-	\ForEach(\tcc*[f]{For every not-matched new ROI}){$new \notin new$\textunderscore$matched$}{
-		$newer = new$\textunderscore$frame[new]$ \tcc*[r]{Get newerROI object}
-		$newer.id = maxId$ \tcc*[r]{Assign new ID}
-		$maxId$ += $1$ \tcc*[r]{Increment the maximum ID}
-	}
-	\texttt{\\}
-	\caption{Algorithm to create new IDs for object in new frame}
-	\label{alg:weights}
-\end{algorithm}
+
 
 
 \section{Movement Prediction}
@@ -1465,11 +1398,14 @@ This method then produces a predicted position and the uncertainty in that posit
 
 The bike is deemed to be the most important model and can therefore predictions should take into account higher order features, for example the current state of the bicycle in the frame and perhaps external factors such as the surrounding environment. The problem is therefore split into two branches, one for sequence prediction of Okvis pose outputs and the other of predictions using image inputs.
 
+
+\paragraph{Training Data} 
+
 \paragraph{Okvis Sequence Inputs:}
 Since the model is required to learn a sequence a recurrent neural network is the obvious choice. This mimicks memory from one-frame to the next, providing $n$ previous frames to predict the $(n+1)th$ frame. The proposed architecture for this model, by no means fine-tuned but merely to provide a proof-of-concept is as follows:
 
 \paragraph{Pose RNN Model:} \label{pose_model}
-The main problem is to generalise the model to any world point. For example, the bike could be at any location or offset from the world origin and thus a huge amount of data would be needed for learning if the world location was an input. Instead, each sequence contains an origin point at sequence number zero. The model simply learns the difference. Note however, things such as orientation can make a large difference, if the bike is at a big angle in the world frame it will be turning. This information cannot be transferred from the difference between an original frame and the next. Hence the rotation part of the transformation matrix remains in the world frame while the translation has an origin equal to that of the 1st frame in the sequence Equation \ref{pose_sequence}.
+The main problem is to generalise the model to any world point. For example, the bike could be at any location or offset from the world origin and thus a huge amount of data would be needed for learning if the world location was an input. Instead, the model simply learns the difference in world frame between frames. Note however, things such as orientation can make a large difference, if the bike is at a big angle in the world frame it will be turning quickly. This information cannot be transferred from the difference between an original frame and the next. Hence the rotation part of the transformation matrix remains in the world frame while the translation has an origin equal to that of the $n-1$th frame in the sequence Equation \ref{pose_sequence}.
 
 
 \begin{equation}
@@ -1483,7 +1419,7 @@ y = r_{WC_{n+1}}
 \label{pose_sequence}
 \end{equation}
 
-The model is formed of the layers detailed on the right of Figure \ref{network_architecture}. Given a limited input space $X = (len_{sequence}, 3\times4)$ where the transformation matrix is flattened for use in the LSTM layers to a matrix of size $12$, discarding the last row $[0_{1 \times 3},1]$. The model is trained in a regression setting with labels $\mathbf{y}=[x,y,z]$ which are coordinated representing the displacement from first frame of the sequence. As it would be too granular to learn from every frame, a larger time-gap between frames can be used and hence the model sequence can consist of every $k$th frame from the camera. The loss function used is mean squared error and is formulated as follows:
+The model is formed of the layers detailed on the right of Figure \ref{network_architecture}. Given a limited input space $X = (len_{sequence}, 3\times4)$ where the transformation matrix is flattened for use in the LSTM layers to a matrix of size $12$, discarding the last row $[0_{1 \times 3},1]$. The model is trained in a regression setting with labels $\mathbf{y}=[x,y,z]$ which represent the displacement from frame last of the sequence at the subsequent frame. As it would be too granular to learn from every frame, a larger time-gap between frames can be used and hence the model sequence can consist of every $k$th frame from the camera. The loss function used is mean squared error and is formulated as follows:
 
 \begin{equation}
 \begin{aligned}
@@ -1502,11 +1438,18 @@ where $i$ is the sequence number, $j$ is the variable prediction and therefore $
 \end{figure}
 
 \paragraph{Images RCNN Model:} \label{images_rcnn}
-For the image section of the model, a standard convolutional learning approach is adopted as described in Section \ref{Cnn_section}. The loss function for the RCNN model is the same as Equation \ref{pose_loss}, as once again this is a regression problem. The images are fed into the network and the difference predicted much like before. The only variation is the data input and the flattening layer before the LSTM. A convolutional layer outputs a number of 3D tensors $(w,h,d)$ which is not compatible with the LSTM or dense matrices. Hence a flattening layer converts the tensors into a shape $(sequence \textunderscore length, w \times h \times d)$ for input into the final network layers.
+For the image section of the model, a standard convolutional learning approach is adopted as described in Section \ref{Cnn_section}. The loss function for the RCNN model is the same as Equation \ref{pose_loss}, as once again this is a regression problem. The images are fed into the network and the difference predicted much like before. The only variation is the data input and the flattening layer before the LSTM. A convolutional layer outputs a number of 3D tensors $(w,h,d)$ which is not compatible with the LSTM or dense matrices. Hence a flattening layer converts the tensors into a shape $(sequence \textunderscore length, w \times h \times d)$ for input into the final network layers. Additionally some extra pre-processing is required, since images are scaled from 
 
 \paragraph{Optimising Learning Rate and Decay:}
+Adam optimiser, a common solver for deep learning problems requires a number of parameters which are all set as the default recommended from the paper \cite{DBLP:journals/corr/KingmaB14} $\beta_{1}=0.9$,$\beta_{2}=0.999$,$\epsilon=10^{-8}$ these are adaptive moment parameters that control the algorithm's descent into minima. However learning rate and learning rate decay are problem specific and can vastly impair the ability of a model to learn correctly. Hence a logical approach to selection of the right values is required. A grid search method was chosen and loss characteristics at epoch 200 compared to get a reasonable approximate for the correct learning rate.
 
-Adam optimiser, a common solver for deep learning problems requires a number of parameters which are all set as the default recommended from the paper \cite{DBLP:journals/corr/KingmaB14} $\alpha=0.001$,$\beta_{1}=0.9$,$\beta_{2}=0.999$,$\epsilon=10^{-8}$ these are adaptive moment parameters that control the algorithm's descent into minima. However learning rate and learning rate decay are problem specific and can vastly impair the ability of a model to learn correctly. Hence a logical approach to selection of the right values is required. A grid search method was chosen and loss characteristics at epoch 200 compared to get a reasonable approximate for the correct learning rate.
+
+\noindent \begin{figure}[h!]
+	\includegraphics[width = 0.5\hsize]{figures/final_model.png}
+	\includegraphics[width = 0.5\hsize]{figures/final_model.png}
+	\caption{Complete Network Architecture.}
+	\label{total_network_architecture}
+\end{figure}
 
 \paragraph{Bayesian Optimisation Layer Dimensions:}
 
@@ -1522,18 +1465,23 @@ Both models discussed in this section can be trained separately to obtain predic
 \paragraph{Training Regime: }The network is large and so a careful training regime is required to ensure convergence to a reasonable minimum. The two initial models, the pose and RCNN images are first pre-trained to predict poses. These are the complete models described in Figure \ref{network_architecture}. Once this training process is complete the weights are used in the larger branched model. These layers are then frozen and the final dense layers are trained. Finally all layers are unfrozen and the whole model is trained with a lower learning rate to fine-tune the weights.
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Experimental Results}
 
 \section{System Evaluation}
 
 \subsection{Mask-RCNN}
 In applying Mask-RCNN to the specific urban environment there have been a number of interesting outcomes. On the whole, the system is robust, often detecting images well and so there are rarely gaps when an object is detected in one frame and not the next. A number of incorrect classifications often provide a worry however, for example, the classification of road paint can cause a problem to the system (Figure ...). This often happens with road markings of bicycles that are relatively convincing examples. After experiencing this phenomenon, a number of examples were sought out to determine how the segmentation performs.
 
-\subsection{Okvis with Dynamic Objects}
+
+\subsection{Cyclist Model}
 
 
 \subsection{Depth Camera}
 
-The intel realsense depth camera is typically used in indoor environments as it operates with a small laser. This, as is expected works less well in highly lit environments. The extent of the problem, however is often drastic and can cause okvis to perform poor estimations of pose and hence is unable to determine the bicycle location. An example of these images can be seen in Figure... . It could quite easily be solved, however, with the use of a stero camera for depth perception. For example the realsense R... offers such capabilities which would mitigate the depth camera sensitivity to bright lighting conditions.
+The intel realsense depth camera is typically used in indoor environments as it operates with a small laser. This, as is expected works less well in highly lit environments. The extent of the problem, however is often drastic and can cause okvis to perform poor estimations of pose and hence is unable to determine the bicycle location. An example of these images can be seen in Figure... . It could quite easily be solved, however, with the use of a stereo camera for depth perception. For example the realsense R... offers such capabilities which would mitigate the depth camera sensitivity to bright lighting conditions.
+
+\subsection{Okvis with Dynamic Objects}
 
 
 
@@ -1688,14 +1636,167 @@ The code developed is intended to offer a basis for an early warning system to c
 	
 \end{longtable}
 
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{Experimental Results}
-
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Conclusion}
+
+\chapter{Appendix}
+
+
+
+\begin{algorithm}
+	\DontPrintSemicolon
+	\SetAlgoLined
+	\setstretch{1.3}
+	\SetKwInOut{Input}{Input}
+	\SetKwInOut{Output}{Output}
+	\underline{match} $(old$\textunderscore$frame),new$\textunderscore$frame,[matching$\textunderscore$methods(oldROI,newROI))],matches,threshold)$\;
+	\Input{
+		\texttt{\\}
+		$old$\textunderscore$frame$ \tcp*[r]{ROIs as structures from the old frame}
+		$new$\textunderscore$frame$ \tcp*[r]{ROIs as structures from the new frame}
+		$[matching$\textunderscore$methods(oldROI,newROI)]$ \tcp*[r]{List of pointers to functions for matching ROIs}
+		\tcp*[r]{(KCF,Kalman Filter,Brisk)}
+		$matches$ \tcp*[r]{A matrix of zeros $\in \mathbb{R}^{(methods,oldROIs,newROIs)}$}
+		$threshold$ \tcp*[r]{The minimum match score considered to denote an inter-frame ROI match}
+	}
+	\Output{
+		\texttt{\\}
+		$old$\textunderscore$matched$ \tcp*[r]{A list of matched oldROIs, $old$\textunderscore$matched[i]$ matches to $new$\textunderscore$matched[i]$}
+		$new$\textunderscore$matched$ \tcp*[r]{A list of matched newROIs, $new$\textunderscore$matched[i]$ matches to $old$\textunderscore$matched[i]$}
+	}
+	\texttt{\\}
+	\tcp{Calculate score of match ($oldROI \to newROI$) for each $method,oldROI,newROI$}
+	\ForEach(\tcc*[f]{For every ROI in last frame}){$oldROI \in old$\textunderscore$frame$}{
+		\ForEach(\tcc*[f]{For every ROI in current frame}){$newROI \in new$\textunderscore$frame$}{
+			\ForEach(\tcc*[f]{For each method}){$method \in matching$\textunderscore$methods(oldROI,newROI)$}{
+				$matches[method_{i},oldROI_{i},newROI_{i}] = matching$\textunderscore$methods(oldROI,newROI)$
+			}
+		}
+	}
+	\tcp{\textbf{Multiply along methods axis to produce one combined match matrix.}}
+	\ForEach(\tcc*[f]{For every method}){$method \in matching$\textunderscore$methods(oldROI,newROI)$}{
+		\uIf(\tcc*[f]{If method index is > 0}){$method_{i} > 0$}{
+			$matches[0,:,:] = mult(matches[0,:,:],matches[method_{i},:,:])$ \tcc*[r]{Multiply along axis}
+		}
+	}
+	
+	$matches = matches[0,:,:]$
+	\texttt{\\}
+	\tcp{\textbf{Match new and old ROIS.}}
+	max = matches.max() \texttt{\\}
+	\While(){$max > threshold \text{ and } len(new$\textunderscore$matched)<len(new$\textunderscore$frame$)}{
+		$old,new = matches.max()_{i,j}$ \tcc*[r]{Find index of max element}
+		\uIf(\tcc*[f]{If not already matched}){$old \notin old$\textunderscore$matched$ and $new \notin new$\textunderscore$matched$}{
+			$new$\textunderscore$matched.append(new)$ \tcc*[f]{Add new index to already matched list}
+			$old$\textunderscore$matched.append(old)$ \tcc*[f]{Add old index to already matched list}
+		}
+		\texttt{\\}
+		$matches[new,old] = -1$ \texttt{\\}
+		$max = matches.max()$
+	}
+	\texttt{\\}
+	\caption{Algorithm to match old and new frames}
+	\label{alg:weights}
+\end{algorithm}
+
+
+\begin{algorithm}
+	\DontPrintSemicolon
+	\SetAlgoLined
+	\setstretch{1.3}
+	\SetKwInOut{Input}{Input}
+	\SetKwInOut{Output}{Output}
+	\underline{add\textunderscore old\textunderscore rois} $($old$\textunderscore$matched$,old$\textunderscore$frame,new$\textunderscore$frame)$\;
+	\Input{ \texttt{\\}
+		$old$\textunderscore$matched$ \tcp*[r]{A list of matched oldROIs, $old$\textunderscore$matched[i]$ matches to $new$\textunderscore$matched[i]$}
+		$old$\textunderscore$frame$ \tcp*[r]{ROIs as structures from the old frame}
+		$new$\textunderscore$frame$ \tcp*[r]{ROIs as structures from the new frame}
+	}
+	\Output{ \texttt{\\}
+		$new$\textunderscore$frame$ \tcp*[r]{An updated list of newROI objects}
+	}
+	
+	\texttt{\\}
+	\tcp{\textbf{Update newROIs to include undetected ROIs from old frame.}}
+	\ForEach(\tcc*[f]{For every old roi not found in new frame}){$old \notin old$\textunderscore$matched$}{
+		$older = old$\textunderscore$frame[old]$ \tcc*[r]{Get olderROI object}
+		\uIf(\tcc*[f]{If the ROI has a life to spare}){$older.lives > 1$}{
+			$older.lives$ -= $1$ \tcc*[r]{Decrement a life}
+			$update$\textunderscore$location(older,T_{CW})$  \tcc*[r]{Update camera/world location from Kalman prediction}
+			$update$\textunderscore$model(older,T_{CW})$  \tcc*[r]{Update pedestrian model from Kalman prediction}
+			$add$\textunderscore$information(new$\textunderscore$frame,older)$ \tcc*[r]{Append older ROI information to new frame} \tcc*[r]{(masks,lives,id,class,colour,briskKeypoints,briskDescriptors,KCFtracker)}
+		}
+	}
+	\texttt{\\}
+	\caption{Algorithm to append oldROIs that aren't detected in new frame}
+	\label{alg:weights}
+\end{algorithm}
+
+
+\begin{algorithm}
+	\DontPrintSemicolon
+	\SetAlgoLined
+	\setstretch{1.3}
+	\SetKwInOut{Input}{Input}
+	\SetKwInOut{Output}{Output}
+	\underline{update\textunderscore matched\textunderscore rois} ($old$\textunderscore$matched,new$\textunderscore$matched,old$\textunderscore$frame,new$\textunderscore$frame)$\;
+	\Input{ \texttt{\\}
+		$old$\textunderscore$matched$ \tcp*[r]{A list of matched oldROIs, $old$\textunderscore$matched[i]$ matches to $new$\textunderscore$matched[i]$}
+		$new$\textunderscore$matched$ \tcp*[r]{A list of matched newROIs, $new$\textunderscore$matched[i]$ matches to $old$\textunderscore$matched[i]$}
+		$old$\textunderscore$frame$ \tcp*[r]{ROIs as structures from the old frame}
+		$new$\textunderscore$frame$ \tcp*[r]{ROIs as structures from the new frame}
+	}
+	\Output{ \texttt{\\}
+		$new$\textunderscore$frame$ \tcp*[r]{An updated list of newROI objects}
+	}
+	\texttt{\\}
+	\tcp{\textbf{Add older ROI details to matched new ROI}}
+	\ForEach(\tcc*[f]{For every matched old/new ROI pair}){$old,new \in old$\textunderscore$matched,new$\textunderscore$matched$}{
+		$older = oldROIs[old]$ \tcc*[r]{Get olderROI object}
+		$newer = newROIs[new]$ \tcc*[r]{Get newerROI object}
+		$newState = newer.worldPoint$ \tcc*[r]{Get new location of ROI}
+		$older.kalman.correct(newState)$ \tcc*[r]{Update Kalman Filter with new location}
+		$older.model.add$\textunderscore$points(newState)$ \tcc*[r]{Add new points to movement model}
+		\uIf(\tcc*[f]{If lives < threshold}){$older.lives < lifeThreshold$}{
+			$older.lives$ += $1$
+		}
+		$update$\textunderscore$object(newer,older)$ \tcc*[r]{Update new ROI with older ROI information} \tcc*[r]{(Kalman Filter,lives,colour,id,model)}
+	}
+	\texttt{\\}
+	\caption{Algorithm to update newROIs with matched oldROIs}
+	\label{alg:weights}
+\end{algorithm}
+
+
+
+\begin{algorithm}
+	\DontPrintSemicolon
+	\SetAlgoLined
+	\setstretch{1.3}
+	\SetKwInOut{Input}{Input}
+	\SetKwInOut{Output}{Output}
+	\underline{update\textunderscore matched\textunderscore rois} ($old$\textunderscore$matched,new$\textunderscore$matched,old$\textunderscore$frame,new$\textunderscore$frame)$\;
+	\Input{ \texttt{\\}
+		$old$\textunderscore$matched$ \tcp*[r]{A list of matched oldROIs, $old$\textunderscore$matched[i]$ matches to $new$\textunderscore$matched[i]$}
+		$new$\textunderscore$matched$ \tcp*[r]{A list of matched newROIs, $new$\textunderscore$matched[i]$ matches to $old$\textunderscore$matched[i]$}
+		$new$\textunderscore$frame$ \tcp*[r]{ROIs as structures from the new frame}
+	}
+	\Output{ \texttt{\\}
+		$new$\textunderscore$frame$ \tcp*[r]{An updated list of newROI objects}
+	}
+	\texttt{\\}
+	\tcp{Note that if there are no objects in old frame $new$\textunderscore$frame.id$ = zeros}
+	$maxId = new$\textunderscore$frame.id.max()+1$ \tcc*[r]{Get current maximum ID + 1}
+	
+	\ForEach(\tcc*[f]{For every not-matched new ROI}){$new \notin new$\textunderscore$matched$}{
+		$newer = new$\textunderscore$frame[new]$ \tcc*[r]{Get newerROI object}
+		$newer.id = maxId$ \tcc*[r]{Assign new ID}
+		$maxId$ += $1$ \tcc*[r]{Increment the maximum ID}
+	}
+	\texttt{\\}
+	\caption{Algorithm to create new IDs for object in new frame}
+	\label{alg:weights}
+\end{algorithm}
 
 
 %% bibliography

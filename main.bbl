@@ -100,6 +100,9 @@ C.~M. Bishop, {\em Pattern Recognition and Machine Learning (Information
 K.~He, G.~Gkioxari, P.~Doll{\'{a}}r, and R.~B. Girshick, ``Mask {R-CNN},'' {\em
   CoRR}, vol.~abs/1703.06870, 2017.
 
+\bibitem{Christopher_Olah_Blog}
+C.~Olah, ``Understanding lstms.''
+
 \bibitem{Marc_Deisenroth_Notes}
 M.~Deisenroth, ``Gaussian processes and bayesian optimisation,'' 2018.
 
@@ -141,5 +144,9 @@ P.~Furgale, ``Extensions to the visual odometry pipeline for the exploration of
 J.~F. Henriques, R.~Caseiro, P.~Martins, and J.~Batista, ``High-speed tracking
   with kernelized correlation filters,'' {\em IEEE Transactions on Pattern
   Analysis and Machine Intelligence}, vol.~37, pp.~583--596, March 2015.
+
+\bibitem{DBLP:journals/corr/KingmaB14}
+D.~P. Kingma and J.~Ba, ``Adam: {A} method for stochastic optimization,'' {\em
+  CoRR}, vol.~abs/1412.6980, 2014.
 
 \end{thebibliography}
