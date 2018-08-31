@@ -1021,7 +1021,7 @@ The collision module takes predicted positions from the object models and cyclis
 Sadly the system currently cannot run in realtime due to Mask-RCNN, the current state of the art segmentation network taking c. 0.5s to predict an image. There is a future possibility of incorporating a simpler, and faster network such as YOLO which foregoes the advantage of segmentation (useful for depth approximation) but would run in real-time.
 
 
-\section{Depth Measurement Outlier Removal}
+\section{Depth Measurement Outlier Removal} \label{Depth_approx}
 
 In order to get the depth measurement of an object, the mask output from Mask R-CNN is overlayed onto the depth map and a mean depth is taken. A number of points are not detected and therefore large quantities of the depth map is 0. Therefore, the median depth is selected only from coordinates at which $depth>0$. Figure \ref{DCO} shows some examples of a depth camera image taken in the Imperial Library.
 
@@ -1221,19 +1221,23 @@ I_{5} & \Delta t \times I_{5} \\[0.3em]
 \end{bmatrix}
 \end{equation}
 
-The final term $w_{k} = \mathcal{N}(0,Q)$ describes the process noise in the system and is normally distributed with error covariance matrix $Q$. This is updated by the kalman filter at each step. Since the state describes 3D coordinates it is useful to determine how far the average walking human would walk (in m) from one frame to the next, given an average walk of 1.5m/s:
+The final term $w_{k} = \mathcal{N}(0,Q)$ describes the process noise in the system and is normally distributed with error covariance matrix $Q$. This is updated by the kalman filter at each step. Since the state describes 3D coordinates it is useful to determine how far the average walking human would walk (in m) from one frame to the next, given an average walk of 1.5m/s. These parameters $dist_{h}$ for a human, $dist_{b}$ for other cyclists and $dist_{v}$ for a motor vehicle are listed below:
 
 \begin{equation}
 \begin{aligned}
-dist = \frac{1.5}{30} \approx 0.05 \\
+dist_{h} = 1.5m/s \\
+dist_{b} = 10 m/s \\
+dist_{v} = 15 m/s \\
 \end{aligned}
 \end{equation}
 
-Speeding this up a bit for runners, the $x,y,z$ variance would not be above 0.1 so that is a good initialising parameter for the filter $x,y,z$ variance states. The width and height is in pixel space and so would change a more rapidly, and so is scaled accordingly.
+The variance in the process noise would also be expected to increase dependent on the type of object concerned and thus they are initialised differently for each respective object type. Also it is beneficial to not that the width and height are in pixel space and so would change a more rapidly, and so is scaled accordingly. The variance in process noise can't possibly be more than the movement of each object per frame so this is a good place to initialise the kalman filter.
 
 \begin{equation}
 \begin{aligned}
-v = [0.1,0.1,0.1,7,7,0.01,0.01,0.01,0.7,0.7] \\
+v_{h} = [1.5,1.5,1.5,7,7,0.15,0.15,0.15,0.7,0.7] \\
+v_{b} = [10,10,10,7,7,1,1,1,0.7,0.7] \\
+v_{v} = [15,15,15,7,7,1.5,1.5,1.5,0.7,0.7] \\
 Q_{k} = diag(v)
 \end{aligned}
 \end{equation}
@@ -1270,7 +1274,7 @@ R_{k} = diag(v)
 \end{aligned}
 \end{equation}
 
-where $R_{k} \in \mathbb{R}^{5 \times 5}$ and is the diagonalised matrix of r. 
+where $R_{k} \in \mathbb{R}^{5 \times 5}$ and is the diagonalised matrix of r. Note also that the measurement error is in the sensors and therefore is not dependent on the type of object and respective presumed velocities.
 
 \subsubsection{Kalman Equations}
 The prior estimates for the next time step by the Kalman predictions step (no control vector):
@@ -1363,6 +1367,20 @@ Finally any new ROIs that were not in the old frame need to be assigned an indiv
 
 Each object and the bike must be modelled from frame-to-frame and the subsequent path predicted for collision detection. The further in the future that can be accurately modelled, the better the warning system. The following section describes both the more complex bicycle model and the simple path prediction for pedestrians.
 
+
+\subsection{Datasets}
+The great advantage of the system is that for movement prediction it already has the core components required to create unlimited training data. All that is required is to cycle around and record the images and pose with Okvis. This can then be passed into the model for training. One caveat to this is that due to the poor depth camera readings outside, Okvis sometimes struggles to maintain the correct position and can drastically mis-predict the speed of the bicycle. This means that a number of runs are required to get a working dataset. Hence three main datasets were collected, a Blackfriars dataset which contains three runs of the route on separate days, an Imperial dataset (around Queen's Tower), and a dataset from walking around the Tate Modern.
+
+
+\noindent \begin{figure}[h!]
+	\includegraphics[width = 0.5\hsize]{figures/blackfriars_okvis_plot.png}
+	\includegraphics[width = 0.5\hsize]{figures/blackfriars_map.png}
+	\caption{Okvis Paths: Left, Google Map: Right.}
+	\label{blackfriars_maps}
+\end{figure}
+
+Although the Okvis paths look vastly different, the model is only interested in short segments and hence the variation is less than percieved in Figure \ref{blackfriars_maps}. The main problem with models is the ability to generalise, hence training on a limited, unbalanced dataset is tricky. So for the prediction it is assumed that someone is able to record their daily commute and train the model on that route. So the validation and test sets consist of a same route on a different day with the obvious varied lighting, traffic conditions, and traffic lights that come with the average daily commute variation.
+
 \subsection{Objects Prediction}
 The objects are modelled by the Kalman filter from frame to frame and this provides a good estimate of both the direction and predicted position. Hence in a future position, say in 10 frames would simply be obtained from multiplying by a modified state-transition model.
 
@@ -1399,7 +1417,6 @@ This method then produces a predicted position and the uncertainty in that posit
 The bike is deemed to be the most important model and can therefore predictions should take into account higher order features, for example the current state of the bicycle in the frame and perhaps external factors such as the surrounding environment. The problem is therefore split into two branches, one for sequence prediction of Okvis pose outputs and the other of predictions using image inputs.
 
 
-\paragraph{Training Data} 
 
 \paragraph{Okvis Sequence Inputs:}
 Since the model is required to learn a sequence a recurrent neural network is the obvious choice. This mimicks memory from one-frame to the next, providing $n$ previous frames to predict the $(n+1)th$ frame. The proposed architecture for this model, by no means fine-tuned but merely to provide a proof-of-concept is as follows:
@@ -1429,7 +1446,21 @@ mse =
 \label{pose_loss}
 \end{equation}
 
-where $i$ is the sequence number, $j$ is the variable prediction and therefore $m=3$ for $[x,y,z]$.
+where $i$ is the sequence number, $j$ is the variable prediction and therefore $m=3$ for $[x,y,z]$. The model simple as the number of features is small so learning from the pose inputs will not require a complex model. The structure is formulated below:
+
+\noindent \begin{table}[h!]
+	\centering
+	\begin{tabular}{|p{3.5cm}|p{3.5cm}|p{3.5cm}|}
+		\hline
+		\textbf{Layer Number}&\textbf{Layer} & \textbf{Size}                                  \\ \hline
+		1  & LSTM   &   32     \\ \hline
+		2  & LSTM   &   32     \\ \hline
+		3  & LSTM   &   32    \\ \hline
+		4  & Dense  &   3    \\ \hline		
+	\end{tabular}
+	\caption{Pose Model Dimensions}
+\end{table}
+
 
 \noindent \begin{figure}[h!]
 	\includegraphics[width = 1.0\hsize]{figures/Networks.png}
@@ -1438,22 +1469,83 @@ where $i$ is the sequence number, $j$ is the variable prediction and therefore $
 \end{figure}
 
 \paragraph{Images RCNN Model:} \label{images_rcnn}
-For the image section of the model, a standard convolutional learning approach is adopted as described in Section \ref{Cnn_section}. The loss function for the RCNN model is the same as Equation \ref{pose_loss}, as once again this is a regression problem. The images are fed into the network and the difference predicted much like before. The only variation is the data input and the flattening layer before the LSTM. A convolutional layer outputs a number of 3D tensors $(w,h,d)$ which is not compatible with the LSTM or dense matrices. Hence a flattening layer converts the tensors into a shape $(sequence \textunderscore length, w \times h \times d)$ for input into the final network layers. Additionally some extra pre-processing is required, since images are scaled from 
+For the image section of the model, a standard convolutional learning approach is adopted as described in Section \ref{Cnn_section}. The loss function for the RCNN model is the same as Equation \ref{pose_loss}, as once again this is a regression problem. The images are fed into the network and the difference predicted much like before. The only variation is the data input and the flattening layer before the LSTM. A convolutional layer outputs a number of 3D tensors $(w,h,d)$ which is not compatible with the LSTM or dense matrices. Hence a flattening layer converts the tensors into a shape $(sequence \textunderscore length, w \times h \times d)$ for input into the final network layers. Additionally some extra pre-processing is required, since images are scaled from 0 to 255 it is hard to learn. Hence the images are simply scaled to between $(-1,1)$ by $(image-127.5)/127.5$.
+
+\noindent \begin{table}[h!]
+	\centering
+	\begin{tabular}{|p{3.5cm}|p{3.5cm}|p{3.5cm}|}
+		\hline
+		\textbf{Layer Number}&\textbf{Layer} & \textbf{Size}                                  \\ \hline
+		1  & Convolutional   &   32     \\ \hline
+		2  & Convolutional   &   32     \\ \hline
+		3  & Max Pooling     &   N/A    \\ \hline
+		4  & Dropout (.25)   &   N/A    \\ \hline
+		5  & Convolutional   &   16     \\ \hline
+		6  & Convolutional   &   16     \\ \hline
+		7  & Max Pooling     &   N/A    \\ \hline  
+		8  & Dropout (.25)   &   N/A    \\ \hline
+		9  & Flatten         &   N/A    \\ \hline
+		10 & LSTM            &   64     \\ \hline   
+		11 & Dense           &   32     \\ \hline 
+		12 & Dense           &   3      \\ \hline 
+		                                                                           
+	\end{tabular}
+\caption{RCNN Dimensions}
+\end{table}
+
 
 \paragraph{Optimising Learning Rate and Decay:}
 Adam optimiser, a common solver for deep learning problems requires a number of parameters which are all set as the default recommended from the paper \cite{DBLP:journals/corr/KingmaB14} $\beta_{1}=0.9$,$\beta_{2}=0.999$,$\epsilon=10^{-8}$ these are adaptive moment parameters that control the algorithm's descent into minima. However learning rate and learning rate decay are problem specific and can vastly impair the ability of a model to learn correctly. Hence a logical approach to selection of the right values is required. A grid search method was chosen and loss characteristics at epoch 200 compared to get a reasonable approximate for the correct learning rate.
 
 
 \noindent \begin{figure}[h!]
-	\includegraphics[width = 0.5\hsize]{figures/final_model.png}
-	\includegraphics[width = 0.5\hsize]{figures/final_model.png}
-	\caption{Complete Network Architecture.}
-	\label{total_network_architecture}
+	\includegraphics[width = 0.5\hsize]{figures/pose_lr_lr_decay_graph_.png}
+	\includegraphics[width = 0.5\hsize]{figures/images_lr_lr_decay_graph_.png}
+	\caption{Pose Lr and Lr Decay Grid: Left, Images Network Optimisation: Right.}
+	\label{lr_and_decay_grid}
 \end{figure}
 
-\paragraph{Bayesian Optimisation Layer Dimensions:}
+Both the image and pose model appear to prefer higher learning rates around the $10^{-4},10^{-3}$ region. Learning rate decay has little influence to the results of the images network which has an optimal values of:
 
-\paragraph{Total Model:}
+\noindent \begin{table}[h!]
+	\centering
+	\begin{tabular}{|p{3.0cm}|p{3.0cm}|p{3.0cm}|p{3.0cm}|}
+		\hline
+		\textbf{Best Performing}&\textbf{Learning Rate} & \textbf{Decay} &  \textbf{Validation Loss}       \\ \hline
+		1  & $10^{-3}$   &   0 & 0.40     \\ \hline
+		2  & $10^{-3.5}$   &   $10^{-6}$ & 0.43     \\ \hline
+		3  & $10^{-3}$    &    $10^{-6}$ & 0.74   \\ \hline
+		
+	\end{tabular}
+	\caption{Image Learning Rate vs Learning Rate Decay}
+	\label{image_lr_lr_decay_table}
+\end{table}
+
+From experience, and logically it is preferable to take an optimal value with decay for longer runs of the network. As the optimisation is performed over only 200 epochs often the lower learning rates with decay perform better in the long-run. Hence the parameter choice ranked no.2 in Table \ref{image_lr_lr_decay_table} is used for the final model. A part to note is that the loss function is mean squared error and so $0.4$ loss is roughly equivalent to $0.6m$. The pose model interestingly has a higher optimal loss than the images model, but this is likely due to model complexity and using the same route for the test set (different days but same route). The images model has more layers and thus may overfit the route whilst the pose model may perform better on unknown routes.
+
+\noindent \begin{table}[h!]
+	\centering
+	\begin{tabular}{|p{3.0cm}|p{3.0cm}|p{3.0cm}|p{3.0cm}|}
+		\hline
+		\textbf{Best Performing}&\textbf{Learning Rate} & \textbf{Decay} &  \textbf{Validation Loss}       \\ \hline
+		1  & $10^{-3}$   &  $10^{-5}$ & 0.91     \\ \hline
+		2  & $10^{-3}$   &   $10^{-6}$ & 2.11    \\ \hline
+		3  & $10^{-4}$    &    $10^{-6}$ & 2.20   \\ \hline
+		
+	\end{tabular}
+	\caption{Pose Learning Rate vs Learning Rate Decay}
+	\label{pose_lr_lr_decay_table}
+\end{table}
+ 
+The highest ranked parameters in Table \ref{pose_lr_lr_decay_table} are taken forwards to the next stage of the process, optimising the layer dimensions.
+ 
+\subsubsection{Bayesian Optimisation Layer Dimensions:}
+The images and pose model are first optimised with respect to learning rate and learning rate decay with a grid search. From there each is optimised with respect to layer dimensions via Bayesian Optimisation. It is questionable as to the order that this should occur in but it is inevitable cyclic so for simplicity learning rate and decay are optimised once as is layer size.
+
+\paragraph{Images Model:}
+The images model is optimised in 3 dimensions, two involve the size of CNN layers and one is the number of layers in the network. The network has blocks of convolutional layers,optimising the number of layers determines whether there are one or two convolutional layers in each block. Simultaneously, the size of the layers in those blocks is also optimised.
+
+\subsubsection{Total Model:}
 Both models discussed in this section can be trained separately to obtain predictions of the future pose. A naive estimation would take weighted predictions and sum for a final prediction result. The final layers of these networks however could infer details from each-other to inform the pose estimation. This can only be done in a branched network that uses both inputs effectively and concatenates the outputs for some final layers. The proposed model is graphed in Figure \ref{total_network_architecture}, it has two inputs tensors of the images and pose data and three output variables which is the predicted $[x,y,z]$.
 
 \noindent \begin{figure}[h!]
@@ -1471,7 +1563,14 @@ Both models discussed in this section can be trained separately to obtain predic
 \section{System Evaluation}
 
 \subsection{Mask-RCNN}
-In applying Mask-RCNN to the specific urban environment there have been a number of interesting outcomes. On the whole, the system is robust, often detecting images well and so there are rarely gaps when an object is detected in one frame and not the next. A number of incorrect classifications often provide a worry however, for example, the classification of road paint can cause a problem to the system (Figure ...). This often happens with road markings of bicycles that are relatively convincing examples. After experiencing this phenomenon, a number of examples were sought out to determine how the segmentation performs.
+In applying Mask-RCNN to the specific urban environment there have been a number of interesting outcomes. On the whole, the system is robust, often detecting images well and so there are rarely gaps when an object is detected in one frame and not the next. A number of incorrect classifications often provide a worry, for example, the classification of road paint can cause a problem to the system (Figure \ref{mrcnn_fail}). This often happens with road markings of bicycles that are relatively convincing examples, this is perhaps solvable with using these examples as part of the null class during training and could be investigated in future work.
+
+\noindent \begin{figure}[h!]
+	\includegraphics[width = 1.0\hsize]{figures/segment_bike.png}
+	\caption{Mask-RCNN failure}
+	\label{mrcnn_fail}
+\end{figure}
+
 
 
 \subsection{Cyclist Model}
@@ -1481,7 +1580,17 @@ In applying Mask-RCNN to the specific urban environment there have been a number
 
 The intel realsense depth camera is typically used in indoor environments as it operates with a small laser. This, as is expected works less well in highly lit environments. The extent of the problem, however is often drastic and can cause okvis to perform poor estimations of pose and hence is unable to determine the bicycle location. An example of these images can be seen in Figure... . It could quite easily be solved, however, with the use of a stereo camera for depth perception. For example the realsense R... offers such capabilities which would mitigate the depth camera sensitivity to bright lighting conditions.
 
-\subsection{Okvis with Dynamic Objects}
+\chapter{Conclusion}
+
+\subsection{Performance}
+
+\subsection{Future Work}
+
+\paragraph{Speed} It is clear that this product is much needed in the arsenal of a cycling commuter but in its current state it is not able to be implemented. The sub-real-time results are too slow for effective use. Therefore, with simpler updated hardware and software it may become less accurate but would be useful in the cycling environment until newer technology is available that can increase accuracy to the current level. Also a pure implementation in a faster language such as cpp could help with this, most of the functions used e.g. (Keras, numpy, Tensorflow) implement c sub-routines, but other parts of the code could equally be sped-up by being ported to c or cpp instead of running python.
+
+\paragraph{Object Detection} It is clear, at the time of writing, that the only real-time method of object detection that could be applicable to cycling is tiny-yolo REFF!!. This is a bounding box approach that runs at c. 80fps on a laptop gpu, and can now be used on a mobile. With this, however comes the deficit of being unable to segment the image like in Mask-RCNN for depth prediction. A lightweight version therefore could use the depth approximation developed in Section \ref{Depth_approx}. Although not perfect, combined with a 3d appreciated of the environment it could be effective, and most importantly fast enough for use. 
+
+\paragraph{SLAM} Although Okvis is effective, the poor quality depth camera images render it less reliable outside than in indoor environments. This would typically not be acceptable on a final system so perhaps incorporating GPS measurements as well as Okvis would be beneficial. Okvis is great for areas where there is no GPS available, such as tunnels, where lighting is also reduced. Okvis is capable of running from a single camera and so the removal of a depth stream would also not hinder it greatly, especially if a stereo camera system was employed instead.
 
 
 
@@ -1637,7 +1746,6 @@ The code developed is intended to offer a basis for an early warning system to c
 \end{longtable}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{Conclusion}
 
 \chapter{Appendix}
 
