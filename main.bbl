@@ -149,4 +149,10 @@ J.~F. Henriques, R.~Caseiro, P.~Martins, and J.~Batista, ``High-speed tracking
 D.~P. Kingma and J.~Ba, ``Adam: {A} method for stochastic optimization,'' {\em
   CoRR}, vol.~abs/1412.6980, 2014.
 
+\bibitem{circle_intersection_point}
+R.~Eisele, ``Circle intersection,'' 2016.
+
+\bibitem{circle_intersection}
+R.~Eisele, ``Circle intersection,'' 2016.
+
 \end{thebibliography}

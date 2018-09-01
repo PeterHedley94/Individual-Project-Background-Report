@@ -6,10 +6,10 @@
 % Edit these to provide the correct information
 % e.g. \newcommand{\reportauthor}{Timothy Kimber}
 
-\newcommand{\reporttitle}{Title}
-\newcommand{\reportauthor}{Your name}
-\newcommand{\supervisor}{Name of supervisor}
-\newcommand{\degreetype}{Type of Degree}
+\newcommand{\reporttitle}{Hazard Detection for Cyclists}
+\newcommand{\reportauthor}{Peter Hedley}
+\newcommand{\supervisor}{Dr Stefan Leutenegger}
+\newcommand{\degreetype}{Computing}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -26,6 +26,7 @@
 \usepackage{graphicx}
 \usepackage{tabularx}
 \usepackage{amsfonts}
+\usepackage{float}
 \usepackage{wrapfig}
 \usepackage[table]{xcolor}
 \usepackage{amssymb}
@@ -37,6 +38,7 @@
 \SetCommentSty{mycommfont}
 
 \date{September 2015}
+
 
 \begin{document}
 
@@ -52,13 +54,17 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{abstract}
-Your abstract.
+Recently in the news, and as any London cyclist has experienced, there are numerous potentially fatal hazards on a morning commute. Cars turn directly in front of you, doors often open unexpectedly and pedestrians amble into the road taking a selfie. The project is aimed at detecting potential hazards through the use of an on-board camera, and alerting the cyclist and pedestrian/car to it. The problem requires computer vision techniques and SLAM algorithms for spacial understanding, and as the techniques described are computationally expensive it will need to be optimised for hardware that is able to fit on a bicycle.
+\newline \newline
+This project investigates state-of-the-art methods in image segmentation, object tracking, and develops a novel architecture for cyclist path prediction. The results of which, although not realtime provide a solid foundation for future research in the area and suggests potential modifications to the system for that to become a reality.
 \end{abstract}
 
 \cleardoublepage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section*{Acknowledgments}
-Comment this out if not needed.
+Many thanks to my supervisor Dr Stefan Leutenegger for his continued support throughout the process. As a student with less than a year of computer science experience this project would not have been possible without him.
+\newline \newline
+Also thanks to the other students on my course who have helped with ideas about how the project should progress.
 
 \clearpage{\pagestyle{empty}\cleardoublepage}
 
@@ -85,7 +91,6 @@ There were c. 18,500 cycling accidents and 3,500 deaths on British roads in 2016
 This report will examine state of the art technologies that are used for autonomous vehicles to investigate their applicability to a cycling environment. The three main topics involve image detection/segmentation, SLAM algorithms and collision/path prediction. 
 
 \newpage
-
 
 
 
@@ -256,8 +261,8 @@ L = L_{cls} + L_{box} + L_{mask}
 Where $L_{cls}$ \& $L_{box}$ are identical to Section \ref{Fast_RCNN}. The mask branch loss is determined by a per-pixel sigmoid between the ground-truth class ($k$) and the corresponding $k$th binary mask (excluding other classes) and is calculated with an average binary cross-entropy loss.
 \newline \newline
 RoI pool as discussed in Section \ref{Fast_RCNN} is modified in this approach. Instead of subdividing an RoI into discrete regions e.g. a grid of $4 \times 5$ cells. An RoI does not always divide equally into these grid cells and so rounding of grid sizes is needed, this quantisation of sub-windows can cause misalignments of the RoI and extracted features. The new RoIAlign layer introduced in this paper mitigates this problem by not rounding grid-cells. Mask R-CNN uses bi-linear interpolation (linear interpolation with 2d) to compute the exact values of input features at four regularly samples locations in each RoI window.
-
-
+\newline \newline
+This network architecture is the final piece required to segment the images provided by the camera and is the model used in the cycling system. The next section will go on to talk about the other networks used for things such as position prediction.
 \subsection{Recurrent Neural Networks:}
 
 \paragraph{Traditional RNN Layer:}A normal dense network layer has no memory of the previous features that pass through it. This would mean that in order to classify a sequence the data must be passed through the layer simultaneously. The advantage of a recurrent layer its ability to remember. An LSTM (Long-Short Term memory) layer has a weighted channel that inputs the output of the previous state as part of the next see Figure \ref{rnn_unrolled} for more details. Each state $ \{ 1,2,...,t-1,t \}$ is connected to one another almost like a chain, the output of the cell at time $t$, from inputs $x_{t}$ is $h_{t}$.
@@ -270,8 +275,8 @@ RoI pool as discussed in Section \ref{Fast_RCNN} is modified in this approach. I
 
 The main issue with this recurrent layer is how far back the network is capable of remembering. In short sequences the information will pass effectively through the chain, but often in longer sequences the network is less capable of remembering previous states. 
 
-\subsubsection{LSTM Layer} 
-LSTM layers contain a cell state which passes through the layer, a forget, input, and output gates. These gates determine whether to modify the cell state of the layer, this acts as the memory of the later and is similar to the links in the RNN chain (Figure \ref{rnn_unrolled}). The gates contain sigmoid functions which can evaluate between to 0 and 1, and determine how much of a component is to be let through.
+\subsubsection{LSTM (Long-Short Term Memory) Layer} 
+LSTM layers are far better at remembering, and do not get the vanishing gradient problem that RNN layers are subject to. LSTMs contain a cell state which passes through the layer, a forget, input, and output gates. These gates determine whether to modify the cell state of the layer, this acts as the memory of the later and is similar to the links in the RNN chain (Figure \ref{rnn_unrolled}). The gates contain sigmoid functions which can evaluate between to 0 and 1, and determine how much of a component is to be let through.
 
 \noindent \begin{figure}[h!]
 	\includegraphics[width = 1.0\hsize]{./figures/LSTM3-chain.png}
@@ -288,9 +293,9 @@ The forget gate determines how much of the cell state to keep by looking at $h_{
 f_{t} = \sigma (W_{f} \cdot [h_{t-1},x_{t}] + b_{f})
 \end{equation}
 
-Once again $h_{t-1}$ is the output of the layer from the last state, and $x_{t}$ is the layer input at time $t$.
+Once again $h_{t-1}$ is the output of the layer from the last state, $x_{t}$ is the layer input at time $t$.
 
-\paragraph{Input Gate} Once the gate has determined what to forget from the last state it needs to decide what to add from the new state $x_{t}$ for a correct prediction $h_{t}$. This introduces the next gate in the system which combines an input sigmoid gate that decides which values of $x_{t}$ to add and a $tanh$ section that creates the new vector $\tilde{C}_{t}$ to add to the current state $C_{t}$, Equation \ref{input_gate}.
+\paragraph{Input Gate} When the gate has determined what to forget from the last state it needs to decide what to add from the new state $x_{t}$ for a correct prediction $h_{t}$. This introduces the next gate in the system which combines an input sigmoid gate that decides which values of $x_{t}$ to add and a $tanh$ section that creates the new vector $\tilde{C}_{t}$ to add to the current state $C_{t}$, Equation \ref{input_gate}.
 
 
 \begin{equation}
@@ -316,9 +321,13 @@ o_{t} = \sigma (W_{o}[h_{t-1},x_{t}] + b_{o}) \\
 h_{t} = o_{t} \times tanh(C_{t})
 \label{forget_gate}
 \end{equation}
+
+\paragraph{Summary}
+
+The LSTM layer is highly effective at predicting sequences, it is used later within the system to predict where the bike will be in the future. It provides an effective and sufficiently complex method of modelling bicycle movement including determining from picture inputs the most likely path along a road that the bike will take. Now that the networks have been defined, they must be optimised to perform well at their respective tasks. Mask-RCNN is kept as default in this report but the prediction models architecture is bespoke and thus must be optimised for its use-case.
  
 \subsection{Bayesian Optimisation of Layer Dimensions:}
-In order to get the best network architecture and hyper-parameters such as learning rate it is possible to naively try combinations and record which performs the best. However, when trying to optimise networks efficiently it is better to provide a range of possible working parameters and optimise them in an informed and, more importantly, automated manner. Bayesian optimisation allows such a method and can quickly check the parameter space for a good combination to minimise the network loss. Bayesian optimisation uses an acquisition function which evaluates a Gaussian process. It is cheaper to evaluate the proxy function that approximates the true function rather than run the neural network. Hence it is a very fast and effective method of optimisation.
+In order to get the best network architecture, and hyper-parameters such as learning rate it is possible to naively try combinations and record which performs the best. However, when trying to optimise networks efficiently it is better to provide a range of possible working parameters and optimise them in an informed and, more importantly, automated manner. Bayesian optimisation allows such a method and can quickly check the parameter space for a good combination to minimise the network loss. Bayesian optimisation uses an acquisition function which evaluates a Gaussian process. It is cheaper to evaluate a proxy function that approximates the true function rather than run the neural network. Hence it is a very fast and effective method of optimisation.
 
 \paragraph{Gaussian Processes:}
 In a typical regression sample, the aim is to determine the parameters to a function (or family of functions) that best describe some data. A Gaussian process involves making the assumption that a function can be described simply by an infinite number of points along a function $f(x) = [f_{1},f_{2},...f_{\infty}]$, a finite number of which are gaussian distributed. The aim is to then best approximate the relationship between these points via a covariance kernel $k(\cdot,\cdot)$ and a mean function $m(\cdot)$. A gaussian distribution is described by Equation \ref{gaus_dist} and a kernel function (Matern) by Equation \ref{matern}.
@@ -340,7 +349,7 @@ k_{Mat,3/2}(x_{i},x_{j}) =
 \label{matern}
 \end{equation}
 
-where $\mathit{l}$ describes the smoothness of the data and $\mathit{\sigma_{f}}$ the amplitude of the latent function. An example of a matern kernel fitted to some data is given in Figure 
+where $\mathit{l}$ is a hyperparameter that describes the smoothness of the data and $\mathit{\sigma_{f}}$ the amplitude of the latent function. An example of a matern kernel fitted to some data is given in Figure 
 
 
 \noindent \begin{figure}[h!]
@@ -362,7 +371,7 @@ is a process that can maximise a set of hyper-parameters with a reduced evaluati
 
 The lower confidence bound balances exploration of global minima by the covariance function and weighting $k$, which increases at each iteration, with exploitation of local minima with the mean function. The Bayesian optimisation process roughly translates to:
 
-\begin{algorithm}
+\begin{algorithm}[H]
 	\DontPrintSemicolon
 	\SetAlgoLined
 	\setstretch{1.3}
@@ -595,7 +604,7 @@ These transformation matrices must be determined from a SLAM algorithm such as O
 
 In order to correctly plot the Kalman filter an give other tracking algorithms the expected location on the picture the ability to transform from world to camera frame is needed. The process is similar to the camera to frame except the reverse, namely:
 
-\begin{algorithm}
+\begin{algorithm}[H]
 	\DontPrintSemicolon
 	\SetAlgoLined
 	\setstretch{1.3}
@@ -1146,14 +1155,10 @@ depth \approx \frac{o_{av}}{r_{3}A}
 
 Once this depth approximation is found the relevant models can get a depth update that is approximately correct unlike the actual camera depth measurement. This allows better modelling and tracking of object movement from frame-to-frame.
 
-
-\subsubsection{Depth stuff summary}
-
-hello
-\section{Frame-to-Frame Tracking}
+\section{Tracking Module}
 
 For each frame Mask RCNN outputs a set of bounding boxes, and masks. These are not within any particular order and so a method must be devised to track objects from one frame to the next. This is a hard challenge due to object occlusion, variation in shadow/lighting conditions and rapid in-frame movement. An obvious method is intersection over union (IOU) of the bounding boxes on a frame-by-frame basis. This is good in theory, however, it lacks the ability to compensate for rapid movement (of the object and the camera angle), occlusion and object overlapping. A set of methods have therefore been developed to overcome this problem, which combined provide a robust tracking system.
-
+\newline \newline
 The method must both track objects in the frame, determine which objects are no-longer in-frame and find any new objects that enter the frame. Information about each object must be stored as to determine the velocity and direction of travel/ if a collision is likely between the cyclist and the object in question. Figure \ref{roi_match} displays an example of a working system.
 
 \noindent \begin{figure}[h!]
@@ -1353,12 +1358,107 @@ $methods$ is the number of matching methods implemented (in this case two) but i
 
 After the matching process is complete, there are a number of extra steps that must take place before continuing to the next frame. For example, any oldROIs that are not detected in the new frame must have a life decremented and be added to the list of new frame ROIs with the relevant location and information.
 
+\begin{algorithm}[H]
+	\DontPrintSemicolon
+	\SetAlgoLined
+	\setstretch{1.3}
+	\SetKwInOut{Input}{Input}
+	\SetKwInOut{Output}{Output}
+	\underline{add\textunderscore old\textunderscore rois} $($old$\textunderscore$matched$,old$\textunderscore$frame,new$\textunderscore$frame)$\;
+	\Input{ \texttt{\\}
+		$old$\textunderscore$matched$ \tcp*[r]{A list of matched oldROIs, $old$\textunderscore$matched[i]$ matches to $new$\textunderscore$matched[i]$}
+		$old$\textunderscore$frame$ \tcp*[r]{ROIs as structures from the old frame}
+		$new$\textunderscore$frame$ \tcp*[r]{ROIs as structures from the new frame}
+	}
+	\Output{ \texttt{\\}
+		$new$\textunderscore$frame$ \tcp*[r]{An updated list of newROI objects}
+	}
+	
+	\texttt{\\}
+	\tcp{\textbf{Update newROIs to include undetected ROIs from old frame.}}
+	\ForEach(\tcc*[f]{For every old roi not found in new frame}){$old \notin old$\textunderscore$matched$}{
+		$older = old$\textunderscore$frame[old]$ \tcc*[r]{Get olderROI object}
+		\uIf(\tcc*[f]{If the ROI has a life to spare}){$older.lives > 1$}{
+			$older.lives$ -= $1$ \tcc*[r]{Decrement a life}
+			$update$\textunderscore$location(older,T_{CW})$  \tcc*[r]{Update camera/world location from Kalman prediction}
+			$update$\textunderscore$model(older,T_{CW})$  \tcc*[r]{Update pedestrian model from Kalman prediction}
+			$add$\textunderscore$information(new$\textunderscore$frame,older)$ \tcc*[r]{Append older ROI information to new frame} \tcc*[r]{(masks,lives,id,class,colour,briskKeypoints,briskDescriptors,KCFtracker)}
+		}
+	}
+	\texttt{\\}
+	\caption{Algorithm to append oldROIs that aren't detected in new frame}
+	\label{alg:weights}
+\end{algorithm}
+
 
 
 Then the matched ROIs pairs from the old and new frame must exchange relevant information in preparation for the next frame:
 
+\begin{algorithm}[H]
+	\DontPrintSemicolon
+	\SetAlgoLined
+	\setstretch{1.3}
+	\SetKwInOut{Input}{Input}
+	\SetKwInOut{Output}{Output}
+	\underline{update\textunderscore matched\textunderscore rois} ($old$\textunderscore$matched,new$\textunderscore$matched,old$\textunderscore$frame,new$\textunderscore$frame)$\;
+	\Input{ \texttt{\\}
+		$old$\textunderscore$matched$ \tcp*[r]{A list of matched oldROIs, $old$\textunderscore$matched[i]$ matches to $new$\textunderscore$matched[i]$}
+		$new$\textunderscore$matched$ \tcp*[r]{A list of matched newROIs, $new$\textunderscore$matched[i]$ matches to $old$\textunderscore$matched[i]$}
+		$old$\textunderscore$frame$ \tcp*[r]{ROIs as structures from the old frame}
+		$new$\textunderscore$frame$ \tcp*[r]{ROIs as structures from the new frame}
+	}
+	\Output{ \texttt{\\}
+		$new$\textunderscore$frame$ \tcp*[r]{An updated list of newROI objects}
+	}
+	\texttt{\\}
+	\tcp{\textbf{Add older ROI details to matched new ROI}}
+	\ForEach(\tcc*[f]{For every matched old/new ROI pair}){$old,new \in old$\textunderscore$matched,new$\textunderscore$matched$}{
+		$older = oldROIs[old]$ \tcc*[r]{Get olderROI object}
+		$newer = newROIs[new]$ \tcc*[r]{Get newerROI object}
+		$newState = newer.worldPoint$ \tcc*[r]{Get new location of ROI}
+		$older.kalman.correct(newState)$ \tcc*[r]{Update Kalman Filter with new location}
+		$older.model.add$\textunderscore$points(newState)$ \tcc*[r]{Add new points to movement model}
+		\uIf(\tcc*[f]{If lives < threshold}){$older.lives < lifeThreshold$}{
+			$older.lives$ += $1$
+		}
+		$update$\textunderscore$object(newer,older)$ \tcc*[r]{Update new ROI with older ROI information} \tcc*[r]{(Kalman Filter,lives,colour,id,model)}
+	}
+	\texttt{\\}
+	\caption{Algorithm to update newROIs with matched oldROIs}
+	\label{alg:weights}
+\end{algorithm}
+
 
 Finally any new ROIs that were not in the old frame need to be assigned an individual ID to be recognised over the next frames.
+
+\begin{algorithm}[H]
+	\DontPrintSemicolon
+	\SetAlgoLined
+	\setstretch{1.3}
+	\SetKwInOut{Input}{Input}
+	\SetKwInOut{Output}{Output}
+	\underline{update\textunderscore matched\textunderscore rois} ($old$\textunderscore$matched,new$\textunderscore$matched,old$\textunderscore$frame,new$\textunderscore$frame)$\;
+	\Input{ \texttt{\\}
+		$old$\textunderscore$matched$ \tcp*[r]{A list of matched oldROIs, $old$\textunderscore$matched[i]$ matches to $new$\textunderscore$matched[i]$}
+		$new$\textunderscore$matched$ \tcp*[r]{A list of matched newROIs, $new$\textunderscore$matched[i]$ matches to $old$\textunderscore$matched[i]$}
+		$new$\textunderscore$frame$ \tcp*[r]{ROIs as structures from the new frame}
+	}
+	\Output{ \texttt{\\}
+		$new$\textunderscore$frame$ \tcp*[r]{An updated list of newROI objects}
+	}
+	\texttt{\\}
+	\tcp{Note that if there are no objects in old frame $new$\textunderscore$frame.id$ = zeros}
+	$maxId = new$\textunderscore$frame.id.max()+1$ \tcc*[r]{Get current maximum ID + 1}
+	
+	\ForEach(\tcc*[f]{For every not-matched new ROI}){$new \notin new$\textunderscore$matched$}{
+		$newer = new$\textunderscore$frame[new]$ \tcc*[r]{Get newerROI object}
+		$newer.id = maxId$ \tcc*[r]{Assign new ID}
+		$maxId$ += $1$ \tcc*[r]{Increment the maximum ID}
+	}
+	\texttt{\\}
+	\caption{Algorithm to create new IDs for object in new frame}
+	\label{alg:weights}
+\end{algorithm}
 
 
 
@@ -1379,40 +1479,52 @@ The great advantage of the system is that for movement prediction it already has
 	\label{blackfriars_maps}
 \end{figure}
 
-Although the Okvis paths look vastly different, the model is only interested in short segments and hence the variation is less than percieved in Figure \ref{blackfriars_maps}. The main problem with models is the ability to generalise, hence training on a limited, unbalanced dataset is tricky. So for the prediction it is assumed that someone is able to record their daily commute and train the model on that route. So the validation and test sets consist of a same route on a different day with the obvious varied lighting, traffic conditions, and traffic lights that come with the average daily commute variation.
+Although the Okvis paths look vastly different, the model is only interested in short segments and hence the variation is less than perceived in Figure \ref{blackfriars_maps}. The main problem with models is the ability to generalise, hence training on a limited, unbalanced dataset is tricky. So for the prediction it is assumed that someone is able to record their daily commute and train the model on that route. So the validation and test sets consist of a same route on a different day with the obvious varied lighting, traffic conditions, and traffic lights that come with the average daily commute variation.
 
-\subsection{Objects Prediction}
+\subsection{Objects Prediction} \label{object_model}
 The objects are modelled by the Kalman filter from frame to frame and this provides a good estimate of both the direction and predicted position. Hence in a future position, say in 10 frames would simply be obtained from multiplying by a modified state-transition model.
 
 \begin{equation}
-F_{k+\mathit{n \textunderscore frames}} = 
+F_{k+\mathit{n \textunderscore seconds}} = 
 \begin{bmatrix}
-I_{5} & \Delta t \times \mathit{n \textunderscore frames} \times I_{5} \\[0.3em]
+I_{5} & \mathit{n \textunderscore seconds} \times I_{5} \\[0.3em]
 
 0_{5 \times 5} & I_{5} \\[0.3em]
 \end{bmatrix}
 \end{equation}
 
-where $\delta t$ is the time difference from one frame to the next and $\mathit{n \textunderscore frames}$ is the number of frames in the future to predict the position at.
+where $\mathit{n \textunderscore seconds}$ is the number of seconds in the future to predict the position at.
 
 \begin{equation}
 \begin{aligned}
-\hat{X}_{k+\mathit{n \textunderscore frames}}(-) =  F_{k+\mathit{n \textunderscore frames}} \hat{X}_{k-1}(+)
+\hat{X}_{k+\mathit{n \textunderscore seconds}}(-) =  F_{k+\mathit{n \textunderscore seconds}} \hat{X}_{k-1}(+)
 \end{aligned}
 \end{equation}
 
-The uncertainty of that position also increases with time, and can be taken directly from the error covariance prediction matrix. This however is updated iteratively and so it is easy enough just to repeat Equation \ref{update_cov_kalman} $\mathit{n \textunderscore frames}$ times.
+The uncertainty of that position also increases with time, and can be taken directly from the error covariance prediction matrix. This however is updated iteratively and so it is easy enough just to repeat Equation \ref{update_cov_kalman} $ \big (\frac{\mathit{n \textunderscore seconds}}{\Delta t} \big )$ times.
 
 \begin{equation}
 \begin{aligned}
-P_{k+\mathit{n \textunderscore frames}}(-) = F_{k+\mathit{n \textunderscore frames}} P_{k-1}(+) F_{k+\mathit{n \textunderscore frames}}^{T} + Q_{k}
+P_{k+ \Delta t}(-) = F_{k} P_{k- \Delta t}(+) F_{k}^{T} + Q_{k}
 \end{aligned}
 \label{update_cov_kalman}
 \end{equation}
 
-This method then produces a predicted position and the uncertainty in that position which can be used to create spheres of possible object positions in future frames. These can then be simply checked for intersection with the bike model predictions.
+However, for speed of computation an approximation can be used:
 
-\subsection{Bike Model}
+\begin{equation}
+\begin{aligned}
+P_{k+ \mathit{n \textunderscore seconds}}(-) \approx F_{k + \mathit{n \textunderscore seconds}} P_{k- \Delta t}(+) F_{k + \mathit{n \textunderscore seconds}}^{T} + \frac{Q_{k} \times \mathit{n \textunderscore seconds}} {\Delta t} \\
+radius = \sqrt{P_{k+ \mathit{n \textunderscore seconds}}(-)}
+\end{aligned}
+\label{cov_kalman_approx}
+\end{equation}
+
+This method then produces a predicted position and the uncertainty in that position which can be used to create spheres of possible object positions in future frames. These can then be checked for intersection with the bike model predictions. 
+
+
+
+\subsection{Bike Model} \label{bike_model}
 
 The bike is deemed to be the most important model and can therefore predictions should take into account higher order features, for example the current state of the bicycle in the frame and perhaps external factors such as the surrounding environment. The problem is therefore split into two branches, one for sequence prediction of Okvis pose outputs and the other of predictions using image inputs.
 
@@ -1422,21 +1534,23 @@ The bike is deemed to be the most important model and can therefore predictions 
 Since the model is required to learn a sequence a recurrent neural network is the obvious choice. This mimicks memory from one-frame to the next, providing $n$ previous frames to predict the $(n+1)th$ frame. The proposed architecture for this model, by no means fine-tuned but merely to provide a proof-of-concept is as follows:
 
 \paragraph{Pose RNN Model:} \label{pose_model}
-The main problem is to generalise the model to any world point. For example, the bike could be at any location or offset from the world origin and thus a huge amount of data would be needed for learning if the world location was an input. Instead, the model simply learns the difference in world frame between frames. Note however, things such as orientation can make a large difference, if the bike is at a big angle in the world frame it will be turning quickly. This information cannot be transferred from the difference between an original frame and the next. Hence the rotation part of the transformation matrix remains in the world frame while the translation has an origin equal to that of the $n-1$th frame in the sequence Equation \ref{pose_sequence}.
+The main problem is to generalise the model to any world point. For example, the bike could be at any location or offset from the world origin and thus a huge amount of data would be needed for learning if the world location was an input. Instead, the model simply learns the difference in camera frame between frames. Note however, things such as orientation can make a large difference, if the bike is at a big angle in the world frame it will be turning quickly. This information cannot be transferred from the difference between an original frame and the next in camera frame. Hence the tilt part of the transformation matrix is added to the camera frame position and orientation of the $n$th frame in the sequence from the perspective of the $0th$ frame in the sequence Equation \ref{pose_sequence}.
 
 
 \begin{equation}
 \begin{aligned}
 X_{frame_{n}} = 
+\bigg [ [I_{1 \times 3} \quad 0]T^{-1}_{WC_{0}}T_{WC_{n}} \quad , \quad C_{ez}\bigg ]\\
+C_{ez} = (T_{WS} T_{SC})^{-1}
 \begin{bmatrix}
-C_{WC_n} & r_{WC_n}-r_{WC_0} \\
-\end{bmatrix} \\
+0 & 0 & 0 & 1 & 0
+\end{bmatrix}^{T}\\
 y = r_{WC_{n+1}}
 \end{aligned}
 \label{pose_sequence}
 \end{equation}
 
-The model is formed of the layers detailed on the right of Figure \ref{network_architecture}. Given a limited input space $X = (len_{sequence}, 3\times4)$ where the transformation matrix is flattened for use in the LSTM layers to a matrix of size $12$, discarding the last row $[0_{1 \times 3},1]$. The model is trained in a regression setting with labels $\mathbf{y}=[x,y,z]$ which represent the displacement from frame last of the sequence at the subsequent frame. As it would be too granular to learn from every frame, a larger time-gap between frames can be used and hence the model sequence can consist of every $k$th frame from the camera. The loss function used is mean squared error and is formulated as follows:
+The model is formed of the layers detailed on the right of Figure \ref{network_architecture}. Given a limited input space $X = (len_{sequence}, 16)$ where the transformation matrix is flattened for use in the LSTM layers to a matrix of size $12$. The model is trained in a regression setting with labels $\mathbf{y}=[x,y,z]$ which represent the displacement from frame last of the sequence at the subsequent frame. As it would be too granular to learn from every frame, a larger time-gap between frames can be used and hence the model sequence can consist of every $k$th frame from the camera. The loss function used is mean squared error and is formulated as follows:
 
 \begin{equation}
 \begin{aligned}
@@ -1461,7 +1575,7 @@ where $i$ is the sequence number, $j$ is the variable prediction and therefore $
 	\caption{Pose Model Dimensions}
 \end{table}
 
-
+%TODO update graphic
 \noindent \begin{figure}[h!]
 	\includegraphics[width = 1.0\hsize]{figures/Networks.png}
 	\caption{RCNN Architecture: Left, Pose Architecture: Right.}
@@ -1521,7 +1635,7 @@ Both the image and pose model appear to prefer higher learning rates around the 
 	\label{image_lr_lr_decay_table}
 \end{table}
 
-From experience, and logically it is preferable to take an optimal value with decay for longer runs of the network. As the optimisation is performed over only 200 epochs often the lower learning rates with decay perform better in the long-run. Hence the parameter choice ranked no.2 in Table \ref{image_lr_lr_decay_table} is used for the final model. A part to note is that the loss function is mean squared error and so $0.4$ loss is roughly equivalent to $0.6m$. The pose model interestingly has a higher optimal loss than the images model, but this is likely due to model complexity and using the same route for the test set (different days but same route). The images model has more layers and thus may overfit the route whilst the pose model may perform better on unknown routes.
+From experience, and logically it is preferable to take an optimal value with decay for longer runs of the network. As the optimisation is performed over only 200 epochs often the lower learning rates with decay perform better in the long-run. Hence the parameter choice ranked no.2 in Table \ref{image_lr_lr_decay_table} is used for the final model. A part to note is that the loss function is mean squared error and so $0.4$ loss is roughly equivalent to $0.6m$. The pose model interestingly has a higher optimal loss than the images model, but this is likely due to the number of epochs and model complexity in using the same route for the test set (different days but same route). The pose model is simple and therefore can train much faster than the images model so it should be trained for longer for a fair comparison. The images model has more layers and thus may overfit the route whilst the pose model may perform better on unknown routes.
 
 \noindent \begin{table}[h!]
 	\centering
@@ -1554,8 +1668,148 @@ Both models discussed in this section can be trained separately to obtain predic
 	\label{total_network_architecture}
 \end{figure}
 
-\paragraph{Training Regime: }The network is large and so a careful training regime is required to ensure convergence to a reasonable minimum. The two initial models, the pose and RCNN images are first pre-trained to predict poses. These are the complete models described in Figure \ref{network_architecture}. Once this training process is complete the weights are used in the larger branched model. These layers are then frozen and the final dense layers are trained. Finally all layers are unfrozen and the whole model is trained with a lower learning rate to fine-tune the weights.
+\paragraph{Training Regime:}The network is large and so a careful training regime is required to ensure convergence to a reasonable minimum. The two initial models, the pose and RCNN images are first pre-trained to predict poses. These are the complete models described in Figure \ref{network_architecture}. Once this training process is complete the weights are used in the larger branched model. These layers are then frozen and the final dense layers are trained. Finally all layers are unfrozen and the whole model is trained with a lower learning rate to fine-tune the weights.
 
+\subsection{Collision Detection Module}
+The collision detection module takes the predicted paths from both the cyclist and object models (Sections \ref{bike_model},\ref{object_model}), and their respective uncertainties. It can then check the distance between the predicted points:
+
+\begin{equation}
+\begin{aligned}
+dist = \sqrt{( (x_{c}-x_{o})^{2} + (y_{c}-y_{o})^{2}}
+\end{aligned}
+\label{distance_eq}
+\end{equation}
+
+where $x_{c}$ is the predicted cyclist location and $x_{o}$ is the predicted object location at time $t$. This can then be used with the uncertainty circle to see if the points could overlap.
+
+\begin{equation}
+\begin{aligned}
+\begin{cases}
+dist < R_{bike} + R_{obj} \quad \textbf{Check IOU} \\
+dist > R_{bike} + R_{obj} \quad \textbf{Continue}
+\end{cases} \\
+R_{k} = \sqrt{var_{k}}
+\end{aligned}
+\label{horn_eq}
+\end{equation}
+
+
+One problem is that when the Kalman filter is highly uncertain it may predict a potential collision when there is little likelihood of it occurring so a solution can be to look at the intersection over union of the two circles.
+
+\noindent \begin{figure}[h!]
+	\includegraphics[width = 1.0\hsize]{figures/points_intersecting_circles.png}
+	\caption{Intersecting Points on Circle \cite{circle_intersection_point}}
+	\label{two_intersect_points}
+\end{figure}
+
+
+\paragraph{Points of intersection}
+The first step to calculate where the circles overlap. This is detailed in figure \ref{two_intersect_points}, point can form a triangle in each circle between the y axis, x axis and a line of length $R_{o},R_{c}$ passing through the circle's origin.
+
+
+\begin{equation}
+\begin{aligned}
+x^{2} + y^{2} = A_{r}^{2} \\
+(d^{2}-x^{2}) + y^{2} = B_{r}^{2}
+\end{aligned}
+\label{inter_point_eq1}
+\end{equation}
+
+
+Solving for $x$ and $y$ yields:
+
+\begin{equation}
+\begin{aligned}
+x = \frac{A_{r}^{2} - B_{r}^{2} + d^{2}}{2d} \\
+y_{1,2} = \pm \sqrt{A_{r}^{2} - x^{2}}
+\end{aligned}
+\label{inter_point_eq2}
+\end{equation}
+
+Transforming the values into unit vectors and solving for the final point locations gives:
+
+\begin{equation}
+\begin{aligned}
+ \overrightarrow{e_{1}} = \frac{ \overrightarrow{B}- \overrightarrow{A}}{|  \overrightarrow{B} -  \overrightarrow{A} |} 
+= 
+\frac{1}{d}
+\begin{bmatrix}
+B_{x} - A_{x} \\
+B_{y} - A_{y}
+\end{bmatrix} \\
+\overrightarrow{e_{2}} =
+rot(90) \overrightarrow{e_{1}} =
+\begin{bmatrix}
+0 & -1 \\
+1 & 0
+\end{bmatrix}
+\overrightarrow{e_{1}} \\
+\overrightarrow{P_{1,2}} = \overrightarrow{A}+x \cdot \overrightarrow{e_{1}} \pm y \cdot \overrightarrow{e_{2}}
+\end{aligned}
+\label{inter_point_eq3}
+\end{equation}
+
+The final check is to detemine if one circle is within the other and hence there are no intersection points. This is given by checking that the distance is greater than the absolute difference between radii, i.e.
+
+
+\begin{equation}
+\begin{aligned}
+dist < |B_{r} - A_{r}| = \textbf{Circle Inception}
+\end{aligned}
+\label{circle_inception}
+\end{equation}
+
+
+\paragraph{Area of Intersection}
+
+Given the equations for $x$ and $y$ shown in the last section. The angles $\theta_{A}$ and $\theta_{B}$ can be calculated. The idea for calculation is simple, the intersection area is the area of the segment minus the area of the triangle.
+
+\noindent \begin{figure}[h!]
+	\includegraphics[width = 1.0\hsize]{figures/two_intersecting_circles.png}
+	\caption{Area of Two Intersecting Circles \cite{circle_intersection}}
+	\label{two_intersect_circles}
+\end{figure}
+
+
+\begin{equation}
+\begin{aligned}
+\theta_{A} = 2sin^{-1} \bigg ( \frac{y}{A_{r}} \bigg )
+\\
+\theta_{B} = 2sin^{-1} \bigg ( \frac{y}{B_{r}} \bigg )
+\end{aligned}
+\label{circle_area_eq1}
+\end{equation}
+
+From this the area of the two triangles are:
+
+\begin{equation}
+\begin{aligned}
+area_{t,1} = y \sqrt{A_{r}^{2} - y^{2}} \\
+area_{t,2} = y \sqrt{B_{r}^{2} - y^{2}}
+\end{aligned}
+\label{circle_area_eq1}
+\end{equation}
+
+
+Finally the area of the intersection is calculated using:
+
+\begin{equation}
+\begin{aligned}
+area = A_{r}^{2}sin^{-1} \big ( \frac{y}{A_{r}}) + B_{r}^{2}sin^{-1} \big ( \frac{y}{B_{r}}) + y \bigg ( \sqrt{A_{r}^{2} - y^{2}} + \sqrt{B_{r}^{2} - y^{2}} \bigg )
+\end{aligned}
+\label{circle_area_eq1}
+\end{equation}
+
+\paragraph{Intersection Over Union}
+In order to better understand the likelihood the circle approximate is used. This, although not exact as Gaussians are a bell shape is a fast and closed form approximate for the probability of collision. The IOU of the circles is the best measure, a higher IOU clearly means a more probably crash. It can be calculated from previous results by:
+
+
+\begin{equation}
+\begin{aligned}
+IOU = \frac{area_{intersection}}{ area_{c1} + area_{c2} - area_{intersection}}
+\end{aligned}
+\label{circle_area_eq1}
+\end{equation}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Experimental Results}
@@ -1747,6 +2001,7 @@ The code developed is intended to offer a basis for an early warning system to c
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+
 \chapter{Appendix}
 
 
@@ -1804,105 +2059,6 @@ The code developed is intended to offer a basis for an early warning system to c
 	}
 	\texttt{\\}
 	\caption{Algorithm to match old and new frames}
-	\label{alg:weights}
-\end{algorithm}
-
-
-\begin{algorithm}
-	\DontPrintSemicolon
-	\SetAlgoLined
-	\setstretch{1.3}
-	\SetKwInOut{Input}{Input}
-	\SetKwInOut{Output}{Output}
-	\underline{add\textunderscore old\textunderscore rois} $($old$\textunderscore$matched$,old$\textunderscore$frame,new$\textunderscore$frame)$\;
-	\Input{ \texttt{\\}
-		$old$\textunderscore$matched$ \tcp*[r]{A list of matched oldROIs, $old$\textunderscore$matched[i]$ matches to $new$\textunderscore$matched[i]$}
-		$old$\textunderscore$frame$ \tcp*[r]{ROIs as structures from the old frame}
-		$new$\textunderscore$frame$ \tcp*[r]{ROIs as structures from the new frame}
-	}
-	\Output{ \texttt{\\}
-		$new$\textunderscore$frame$ \tcp*[r]{An updated list of newROI objects}
-	}
-	
-	\texttt{\\}
-	\tcp{\textbf{Update newROIs to include undetected ROIs from old frame.}}
-	\ForEach(\tcc*[f]{For every old roi not found in new frame}){$old \notin old$\textunderscore$matched$}{
-		$older = old$\textunderscore$frame[old]$ \tcc*[r]{Get olderROI object}
-		\uIf(\tcc*[f]{If the ROI has a life to spare}){$older.lives > 1$}{
-			$older.lives$ -= $1$ \tcc*[r]{Decrement a life}
-			$update$\textunderscore$location(older,T_{CW})$  \tcc*[r]{Update camera/world location from Kalman prediction}
-			$update$\textunderscore$model(older,T_{CW})$  \tcc*[r]{Update pedestrian model from Kalman prediction}
-			$add$\textunderscore$information(new$\textunderscore$frame,older)$ \tcc*[r]{Append older ROI information to new frame} \tcc*[r]{(masks,lives,id,class,colour,briskKeypoints,briskDescriptors,KCFtracker)}
-		}
-	}
-	\texttt{\\}
-	\caption{Algorithm to append oldROIs that aren't detected in new frame}
-	\label{alg:weights}
-\end{algorithm}
-
-
-\begin{algorithm}
-	\DontPrintSemicolon
-	\SetAlgoLined
-	\setstretch{1.3}
-	\SetKwInOut{Input}{Input}
-	\SetKwInOut{Output}{Output}
-	\underline{update\textunderscore matched\textunderscore rois} ($old$\textunderscore$matched,new$\textunderscore$matched,old$\textunderscore$frame,new$\textunderscore$frame)$\;
-	\Input{ \texttt{\\}
-		$old$\textunderscore$matched$ \tcp*[r]{A list of matched oldROIs, $old$\textunderscore$matched[i]$ matches to $new$\textunderscore$matched[i]$}
-		$new$\textunderscore$matched$ \tcp*[r]{A list of matched newROIs, $new$\textunderscore$matched[i]$ matches to $old$\textunderscore$matched[i]$}
-		$old$\textunderscore$frame$ \tcp*[r]{ROIs as structures from the old frame}
-		$new$\textunderscore$frame$ \tcp*[r]{ROIs as structures from the new frame}
-	}
-	\Output{ \texttt{\\}
-		$new$\textunderscore$frame$ \tcp*[r]{An updated list of newROI objects}
-	}
-	\texttt{\\}
-	\tcp{\textbf{Add older ROI details to matched new ROI}}
-	\ForEach(\tcc*[f]{For every matched old/new ROI pair}){$old,new \in old$\textunderscore$matched,new$\textunderscore$matched$}{
-		$older = oldROIs[old]$ \tcc*[r]{Get olderROI object}
-		$newer = newROIs[new]$ \tcc*[r]{Get newerROI object}
-		$newState = newer.worldPoint$ \tcc*[r]{Get new location of ROI}
-		$older.kalman.correct(newState)$ \tcc*[r]{Update Kalman Filter with new location}
-		$older.model.add$\textunderscore$points(newState)$ \tcc*[r]{Add new points to movement model}
-		\uIf(\tcc*[f]{If lives < threshold}){$older.lives < lifeThreshold$}{
-			$older.lives$ += $1$
-		}
-		$update$\textunderscore$object(newer,older)$ \tcc*[r]{Update new ROI with older ROI information} \tcc*[r]{(Kalman Filter,lives,colour,id,model)}
-	}
-	\texttt{\\}
-	\caption{Algorithm to update newROIs with matched oldROIs}
-	\label{alg:weights}
-\end{algorithm}
-
-
-
-\begin{algorithm}
-	\DontPrintSemicolon
-	\SetAlgoLined
-	\setstretch{1.3}
-	\SetKwInOut{Input}{Input}
-	\SetKwInOut{Output}{Output}
-	\underline{update\textunderscore matched\textunderscore rois} ($old$\textunderscore$matched,new$\textunderscore$matched,old$\textunderscore$frame,new$\textunderscore$frame)$\;
-	\Input{ \texttt{\\}
-		$old$\textunderscore$matched$ \tcp*[r]{A list of matched oldROIs, $old$\textunderscore$matched[i]$ matches to $new$\textunderscore$matched[i]$}
-		$new$\textunderscore$matched$ \tcp*[r]{A list of matched newROIs, $new$\textunderscore$matched[i]$ matches to $old$\textunderscore$matched[i]$}
-		$new$\textunderscore$frame$ \tcp*[r]{ROIs as structures from the new frame}
-	}
-	\Output{ \texttt{\\}
-		$new$\textunderscore$frame$ \tcp*[r]{An updated list of newROI objects}
-	}
-	\texttt{\\}
-	\tcp{Note that if there are no objects in old frame $new$\textunderscore$frame.id$ = zeros}
-	$maxId = new$\textunderscore$frame.id.max()+1$ \tcc*[r]{Get current maximum ID + 1}
-	
-	\ForEach(\tcc*[f]{For every not-matched new ROI}){$new \notin new$\textunderscore$matched$}{
-		$newer = new$\textunderscore$frame[new]$ \tcc*[r]{Get newerROI object}
-		$newer.id = maxId$ \tcc*[r]{Assign new ID}
-		$maxId$ += $1$ \tcc*[r]{Increment the maximum ID}
-	}
-	\texttt{\\}
-	\caption{Algorithm to create new IDs for object in new frame}
 	\label{alg:weights}
 \end{algorithm}
 

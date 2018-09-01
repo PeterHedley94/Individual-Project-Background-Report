@@ -20,43 +20,47 @@ Warning--entry type for "Marc_Deisenroth_Notes" isn't style-file defined
 --line 318 of file bibliography.bib.bib
 Warning--entry type for "opencv_camera_article" isn't style-file defined
 --line 335 of file bibliography.bib.bib
+Warning--entry type for "circle_intersection" isn't style-file defined
+--line 343 of file bibliography.bib.bib
+Warning--entry type for "circle_intersection_point" isn't style-file defined
+--line 351 of file bibliography.bib.bib
 Warning--entry type for "opencv_harris_article" isn't style-file defined
---line 404 of file bibliography.bib.bib
+--line 423 of file bibliography.bib.bib
 Warning--empty journal in GH_CNN
 Warning--empty journal in SrinivasNiranjan2010GPOi
 Warning--empty journal in F_Durr_1
 Warning--empty journal in F_Durr_Pt1
 Warning--empty journal in Furgale
-You've used 35 entries,
+You've used 37 entries,
             1876 wiz_defined-function locations,
-            665 strings with 9144 characters,
-and the built_in function-call counts, 6985 in all, are:
-= -- 590
-> -- 368
+            669 strings with 9220 characters,
+and the built_in function-call counts, 7227 in all, are:
+= -- 610
+> -- 376
 < -- 0
-+ -- 139
-- -- 104
-* -- 510
-:= -- 1092
-add.period$ -- 35
-call.type$ -- 35
-change.case$ -- 37
++ -- 143
+- -- 106
+* -- 518
+:= -- 1126
+add.period$ -- 37
+call.type$ -- 37
+change.case$ -- 39
 chr.to.int$ -- 0
-cite$ -- 40
-duplicate$ -- 338
-empty$ -- 709
-format.name$ -- 104
-if$ -- 1648
+cite$ -- 42
+duplicate$ -- 346
+empty$ -- 745
+format.name$ -- 106
+if$ -- 1710
 int.to.chr$ -- 0
-int.to.str$ -- 35
+int.to.str$ -- 37
 missing$ -- 26
-newline$ -- 109
-num.names$ -- 35
-pop$ -- 144
+newline$ -- 115
+num.names$ -- 37
+pop$ -- 158
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 0
-skip$ -- 168
+skip$ -- 176
 stack$ -- 0
 substring$ -- 246
 swap$ -- 80
@@ -65,7 +69,7 @@ text.prefix$ -- 0
 top$ -- 0
 type$ -- 0
 warning$ -- 5
-while$ -- 50
-width$ -- 37
-write$ -- 300
+while$ -- 52
+width$ -- 39
+write$ -- 314
 (There was 1 error message)
