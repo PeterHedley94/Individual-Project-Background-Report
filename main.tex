@@ -1613,8 +1613,8 @@ Adam optimiser, a common solver for deep learning problems requires a number of 
 
 
 \noindent \begin{figure}[h!]
-	\includegraphics[width = 0.5\hsize]{figures/pose_lr_lr_decay_graph_.png}
-	\includegraphics[width = 0.5\hsize]{figures/images_lr_lr_decay_graph_.png}
+	\includegraphics[width = 0.5\hsize]{figures/pose_lr_lr_decay_graph_.eps}
+	\includegraphics[width = 0.5\hsize]{figures/images_lr_lr_decay_graph_.eps}
 	\caption{Pose Lr and Lr Decay Grid: Left, Images Network Optimisation: Right.}
 	\label{lr_and_decay_grid}
 \end{figure}
@@ -1626,16 +1626,16 @@ Both the image and pose model appear to prefer higher learning rates around the 
 	\begin{tabular}{|p{3.0cm}|p{3.0cm}|p{3.0cm}|p{3.0cm}|}
 		\hline
 		\textbf{Best Performing}&\textbf{Learning Rate} & \textbf{Decay} &  \textbf{Validation Loss}       \\ \hline
-		1  & $10^{-3}$   &   0 & 0.40     \\ \hline
-		2  & $10^{-3.5}$   &   $10^{-6}$ & 0.43     \\ \hline
-		3  & $10^{-3}$    &    $10^{-6}$ & 0.74   \\ \hline
+		1  & $10^{-3.5}$   &   0 & 0.11     \\ \hline
+		2  & $10^{-3}$   &   $10^{-6}$ & 0.14     \\ \hline
+		3  & $10^{-3.5}$    &    $10^{-5}$ & 0.19   \\ \hline
 		
 	\end{tabular}
 	\caption{Image Learning Rate vs Learning Rate Decay}
 	\label{image_lr_lr_decay_table}
 \end{table}
 
-From experience, and logically it is preferable to take an optimal value with decay for longer runs of the network. As the optimisation is performed over only 200 epochs often the lower learning rates with decay perform better in the long-run. Hence the parameter choice ranked no.2 in Table \ref{image_lr_lr_decay_table} is used for the final model. A part to note is that the loss function is mean squared error and so $0.4$ loss is roughly equivalent to $0.6m$. The pose model interestingly has a higher optimal loss than the images model, but this is likely due to the number of epochs and model complexity in using the same route for the test set (different days but same route). The pose model is simple and therefore can train much faster than the images model so it should be trained for longer for a fair comparison. The images model has more layers and thus may overfit the route whilst the pose model may perform better on unknown routes.
+From experience, and logically it is preferable to take an optimal value with decay for longer runs of the network. As the optimisation is performed over only 200 epochs often the lower learning rates with decay perform better in the long-run. Hence the parameter choice ranked no.2 in Table \ref{image_lr_lr_decay_table} is used for the final model. A part to note is that the loss function is mean squared error and so $0.11$ loss is roughly equivalent to $0.3m$. The pose model interestingly has a higher optimal loss than the images model, but this is likely due to the number of epochs and model complexity in using the same route for the test set (different days but same route). The pose model is simple and therefore can train much faster than the images model so it should be trained for longer for a fair comparison. The images model has more layers and thus may overfit the route whilst the pose model may perform better on unknown routes.
 
 \noindent \begin{table}[h!]
 	\centering
@@ -1656,8 +1656,36 @@ The highest ranked parameters in Table \ref{pose_lr_lr_decay_table} are taken fo
 \subsubsection{Bayesian Optimisation Layer Dimensions:}
 The images and pose model are first optimised with respect to learning rate and learning rate decay with a grid search. From there each is optimised with respect to layer dimensions via Bayesian Optimisation. It is questionable as to the order that this should occur in but it is inevitable cyclic so for simplicity learning rate and decay are optimised once as is layer size.
 
+
+
+\noindent \begin{figure}[h!]
+	\includegraphics[width = 0.5\hsize]{figures/pose_lstm1_lstm2_graph_.eps}
+	\includegraphics[width = 0.5\hsize]{figures/pose_lstm1_lstm2_graph_.eps}
+	\caption{Pose Layer Optimisation: Left, Images Network Optimisation: Right.}
+	\label{bayes_opt_fig}
+\end{figure}
+
+\paragraph{Pose Model:} As the pose model was once again optimised with a small number of epochs it has slightly higher loss than the images model. The results from optimising the LSTM layers are as follows:
+
+\noindent \begin{table}[h!]
+	\centering
+	\begin{tabular}{|p{3.0cm}|p{3.0cm}|p{3.0cm}|p{3.0cm}|}
+		\hline
+		\textbf{Best Performing}&\textbf{LSTM 1 Size} & \textbf{LSTM 2 Size} &  \textbf{Validation Loss}       \\ \hline
+		1  & $2^{6.44} = 87$   &  $2^{6.25}=77$ & 0.42     \\ \hline
+		2  & $2^{6.04}=63$   &  $2^{5.7}=53$ & 0.43   \\ \hline
+		3  & $2^{2.03}=4$    & $2^{3.9}=15$ & 0.48   \\ \hline
+		
+	\end{tabular}
+	\caption{Pose Layer Size Bayesian Optimisation}
+	\label{pose_bayes_table}
+\end{table}
+
+The best result from Table \ref{pose_bayes_table} was then taken forward as the final dimensions for the network, and is used in the complete model.
+
 \paragraph{Images Model:}
 The images model is optimised in 3 dimensions, two involve the size of CNN layers and one is the number of layers in the network. The network has blocks of convolutional layers,optimising the number of layers determines whether there are one or two convolutional layers in each block. Simultaneously, the size of the layers in those blocks is also optimised.
+
 
 \subsubsection{Total Model:}
 Both models discussed in this section can be trained separately to obtain predictions of the future pose. A naive estimation would take weighted predictions and sum for a final prediction result. The final layers of these networks however could infer details from each-other to inform the pose estimation. This can only be done in a branched network that uses both inputs effectively and concatenates the outputs for some final layers. The proposed model is graphed in Figure \ref{total_network_architecture}, it has two inputs tensors of the images and pose data and three output variables which is the predicted $[x,y,z]$.
