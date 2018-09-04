@@ -1,98 +1,109 @@
 \select@language {english}
 \contentsline {chapter}{\numberline {1}Introduction}{1}{chapter.3}
-\contentsline {chapter}{\numberline {2}Background}{2}{chapter.4}
-\contentsline {section}{\numberline {2.1}Background, Computer Vision}{2}{section.5}
-\contentsline {subsection}{\numberline {2.1.1}Deep Learning Preliminaries}{2}{subsection.6}
-\contentsline {subsection}{\numberline {2.1.2}Convolutional Networks}{2}{subsection.7}
-\contentsline {subsubsection}{Convolutional Layers}{3}{section*.9}
-\contentsline {subsubsection}{Pooling Layers}{3}{section*.11}
-\contentsline {subsection}{\numberline {2.1.3}Image Detection}{4}{subsection.12}
-\contentsline {subsubsection}{R-CNN}{4}{section*.13}
-\contentsline {subsubsection}{Fast-RCNN}{5}{section*.15}
-\contentsline {subsubsection}{Faster R-CNN}{6}{section*.20}
-\contentsline {subsection}{\numberline {2.1.4}Image Segmentation}{7}{subsection.24}
-\contentsline {subsection}{\numberline {2.1.5}Instance Segmentation}{8}{subsection.26}
-\contentsline {subsubsection}{Mask R-CNN}{8}{section*.27}
-\contentsline {subsection}{\numberline {2.1.6}Recurrent Neural Networks:}{10}{subsection.30}
-\contentsline {paragraph}{Traditional RNN Layer:}{10}{section*.31}
-\contentsline {subsubsection}{LSTM (Long-Short Term Memory) Layer}{10}{section*.33}
-\contentsline {paragraph}{Forget Gate}{11}{section*.35}
-\contentsline {paragraph}{Input Gate}{11}{section*.37}
-\contentsline {paragraph}{Output gate}{11}{section*.40}
-\contentsline {paragraph}{Summary}{11}{section*.42}
-\contentsline {subsection}{\numberline {2.1.7}Bayesian Optimisation of Layer Dimensions:}{11}{subsection.43}
-\contentsline {paragraph}{Gaussian Processes:}{12}{section*.44}
-\contentsline {paragraph}{Bayesian Optimisation:}{12}{section*.48}
-\contentsline {section}{\numberline {2.2}Background, SLAM}{13}{section.52}
-\contentsline {subsection}{\numberline {2.2.1}Sensors}{13}{subsection.53}
-\contentsline {subsubsection}{Camera Distortion}{14}{section*.55}
-\contentsline {subsection}{\numberline {2.2.2}Camera to World Frame}{14}{subsection.58}
-\contentsline {subsubsection}{Calculating the 3D Ray}{14}{section*.59}
-\contentsline {subsubsection}{Calculating the 3D Location}{15}{section*.64}
-\contentsline {subsection}{\numberline {2.2.3}Projecting to World Frame}{16}{subsection.66}
-\contentsline {subsubsection}{Camera to World Summary}{17}{section*.72}
-\contentsline {subsection}{\numberline {2.2.4}World to Camera Frame}{17}{subsection.75}
-\contentsline {subsection}{\numberline {2.2.5}Bicycle States}{18}{subsection.78}
-\contentsline {subsection}{\numberline {2.2.6}The SLAM Problem}{18}{subsection.81}
-\contentsline {subsubsection}{Batch NonLinear Least Squares}{20}{section*.84}
-\contentsline {subsubsection}{Frame to Frame Matching}{20}{section*.89}
-\contentsline {paragraph}{Keypoint Detection}{20}{section*.90}
-\contentsline {paragraph}{Keypoint Matching}{21}{section*.96}
-\contentsline {subsubsection}{Camera Re-projection Error}{21}{section*.98}
-\contentsline {subsubsection}{IMU Kinematics}{22}{section*.100}
-\contentsline {subsubsection}{IMU Kinematics Linearised}{22}{section*.103}
-\contentsline {section}{\numberline {2.3}Background Object Tracking}{23}{section.107}
-\contentsline {subsection}{\numberline {2.3.1}Kernelised Correlation Filter}{23}{subsection.108}
-\contentsline {subsubsection}{Kernels}{24}{section*.113}
-\contentsline {subsubsection}{Detection}{25}{section*.118}
-\contentsline {chapter}{\numberline {3}Contribution}{26}{chapter.121}
-\contentsline {section}{\numberline {3.1}Software Solution}{26}{section.122}
-\contentsline {paragraph}{Tracking Module}{26}{section*.124}
-\contentsline {paragraph}{Collision Module}{27}{section*.125}
-\contentsline {paragraph}{Limitations}{27}{section*.126}
-\contentsline {section}{\numberline {3.2}Depth Measurement Outlier Removal}{27}{section.127}
-\contentsline {section}{\numberline {3.3}Tracking Module}{29}{section.137}
-\contentsline {subsection}{\numberline {3.3.1}Kernelised Correlation Filter}{30}{subsection.139}
-\contentsline {paragraph}{Modifications:}{30}{section*.140}
-\contentsline {subsection}{\numberline {3.3.2}BRISK - Selector}{30}{subsection.141}
-\contentsline {subsection}{\numberline {3.3.3}Class Matching}{30}{subsection.142}
-\contentsline {subsection}{\numberline {3.3.4}Kalman Filter ROI Matching}{31}{subsection.143}
-\contentsline {subsubsection}{Kalman Predictive Step}{31}{section*.144}
-\contentsline {subsubsection}{Kalman Update Step}{32}{section*.151}
-\contentsline {subsubsection}{Kalman Equations}{32}{section*.155}
-\contentsline {subsubsection}{Kalman Matching ROIS}{33}{section*.158}
-\contentsline {subsection}{\numberline {3.3.5}ROI Lives}{33}{subsection.162}
-\contentsline {subsection}{\numberline {3.3.6}Combining Matching Methods}{34}{subsection.163}
-\contentsline {section}{\numberline {3.4}Movement Prediction}{36}{section.170}
-\contentsline {subsection}{\numberline {3.4.1}Datasets}{36}{subsection.171}
-\contentsline {subsection}{\numberline {3.4.2}Objects Prediction}{37}{subsection.173}
-\contentsline {subsection}{\numberline {3.4.3}Bike Model}{37}{subsection.178}
-\contentsline {paragraph}{Okvis Sequence Inputs:}{38}{section*.179}
-\contentsline {paragraph}{Pose RNN Model:}{38}{section*.180}
-\contentsline {paragraph}{Images RCNN Model:}{39}{section*.185}
-\contentsline {paragraph}{Optimising Learning Rate and Decay:}{39}{section*.187}
-\contentsline {subsubsection}{Bayesian Optimisation Layer Dimensions:}{40}{section*.191}
-\contentsline {paragraph}{Pose Model:}{41}{section*.193}
-\contentsline {paragraph}{Images Model:}{41}{section*.195}
-\contentsline {subsubsection}{Total Model:}{42}{section*.196}
-\contentsline {paragraph}{Training Regime:}{42}{section*.198}
-\contentsline {subsection}{\numberline {3.4.4}Collision Detection Module}{42}{subsection.199}
-\contentsline {paragraph}{Points of intersection}{43}{section*.203}
-\contentsline {paragraph}{Area of Intersection}{44}{section*.208}
-\contentsline {paragraph}{Intersection Over Union}{45}{section*.213}
-\contentsline {chapter}{\numberline {4}Experimental Results}{46}{chapter.215}
-\contentsline {section}{\numberline {4.1}System Evaluation}{46}{section.216}
-\contentsline {subsection}{\numberline {4.1.1}Mask-RCNN}{46}{subsection.217}
-\contentsline {subsection}{\numberline {4.1.2}Cyclist Model}{47}{subsection.219}
-\contentsline {subsection}{\numberline {4.1.3}Depth Camera}{47}{subsection.220}
-\contentsline {chapter}{\numberline {5}Conclusion}{48}{chapter.221}
-\contentsline {subsection}{\numberline {5.0.1}Performance}{48}{subsection.222}
-\contentsline {subsection}{\numberline {5.0.2}Future Work}{48}{subsection.223}
-\contentsline {paragraph}{Speed}{48}{section*.224}
-\contentsline {paragraph}{Object Detection}{48}{section*.225}
-\contentsline {paragraph}{SLAM}{48}{section*.226}
-\contentsline {chapter}{\numberline {6}Ethics}{49}{chapter.227}
-\contentsline {subsection}{\numberline {6.0.1}Modification for Military Purposes}{49}{subsection.228}
-\contentsline {subsection}{\numberline {6.0.2}Other Ethics Issues}{49}{subsection.229}
-\contentsline {section}{\numberline {6.1}Ethics Checklist}{49}{section.230}
-\contentsline {chapter}{\numberline {7}Appendix}{52}{chapter.232}
+\contentsline {subsection}{\numberline {1.0.1}Road Map}{1}{subsection.4}
+\contentsline {paragraph}{Background}{1}{section*.5}
+\contentsline {paragraph}{Contribution}{1}{section*.6}
+\contentsline {paragraph}{System Evaluation}{2}{section*.8}
+\contentsline {paragraph}{Conclusion}{2}{section*.9}
+\contentsline {paragraph}{Ethics}{2}{section*.10}
+\contentsline {chapter}{\numberline {2}Background}{3}{chapter.11}
+\contentsline {section}{\numberline {2.1}Background, Computer Vision}{3}{section.12}
+\contentsline {subsection}{\numberline {2.1.1}Deep Learning Preliminaries}{3}{subsection.13}
+\contentsline {subsection}{\numberline {2.1.2}Convolutional Networks}{3}{subsection.14}
+\contentsline {subsubsection}{Convolutional Layers}{4}{section*.16}
+\contentsline {subsubsection}{Pooling Layers}{4}{section*.18}
+\contentsline {subsection}{\numberline {2.1.3}Image Detection}{5}{subsection.19}
+\contentsline {subsubsection}{R-CNN}{5}{section*.20}
+\contentsline {subsubsection}{Fast-RCNN}{6}{section*.22}
+\contentsline {subsubsection}{Faster R-CNN}{7}{section*.27}
+\contentsline {subsection}{\numberline {2.1.4}Image Segmentation}{8}{subsection.30}
+\contentsline {subsection}{\numberline {2.1.5}Instance Segmentation}{9}{subsection.32}
+\contentsline {subsubsection}{Mask R-CNN}{10}{section*.33}
+\contentsline {subsection}{\numberline {2.1.6}Recurrent Neural Networks (RNN):}{11}{subsection.36}
+\contentsline {paragraph}{Traditional RNN Layer:}{11}{section*.37}
+\contentsline {subsubsection}{Long-Short Term Memory (LSTM) Layer}{11}{section*.39}
+\contentsline {paragraph}{Forget Gate:}{11}{section*.41}
+\contentsline {paragraph}{Input Gate:}{12}{section*.43}
+\contentsline {paragraph}{Output gate:}{12}{section*.47}
+\contentsline {paragraph}{Summary:}{12}{section*.49}
+\contentsline {subsection}{\numberline {2.1.7}Bayesian Optimisation of Layer Dimensions:}{12}{subsection.50}
+\contentsline {paragraph}{Gaussian Processes:}{13}{section*.51}
+\contentsline {paragraph}{Bayesian Optimisation:}{13}{section*.55}
+\contentsline {section}{\numberline {2.2}Background, SLAM}{15}{section.59}
+\contentsline {subsection}{\numberline {2.2.1}Sensors}{15}{subsection.60}
+\contentsline {subsubsection}{Camera Distortion}{15}{section*.62}
+\contentsline {subsection}{\numberline {2.2.2}Camera to World Frame}{16}{subsection.66}
+\contentsline {subsubsection}{Calculating the 3D Ray}{16}{section*.67}
+\contentsline {subsubsection}{Calculating the 3D Location}{17}{section*.72}
+\contentsline {subsection}{\numberline {2.2.3}Projecting to World Frame}{17}{subsection.74}
+\contentsline {subsubsection}{Camera to World Summary}{18}{section*.80}
+\contentsline {subsection}{\numberline {2.2.4}World to Camera Frame}{18}{subsection.83}
+\contentsline {subsection}{\numberline {2.2.5}Bicycle States}{20}{subsection.86}
+\contentsline {subsection}{\numberline {2.2.6}The SLAM Problem}{20}{subsection.88}
+\contentsline {subsubsection}{Batch NonLinear Least Squares}{21}{section*.91}
+\contentsline {subsection}{\numberline {2.2.7}Frame to Frame Matching}{22}{subsection.97}
+\contentsline {paragraph}{Keypoint Detection}{22}{section*.98}
+\contentsline {paragraph}{Keypoint Matching}{23}{section*.105}
+\contentsline {subsubsection}{Camera Re-projection Error}{23}{section*.107}
+\contentsline {subsubsection}{IMU Kinematics}{24}{section*.109}
+\contentsline {subsubsection}{IMU Kinematics Linearised}{24}{section*.117}
+\contentsline {section}{\numberline {2.3}Background Object Tracking}{24}{section.121}
+\contentsline {subsection}{\numberline {2.3.1}Kernelised Correlation Filter}{25}{subsection.122}
+\contentsline {subsubsection}{Kernels}{26}{section*.129}
+\contentsline {subsubsection}{Detection}{26}{section*.134}
+\contentsline {chapter}{\numberline {3}Contribution}{27}{chapter.137}
+\contentsline {section}{\numberline {3.1}Software Solution}{27}{section.138}
+\contentsline {paragraph}{Tracking Module}{27}{section*.140}
+\contentsline {paragraph}{Collision Module}{28}{section*.141}
+\contentsline {paragraph}{Limitations}{28}{section*.142}
+\contentsline {section}{\numberline {3.2}Depth Measurement Outlier Removal}{28}{section.143}
+\contentsline {section}{\numberline {3.3}Tracking Module}{30}{section.153}
+\contentsline {subsection}{\numberline {3.3.1}Kernelised Correlation Filter}{31}{subsection.155}
+\contentsline {paragraph}{Modifications:}{31}{section*.156}
+\contentsline {subsection}{\numberline {3.3.2}BRISK - Selector}{31}{subsection.157}
+\contentsline {subsection}{\numberline {3.3.3}Class Matching}{31}{subsection.158}
+\contentsline {subsection}{\numberline {3.3.4}Kalman Filter RoI Matching}{32}{subsection.159}
+\contentsline {subsubsection}{Kalman Predictive Step}{32}{section*.160}
+\contentsline {subsubsection}{Kalman Update Step}{33}{section*.167}
+\contentsline {subsubsection}{Kalman Equations}{33}{section*.171}
+\contentsline {subsubsection}{Kalman Matching RoIS}{34}{section*.174}
+\contentsline {subsection}{\numberline {3.3.5}RoI Lives}{34}{subsection.179}
+\contentsline {subsection}{\numberline {3.3.6}Combining Matching Methods}{35}{subsection.180}
+\contentsline {section}{\numberline {3.4}Movement Prediction}{37}{section.187}
+\contentsline {subsection}{\numberline {3.4.1}Datasets}{37}{subsection.188}
+\contentsline {subsection}{\numberline {3.4.2}Objects Prediction}{38}{subsection.190}
+\contentsline {subsection}{\numberline {3.4.3}Bike Model}{38}{subsection.196}
+\contentsline {paragraph}{Okvis Sequence Inputs:}{38}{section*.197}
+\contentsline {paragraph}{Pose RNN Model:}{38}{section*.198}
+\contentsline {paragraph}{Images RCNN Model:}{40}{section*.205}
+\contentsline {paragraph}{Optimising Learning Rate and Decay:}{40}{section*.207}
+\contentsline {subsubsection}{Bayesian Optimisation Layer Dimensions:}{41}{section*.211}
+\contentsline {paragraph}{Pose Model:}{41}{section*.213}
+\contentsline {paragraph}{Images Model:}{42}{section*.215}
+\contentsline {subsubsection}{Final Optimised Models}{43}{section*.217}
+\contentsline {subsubsection}{Total Model:}{43}{section*.219}
+\contentsline {paragraph}{Training Regime:}{43}{section*.221}
+\contentsline {paragraph}{Summary}{44}{section*.223}
+\contentsline {subsection}{\numberline {3.4.4}Collision Detection Module}{44}{subsection.224}
+\contentsline {paragraph}{Points of intersection}{45}{section*.228}
+\contentsline {paragraph}{Area of Intersection}{46}{section*.235}
+\contentsline {paragraph}{Intersection Over Union}{46}{section*.239}
+\contentsline {paragraph}{Moving Objects}{46}{section*.241}
+\contentsline {chapter}{\numberline {4}Experimental Results}{47}{chapter.242}
+\contentsline {section}{\numberline {4.1}System Evaluation}{47}{section.243}
+\contentsline {subsection}{\numberline {4.1.1}Mask-RCNN}{47}{subsection.244}
+\contentsline {subsection}{\numberline {4.1.2}Cyclist Model}{48}{subsection.246}
+\contentsline {subsection}{\numberline {4.1.3}Depth Camera}{48}{subsection.247}
+\contentsline {subsection}{\numberline {4.1.4}Crash Sequence Evaluation}{48}{subsection.248}
+\contentsline {chapter}{\numberline {5}Conclusion}{50}{chapter.251}
+\contentsline {subsection}{\numberline {5.0.1}Contributions}{50}{subsection.252}
+\contentsline {subsection}{\numberline {5.0.2}Future Work}{50}{subsection.253}
+\contentsline {paragraph}{Speed}{50}{section*.254}
+\contentsline {paragraph}{Object Detection}{50}{section*.255}
+\contentsline {paragraph}{SLAM}{51}{section*.256}
+\contentsline {chapter}{\numberline {6}Ethics}{52}{chapter.257}
+\contentsline {subsection}{\numberline {6.0.1}Modification for Military Purposes}{52}{subsection.258}
+\contentsline {subsection}{\numberline {6.0.2}Other Ethics Issues}{52}{subsection.259}
+\contentsline {section}{\numberline {6.1}Ethics Checklist}{52}{section.260}
+\contentsline {chapter}{\numberline {7}Appendix}{55}{chapter.262}
+\contentsline {subsection}{\numberline {7.0.1}RoI Matching Algorithm}{55}{subsection.263}

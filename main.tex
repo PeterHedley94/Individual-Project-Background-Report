@@ -54,7 +54,7 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{abstract}
-Recently in the news, and as any London cyclist has experienced, there are numerous potentially fatal hazards on a morning commute. Cars turn directly in front of you, doors often open unexpectedly and pedestrians amble into the road taking a selfie. The project is aimed at detecting potential hazards through the use of an on-board camera, and alerting the cyclist and pedestrian/car to it. The problem requires computer vision techniques and SLAM algorithms for spacial understanding, and as the techniques described are computationally expensive it will need to be optimised for hardware that is able to fit on a bicycle.
+Recently in the news, and as any London cyclist has experienced, there are numerous potentially fatal hazards on a morning commute. Cars turn directly in front of you, doors often open unexpectedly and pedestrians amble into the road taking a selfie. The project is aimed at detecting potential hazards through the use of an on-board camera, and alerting the cyclist and pedestrian/car to it. The problem requires computer vision techniques and SLAM algorithms for spacial understanding.
 \newline \newline
 This project investigates state-of-the-art methods in image segmentation, object tracking, and develops a novel architecture for cyclist path prediction. The results of which, although not realtime provide a solid foundation for future research in the area and suggests potential modifications to the system for that to become a reality.
 \end{abstract}
@@ -87,8 +87,31 @@ Also thanks to the other students on my course who have helped with ideas about 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 There were c. 18,500 cycling accidents and 3,500 deaths on British roads in 2016 \cite{DFT_fig}. Of these accidents 80\% occur during the day and driver/rider error accounts for 71\% of the total collisions \cite{DFT_fig2}. The most common place for a cycling incident is at a road junction with 75\% of collisions occurring there \cite{DFT_fig3}. With cycling becoming a more accepted form of transport, the need to protect and modify bikes with a comprehensive safety system is important.
-\newline\newline
-This report will examine state of the art technologies that are used for autonomous vehicles to investigate their applicability to a cycling environment. The three main topics involve image detection/segmentation, SLAM algorithms and collision/path prediction. 
+
+\subsection{Road Map} The report develops a system for collision detection and is split into two main sections, object detection and understanding the 3D environment. The sections are developed simultaneously throughout the report and are discussed within the following chapters.
+
+\paragraph{Background} This chapter discusses the current research into the area of instance segmentation, recurrent networks, optimisation and SLAM. It first describes recent advances in computer vision relevant to the current state-of-the-art method Mask RCNN. Mask RCNN combines a number of advances in different fields, namely image classification, detection and segmentation. The chapter then continues with discussion around recurrent networks for path prediction, and methods of optimising these networks. Finally a brief discussion on SLAM and object tracking which are both highly active and voluminous fields of research in their own right.
+
+\paragraph{Contribution}
+The contribution chapter discusses depth approximations when there is a depth camera failure, object tracking and prediction. In particular it discusses combining various tracking methods into a comprehensive system that both combines the advantages of the respective algorithms and mitigates their potential weaknesses. Once the ability to track objects is discussed, models for prediction of future locations are developed. This leads to a novel recurrent network to predict future bicycle locations from image, and pose data gathered from previous frames. Finally a method of combining these predictive models, and determining whether a collision is likely to occur is discussed in the latter part of the chapter. These sections all talk through the various modules required in the system which is described below in Figure \ref{software_soln1}
+
+
+\noindent \begin{figure}[h!]
+	\includegraphics[width = 1.0\hsize]{figures/software_architecture.png}
+	\caption{System Design}
+	\label{software_soln1}
+\end{figure}
+
+
+\paragraph{System Evaluation}
+This section describes the potential problems with the system, and includes an image sequence from a staged hazard. The final system can be seen to detect a crossing pedestrian and determine the collision is likely.
+
+\paragraph{Conclusion}
+This chapter discusses and summarises the system, it also suggests further areas of research if the system is to be taken further.
+
+\paragraph{Ethics}
+The final section discusses any ethical issues within the project and contains a completed ethical checklist.
+
 
 \newpage
 
@@ -207,15 +230,14 @@ L(\{p_{i}\},\{t_{i}\}) = \frac{1}{N_{cls}} \sum_{i} L_{cls}(p{i},p_{i}^{*}) + \l
 
 Where $i$ is the anchor index, $p_{i}$ is the predicted probability of anchor $i$ containing an object. The ground truth label $p_{i}$ is denoted as a 1 for a positive anchor and 0 for a negative therefore $L_{reg}$ is only activated for a positive example, $t_{i}$ and $t_{i}^{*}$ represent the 4 coordinates of the bounding boxes, and $L_{cls}$ is the classification loss. The two terms are normalised ($N_{cls}$ and $N_{reg}$) and balanced by a weighting parameter $\lambda$. The final term to discuss, the bounding box regression is calculated, simply, as follows:
 
-\begin{equation}
-\begin{aligned}
+
+\begin{align*}
 \label{bounding_box_loss}
 t_{x} = (x-x_{a})/w_{a}, \quad t_{y} = (y-y_{a})/h_{a},\\
 t_{w} = log(w/w_{a}), \quad t_{h} = log(h/h_{a}), \\
-t_{x}^{*} = (x^{*}-x_{a})/w_{a},\quad t_{y}^{*} = (y^{*} - y_{a})/h_{a} \\
+t_{x}^{*} = (x^{*}-x_{a})/w_{a},\quad t_{y}^{*} = (y^{*} - y_{a})/h_{a}, \\
 t_{w}^{*} = log(w^{*}/w_{a}), \quad t_{h}^{*} = log(h^{*}/h_{a})
-\end{aligned}
-\end{equation}
+\end{align*}
 
 where $x$, $y$, $w$, and $h$ are the box centre coordinates plus width and height. Predicted box, and anchored box are denoted by $x$, $x_{a}$, $x^{*}$ (likewise for $y$, $w$, $h$).
 \newline \newline
@@ -240,7 +262,7 @@ Although conventional proven classification architectures performed to state-of-
 \subsection{Instance Segmentation}
 Instance segmentation is a problem that combines research in Sections \ref{Image_det} \& \ref{image_seg}, it aims to not only perform pixel-wise segmentation of classes but also determine instances of objects within and image. As discussed in Section \ref{mask_rcnn} there is a simple method of combining these networks into one simple classification pipeline.
 \subsubsection{Mask R-CNN} \label{mask_rcnn}
-Mask R-CNN was proposed by Facebook AI Research (FAIR) namely Kaiming He et al. in March 2017. It uses the Faster R-CNN network described in Section \ref{Faster_rcnn} which builds from advances in Sections \ref{rcnn}  \& \ref{Fast_RCNN}. The method works by simply adding a branch from the existing network for predicting segmentation masks as in Section \ref{image_seg} (Figure \ref{Mask_rcnn_arch}). The branch is a small FCN that is applied to each ROI for segmentation. There are a number of slight modifications to each approach to produce the final Mask R-CNN that are documented below.
+Mask R-CNN was proposed by Facebook AI Research (FAIR) namely Kaiming He et al. in March 2017. It uses the Faster R-CNN network described in Section \ref{Faster_rcnn} which builds from advances in Sections \ref{rcnn}  \& \ref{Fast_RCNN}. The method works by simply adding a branch from the existing network for predicting segmentation masks as in Section \ref{image_seg} (Figure \ref{Mask_rcnn_arch}). The branch is a small FCN that is applied to each RoI for segmentation. There are a number of slight modifications to each approach to produce the final Mask R-CNN that are documented below.
 \newline \newline
 
 \noindent \begin{figure}[h!]
@@ -249,23 +271,23 @@ Mask R-CNN was proposed by Facebook AI Research (FAIR) namely Kaiming He et al. 
 	\label{Mask_rcnn_arch}
 \end{figure}
 %TODO nice binary mask per class photo
-RoIs are produced from the RPN as in Faster R-CNN \cite{DBLP:journals/corr/RenHG015} then an $m \times m$ mask is predicted from each RoI without the use of a fully-connected (fc) layer and therefore keeps spacial information as in Section \ref{image_seg}. It was found during experimentation that it is preferable to decouple the class classification and the mask production of the network. This stops multiple classes disrupting eachother during mask production, hence a mask is produced for each class. The class of each respective mask is then determined from the class output branch and that binary mask is selected. 
+RoIs are produced from the RPN as in Faster R-CNN \cite{DBLP:journals/corr/RenHG015} then a $m \times m$ mask is predicted from each RoI without the use of a fully-connected (fc) layer and therefore keeps spacial information as in Section \ref{image_seg}. It was found during experimentation that it is preferable to decouple the class classification and the mask production of the network. This stops multiple classes disrupting each other during mask production, hence a mask is produced for each class. The class of each respective mask is then determined from the class output branch and that binary mask is selected. 
 \newline \newline
-The loss function for the network must now incorporate the three different branches; mask, class prediction, bounding-box prediction (Equation \ref{maskrcnnloss}). 
+The loss function for the network must now incorporate the three different branches; mask, class prediction, and bounding-box prediction (Equation \ref{maskrcnnloss}). 
 
 \begin{equation}
 \label{maskrcnnloss}
 L = L_{cls} + L_{box} + L_{mask}
 \end{equation}
 
-Where $L_{cls}$ \& $L_{box}$ are identical to Section \ref{Fast_RCNN}. The mask branch loss is determined by a per-pixel sigmoid between the ground-truth class ($k$) and the corresponding $k$th binary mask (excluding other classes) and is calculated with an average binary cross-entropy loss.
+where $L_{cls}$ \& $L_{box}$ are identical to Section \ref{Fast_RCNN}. The mask branch loss is determined by a per-pixel sigmoid between the ground-truth class ($k$) and the corresponding $k$th binary mask (excluding other classes) and is calculated with an average binary cross-entropy loss.
 \newline \newline
-RoI pool as discussed in Section \ref{Fast_RCNN} is modified in this approach. Instead of subdividing an RoI into discrete regions e.g. a grid of $4 \times 5$ cells. An RoI does not always divide equally into these grid cells and so rounding of grid sizes is needed, this quantisation of sub-windows can cause misalignments of the RoI and extracted features. The new RoIAlign layer introduced in this paper mitigates this problem by not rounding grid-cells. Mask R-CNN uses bi-linear interpolation (linear interpolation with 2d) to compute the exact values of input features at four regularly samples locations in each RoI window.
+RoI pool as discussed in Section \ref{Fast_RCNN} is modified in this approach. Instead of subdividing an RoI into discrete regions e.g. a grid of $4 \times 5$ cells. An RoI does not always divide equally into these grid cells and so rounding of grid sizes is needed, this quantisation of sub-windows can cause misalignments of the RoI and extracted features. The new RoIAlign layer introduced in this paper mitigates this problem by not rounding grid-cells. Mask R-CNN uses bi-linear interpolation (linear interpolation with 2d) to compute the exact values of input features.
 \newline \newline
 This network architecture is the final piece required to segment the images provided by the camera and is the model used in the cycling system. The next section will go on to talk about the other networks used for things such as position prediction.
-\subsection{Recurrent Neural Networks:}
+\subsection{Recurrent Neural Networks (RNN):}
 
-\paragraph{Traditional RNN Layer:}A normal dense network layer has no memory of the previous features that pass through it. This would mean that in order to classify a sequence the data must be passed through the layer simultaneously. The advantage of a recurrent layer its ability to remember. An LSTM (Long-Short Term memory) layer has a weighted channel that inputs the output of the previous state as part of the next see Figure \ref{rnn_unrolled} for more details. Each state $ \{ 1,2,...,t-1,t \}$ is connected to one another almost like a chain, the output of the cell at time $t$, from inputs $x_{t}$ is $h_{t}$.
+\paragraph{Traditional RNN Layer:}A normal dense network layer has no memory of the previous features that pass through it. This would mean that in order to classify a sequence the data must be passed through the layer simultaneously. The advantage of a recurrent layer its ability to remember. A Long-Short Term memory (LSTM) layer has a weighted channel that inputs the output of the previous state as part of the next, see Figure \ref{rnn_unrolled} for more details. Each state $ \{ 1,2,...,t-1,t \}$ is connected to one another almost like a chain, the output of the cell at time $t$, from inputs $x_{t}$ is $h_{t}$.
 
 \noindent \begin{figure}[h!]
 	\includegraphics[width = 1.0\hsize]{./figures/RNN-unrolled.png}
@@ -275,17 +297,17 @@ This network architecture is the final piece required to segment the images prov
 
 The main issue with this recurrent layer is how far back the network is capable of remembering. In short sequences the information will pass effectively through the chain, but often in longer sequences the network is less capable of remembering previous states. 
 
-\subsubsection{LSTM (Long-Short Term Memory) Layer} 
+\subsubsection{Long-Short Term Memory (LSTM) Layer} 
 LSTM layers are far better at remembering, and do not get the vanishing gradient problem that RNN layers are subject to. LSTMs contain a cell state which passes through the layer, a forget, input, and output gates. These gates determine whether to modify the cell state of the layer, this acts as the memory of the later and is similar to the links in the RNN chain (Figure \ref{rnn_unrolled}). The gates contain sigmoid functions which can evaluate between to 0 and 1, and determine how much of a component is to be let through.
 
 \noindent \begin{figure}[h!]
 	\includegraphics[width = 1.0\hsize]{./figures/LSTM3-chain.png}
 	\caption{A LSTM (Long-Short Term Memory) Layer \cite{Christopher_Olah_Blog}}
-	\label{rnn_unrolled}
+	\label{lstm_fig}
 \end{figure}
 
 
-\paragraph{Forget Gate}
+\paragraph{Forget Gate:}
 The forget gate determines how much of the cell state to keep by looking at $h_{t-1}$ and $x_{t}$. The gate simply acts like a network layer, multiplying inputs by a weight, adding a bias and then passing the result through the activation (Sigmoid) function (Equation \ref{forget_gate}). 
 
 \begin{equation}
@@ -295,39 +317,44 @@ f_{t} = \sigma (W_{f} \cdot [h_{t-1},x_{t}] + b_{f})
 
 Once again $h_{t-1}$ is the output of the layer from the last state, $x_{t}$ is the layer input at time $t$.
 
-\paragraph{Input Gate} When the gate has determined what to forget from the last state it needs to decide what to add from the new state $x_{t}$ for a correct prediction $h_{t}$. This introduces the next gate in the system which combines an input sigmoid gate that decides which values of $x_{t}$ to add and a $tanh$ section that creates the new vector $\tilde{C}_{t}$ to add to the current state $C_{t}$, Equation \ref{input_gate}.
+\paragraph{Input Gate:} When the gate has determined what to forget from the last state it needs to decide what to add from the new state $x_{t}$ for a correct prediction $h_{t}$. This introduces the next gate in the system which combines an input sigmoid gate that decides which values of $x_{t}$ to add (Equation \ref{input_gate0}), and a $tanh$ section that creates the new vector $\tilde{C}_{t}$ to add to the current state $C_{t}$, Equation \ref{input_gate1}.
+
 
 
 \begin{equation}
-\begin{aligned}
-\mathit{i}_{t} = \sigma (W_{i} \cdot [h_{t-1},x_{t}] + b_{i}) \\
-\tilde{C}_{t} = tanh(W_{C} \cdot [h_{t-1},x_{t}] + b_{C})
-\end{aligned}
-\label{input_gate}
+\mathit{i}_{t} = \sigma (W_{i} \cdot [h_{t-1},x_{t}] + b_{i})
+\label{input_gate0}
 \end{equation}
 
-The input gate and forget gate then influence the state via weighting $C_{t-1}$ by the forget metric $f_{t}$ and $\tilde{C}_{t}$ by the input scale.
+\begin{equation}
+\tilde{C}_{t} = tanh(W_{C} \cdot [h_{t-1},x_{t}] + b_{C})
+\label{input_gate1}
+\end{equation}
+
+
+
+The input gate and forget gate then influence the state via weighting $C_{t-1}$ by the forget metric $f_{t}$ and $\tilde{C}_{t}$ by the input scale, Equation \ref{input_gate2}.
 
 \begin{equation}
 C_{t} = f_{t} \times C_{t-1} + i_{t} \times \tilde{C}_{t}
-\label{forget_gate}
+\label{input_gate2}
 \end{equation}
 
-\paragraph{Output gate} The final step of a LSTM is to decide the output. This involves deciding which parts of the cell state to output and scaling to (-1,1) via the use of another $tanh$ function.
+\paragraph{Output gate:} The final step of a LSTM is to decide the output. This involves deciding which parts of the cell state to output and scaling to (-1,1) via the use of another $tanh$ function, Equation \ref{input_gate3}.
 
 
 \begin{equation}
 o_{t} = \sigma (W_{o}[h_{t-1},x_{t}] + b_{o}) \\
 h_{t} = o_{t} \times tanh(C_{t})
-\label{forget_gate}
+\label{input_gate3}
 \end{equation}
 
-\paragraph{Summary}
+\paragraph{Summary:}
 
 The LSTM layer is highly effective at predicting sequences, it is used later within the system to predict where the bike will be in the future. It provides an effective and sufficiently complex method of modelling bicycle movement including determining from picture inputs the most likely path along a road that the bike will take. Now that the networks have been defined, they must be optimised to perform well at their respective tasks. Mask-RCNN is kept as default in this report but the prediction models architecture is bespoke and thus must be optimised for its use-case.
  
 \subsection{Bayesian Optimisation of Layer Dimensions:}
-In order to get the best network architecture, and hyper-parameters such as learning rate it is possible to naively try combinations and record which performs the best. However, when trying to optimise networks efficiently it is better to provide a range of possible working parameters and optimise them in an informed and, more importantly, automated manner. Bayesian optimisation allows such a method and can quickly check the parameter space for a good combination to minimise the network loss. Bayesian optimisation uses an acquisition function which evaluates a Gaussian process. It is cheaper to evaluate a proxy function that approximates the true function rather than run the neural network. Hence it is a very fast and effective method of optimisation.
+In order to get the best network architecture, and hyper-parameters such as learning rate, it is possible to naively try combinations and record which performs the best. However, when trying to optimise networks efficiently it is better to provide a range of possible working parameters and optimise them in an informed and, more importantly, automated manner. Bayesian optimisation allows such a method and can quickly check the parameter space for a good combination to minimise the network loss. Bayesian optimisation uses an acquisition function which evaluates a Gaussian process. It is cheaper to evaluate a proxy function that approximates the true function rather than run the neural network. Hence it is a very fast and effective method of optimisation.
 
 \paragraph{Gaussian Processes:}
 In a typical regression sample, the aim is to determine the parameters to a function (or family of functions) that best describe some data. A Gaussian process involves making the assumption that a function can be described simply by an infinite number of points along a function $f(x) = [f_{1},f_{2},...f_{\infty}]$, a finite number of which are gaussian distributed. The aim is to then best approximate the relationship between these points via a covariance kernel $k(\cdot,\cdot)$ and a mean function $m(\cdot)$. A gaussian distribution is described by Equation \ref{gaus_dist} and a kernel function (Matern) by Equation \ref{matern}.
@@ -349,7 +376,7 @@ k_{Mat,3/2}(x_{i},x_{j}) =
 \label{matern}
 \end{equation}
 
-where $\mathit{l}$ is a hyperparameter that describes the smoothness of the data and $\mathit{\sigma_{f}}$ the amplitude of the latent function. An example of a matern kernel fitted to some data is given in Figure 
+where $\mathit{l}$ is a hyperparameter that describes the smoothness of the data and $\mathit{\sigma_{f}}$ the amplitude of the latent function. An example of a Matern kernel is given in Figure \ref{matern_kernel_fig}.
 
 
 \noindent \begin{figure}[h!]
@@ -359,7 +386,7 @@ where $\mathit{l}$ is a hyperparameter that describes the smoothness of the data
 \end{figure}
 
 \paragraph{Bayesian Optimisation:}
-is a process that can maximise a set of hyper-parameters with a reduced evaluation of the true function. It uses an acquisition function that balances state exploration and exploitation i.e. how much to search local minima for the best solution vs exploring for global minima. The true function (NN model) is evaluated and data collected to initialise the process. Then the acquisition function determines where to evaluate next in the true function by querying the proxy function. An example acquisition function the lower confidence bound \cite{SrinivasNiranjan2010GPOi} is presented in Equation \ref{gp_lower_confidence}.
+Bayesian Optimisation is a process that can maximise a set of hyper-parameters with a reduced evaluation of the true function. It uses an acquisition function that balances state exploration and exploitation i.e. how much to search local minima for the best solution vs exploring for global minima. The true function (NN model) is evaluated and data collected to initialise the process. Then the acquisition function determines where to evaluate next in the true function by querying the proxy function. An example acquisition function, the lower confidence bound \cite{SrinivasNiranjan2010GPOi} is presented in Equation \ref{gp_lower_confidence}.
 
 \begin{equation}
 \begin{aligned}
@@ -369,8 +396,7 @@ is a process that can maximise a set of hyper-parameters with a reduced evaluati
 \end{equation}
 
 
-The lower confidence bound balances exploration of global minima by the covariance function and weighting $k$, which increases at each iteration, with exploitation of local minima with the mean function. The Bayesian optimisation process roughly translates to:
-
+The lower confidence bound balances exploration of global minima by the covariance function and weighting $k$, which increases at each iteration, with exploitation of local minima with the mean function. The Bayesian optimisation process roughly translates to:\newline\newline
 \begin{algorithm}[H]
 	\DontPrintSemicolon
 	\SetAlgoLined
@@ -390,7 +416,7 @@ The lower confidence bound balances exploration of global minima by the covarian
 	\tcp{Note that if there are no objects in old frame $new$\textunderscore$frame.id$ = zeros}
 	$D = [\{ x_{0},y_{0} \}]$ \tcc*[r]{Initialise the dataset}
 	
-	\ForEach(\tcc*[f]{For every not-matched new ROI}){$step \in iterations$}{
+	\ForEach(\tcc*[f]{For every not-matched new RoI}){$step \in iterations$}{
 		$update \textunderscore gp(D[step-1])$ \tcc*[r]{Update the Gaussian process with data from the last step}
 		$x_{step} = argmax(\alpha(x))$ \tcc*[r]{Evaluate the acquisition function for where to evaluate next}
 		$y_{step} = function(x_{step})$ \tcc*[r]{Evaluate true function (NN model)}
@@ -402,13 +428,13 @@ The lower confidence bound balances exploration of global minima by the covarian
 	\label{alg:weights}
 \end{algorithm}
 
-
+\newpage
 
 \section{Background, SLAM} \label{back_slam}
 In order to detect collisions between the bike and obstacles the software must have an understanding of the global environment. The detection described in Section \ref{comp_vis_back} allows mapping, and tracking of dynamic objects in the frame, but distance, path prediction and eventually collision prediction rely strongly on an accurate understanding of 2.5-3D space.
 
 \subsection{Sensors}
-The sensors used in this project are an RGBD camera and an IMU. These are both available in the Intel Realsense Camera (ZR300, Figure \ref{realsense_camera}). This camera has a USB cable that both provides the power and sends camera information. An extension cable allows for a laptop to be attached to the camera, from a backpack whilst cycling. Potential problems with this setup are due to juddering of the bike during operation; this could cause tricky footage to analyse and can data loss when the hard-drive is writing to disk. The latter issue can easily be solved by writing to an SSD while cycling.
+The sensors used in this project are an RGBD camera and an IMU. These are both available in the Intel Realsense Camera (ZR300, Figure \ref{realsense_camera}). This camera has a USB cable that both provides the power and sends camera information. An extension cable allows for a laptop to be attached to the camera, from a backpack whilst cycling. Potential problems with this setup are due to juddering of the bike on the road; this could cause tricky footage to analyse and data loss when the hard-drive is writing to disk. The latter issue can easily be solved by writing to an SSD while cycling.
 
 \noindent \begin{figure}[h!]
 	\includegraphics[width = 1.0\hsize]{./figures/intel_realsense.jpg}
@@ -429,8 +455,9 @@ In order to fully understand the bike's location, the environment can be conside
 A well-known distortion model is "radial-tangential" distortion. As the name implies there is both a radial and tangential component to the distortion (Equation \ref{raddis}) 
 
 \begin{equation}
-\begin{aligned}
 r^{2} = x_{1}^{'2} + x_{2}^{'2} \\
+\end{equation}
+\begin{equation}
 \mathbf{x''} = \mathbf{d(x')} = \frac{1 + k_{1}r^{2} + k_{2}r^{4}+k_{3}r^{6}}{1+ k_{4}r^{2} + k_{5}r^{4}+k_{6}r^{6}}
 \begin{bmatrix}
 x'_{1} \\[0.3em]
@@ -441,9 +468,10 @@ x'_{2}
 2p_{1}x'_{1}x'_{2} + p_{2}(r^{2} + 2x_{1}^{'2}) \\[0.3em]
 p_{1}(r^{2} + 2x_{2}^{'2}) + 2p_{2}x'_{1}x'_{2}
 \end{bmatrix}
-\end{aligned}
 \label{raddis}
 \end{equation}
+
+
 
 where $x'_{1},x'_{2}$ is the 3d point mapped to the unit plane in z, $k_{1}-k_{6}$ are radial distortion parameters, $p_{1},p_{2}$ are tangential distortion parameters. The model parameters can be determined during camera calibration.
 
@@ -458,7 +486,7 @@ where $x'_{1},x'_{2}$ is the 3d point mapped to the unit plane in z, $k_{1}-k_{6
 	\label{pinhole_model}
 \end{figure}
 
-Assuming an object or a point on the camera image, it is important to be able to transform such a point into the world frame. To track and gain a 3d appreciation of the environment. Hence for visual context (Figure \ref{pinhole_model}) is a pinhole camera model. The only difference, in practice, in an intermediate un-distorting step to get the point's ray. This is due to the focal lens in the camera, which is not represented in the pinhole model. Hence to find a ray describing a 3d point the image must first be scaled, (Equation \ref{camera_scale})
+Once an object or a point is detected in an image, it is important to transform it into the world frame; to track and gain a 3d appreciation of the environment. For visual understanding and context  of the problem see the pinhole camera model in Figure \ref{pinhole_model}. The only difference, in practice, in an intermediate un-distorting step to get the point's ray. This is due to the focal lens in the camera, which is not represented in the pinhole model but Equation \ref{raddis} shows how to account for this. Hence to find a ray describing a 3d point, the image must first be scaled, (Equation \ref{camera_scale})
 
 
 \begin{equation}
@@ -510,7 +538,7 @@ depth(\mathbf{x'})
 \label{camera_add_depth}
 \end{equation}
 
-Assuming a static camera location, this would be all that is needed to map the space in-front of the camera. However, as the camera moves, the origin, and orientation of the camera frame changes with respect the world frame. Hence the software must not only determine the 3D location of a point in the camera frame but also translate that to a world frame representation.
+Assuming a static camera location, this would be all that is needed to map the space in-front of the camera. However, as the camera moves, the origin, and orientation of the camera frame changes with respect to the world frame. Hence the software must not only determine the 3D location of a point in the camera frame but also translate that to a world frame representation.
 
 \subsection{Projecting to World Frame}
 
@@ -523,7 +551,7 @@ Assuming a static camera location, this would be all that is needed to map the s
 \end{figure}
 
 
-To convert between world (${\xrightarrow{F}}_{W}$), camera frame (${\xrightarrow{F}}_{C_{i}}$), and IMU frame (${\xrightarrow{F}}_{S}$), an appropriate method of describing the orientation, and location of an object in 3D space is needed. A Hamiltonian Quaternion is capable of correctly mapping the orientation of an object in 3D space, it does this by use of a 4D representation of one real part, and 3 imaginary;  
+To convert between world (${\xrightarrow{F}}_{W}$), camera frame (${\xrightarrow{F}}_{C_{i}}$), and IMU frame (${\xrightarrow{F}}_{S}$), an appropriate method of describing the orientation and location of an object in 3D space is needed. A Hamiltonian Quaternion is capable of correctly mapping the orientation of an object in 3D space, it does this by use of a 4D representation of one real part, and 3 imaginary parts;  
 
 \begin{equation}
 \begin{aligned}
@@ -556,7 +584,7 @@ C_{WC} & r_{WC} \\
 \end{aligned}
 \end{equation}
 
-where $T_{WC} \in \mathbb{R}^{4 \times 4}$, the position translation matrix $r_{WC} \in \mathbb{R}^{3 \times 1}$, and the orientation matrix $C_{WC} \in \mathbb{R}^{3 \times 3}$. Note alsp that the inverse of this matrix can be easily calculated as $C_{WC}$ is symmetric and therefore positive definite and it holds that $C_{CW}=C_{WC}^{-1}= C_{WC}^{T}$.Therefore:
+where $T_{WC} \in \mathbb{R}^{4 \times 4}$, the position translation matrix $r_{WC} \in \mathbb{R}^{3 \times 1}$, and the orientation matrix $C_{WC} \in \mathbb{R}^{3 \times 3}$. Note also that the inverse of this matrix can be easily calculated as $C_{WC}$ is symmetric and therefore positive definite and it holds that $C_{CW}=C_{WC}^{-1}= C_{WC}^{T}$.Therefore:
 
 \begin{equation}
 \begin{aligned}
@@ -602,7 +630,7 @@ These transformation matrices must be determined from a SLAM algorithm such as O
 
 \subsection{World to Camera Frame} \label{w_c_frame}
 
-In order to correctly plot the Kalman filter an give other tracking algorithms the expected location on the picture the ability to transform from world to camera frame is needed. The process is similar to the camera to frame except the reverse, namely:
+In order to correctly plot the Kalman filter and give other tracking algorithms the expected location on the picture, the ability to transform from world to camera frame is needed. The process is similar to the camera to frame except the reverse, namely:
 
 \begin{algorithm}[H]
 	\DontPrintSemicolon
@@ -648,16 +676,7 @@ In order to find the bike location and orientation in each frame; a complete rep
 \end{aligned}
 \end{equation}
 
-The elements $_{W}\textbf{r}_{S}^{T}$, $\textbf{{q}}_{W}^{T}$ are the position and the quaternion body orientation, $_{s}\textbf{{v}}^{T}$ the velocity, $\textbf{{b}}_{g}$ \& $\textbf{{b}}_{a}$ the accelerometer and gyroscope biases. Since $\delta \textbf{q}$ describes the axis-angle perturbation about the estimate $\overline{q}_{WS}$ it follows that $\textbf{q}_{WS} = \delta \textbf{q} \otimes \overline{q}_{WS}$ """"EXPAND THIS BIT """. Hence the error states combining with (Equation \ref{quat_delta}) are:
-
-\begin{equation}
-\begin{aligned}
-\label{states_2}
-\delta \mathcal{X}_{T} := [ \delta r^{T}, \delta \alpha^{T} ]^{T} \\
-\delta \mathcal{X}_{sb} := [ \delta v^{T}, \delta b_{g}^{T},\delta b_{a}^{T} ]^{T} \\
-\delta \mathcal{X}_{R} := [ \delta r^{T}, \delta \alpha^{T}, \delta v^{T},b_{g}^{T}, b_{a}^{T}]^{T}
-\end{aligned}
-\end{equation}
+The elements $_{W}\textbf{r}_{S}^{T}$, $\textbf{{q}}_{W}^{T}$ are the position and the quaternion body orientation, $_{s}\textbf{{v}}^{T}$ the velocity, $\textbf{{b}}_{g}$ \& $\textbf{{b}}_{a}$ the accelerometer and gyroscope biases.
 
 
 \subsection{The SLAM Problem}
@@ -672,9 +691,9 @@ If measurements were exact, mapping of an environment would be easy. This, howev
 \end{equation}
 
 where $\textbf{z}$ is the correct measurement, $\textbf{b}_{c}$ is a long-term constant bias, $s$ is a scaling factor, $\textbf{M}$ - misalignment, $\textbf{b}$ - time varying bias, $n$ - noise, and $o$ contains other un-modelled influences. This means that no measurement can be trusted exclusively for state-space information. \newline\newline
-Historically, before the recent advances in SLAM, it was first assumed that errors have a compounding effect. The position of a bike, would become increasingly unknown as the environment is explored and the bike is displaced from the origin. This makes intuitive sense if say there is only IMU measurements available. At each step, more uncertainty is introduced from the noise and biases (shown in Equation \ref{measurement_model}) and the bike's position becomes more and more uncertain.
-
-For some time it was also presumed to be the case even when external measurements of the environment are taken. This, however, is not the case as proved by Durrant-Whyte \cite{F_Durr_1} since there is a high degree of correlation between estimates of different landmarks and locations in a map, these correlations also increase with successive observations (Figure \ref{slam_prob_fig}). As an example of this (Figure \ref{slam_prob_fig} : Right) displays error in measurements of landmark observation, the mean error is common between all landmarks and so with successive landmark observations, the errors in location estimates become highly correlated. This means that although $\textbf{m}_{i}$'s location may be quite uncertain but the relative location between two landmarks $\textbf{m}_{i}-\textbf{m}_{j}$ is almost certain.\newline\newline 
+Historically, before the recent advances in SLAM, it was first assumed that errors have a compounding effect. The position of a bike, would become increasingly unknown as the environment is explored and the bike is displaced from the origin. This makes intuitive sense if say there is only IMU measurements available. At each step, more uncertainty is introduced from the noise and biases (shown in Equation \ref{measurement_model}) and the bike's position becomes more and more uncertain. 
+\newline \newline
+For some time it was also presumed to be the case even when external measurements of the environment are taken. This, however, is not the case as proved by Durrant-Whyte \cite{F_Durr_1} since there is a high degree of correlation between estimates of different landmarks and locations in a map, these correlations also increase with successive observations (Figure \ref{slam_prob_fig}). As an example of this (Figure \ref{slam_prob_fig} : Right) displays error in measurements of landmark observation, the mean error is common between all landmarks and so with successive landmark observations, the errors in location estimates become highly correlated. This means that although $\textbf{m}_{i}$'s location may be quite uncertain but the relative location between two landmarks $\textbf{m}_{i}-\textbf{m}_{j}$ is well-known.\newline
 
 In the case of the bicycle set-up, there is both an IMU, and a camera. These provide the basic inputs to the OKVIS software \cite{Okvis_1}. Okvis is able to determine the bike's location by optimising the total error, hence combining both the camera and IMU error.
 
@@ -707,13 +726,13 @@ where $\textbf{e}_{n}(\cdot)$ is an error term that is weighted by $\textbf{W}_{
 where $z_{n}$ is the observation, $g_{n}(\textbf{x})$ the observation model, and $v_{n} ~ \mathcal{N}(0,Q_{n})$ and are independent. Hence as $v_{n}$ is mean 0, the error can be simply formulated by:
 
 \begin{equation}
-\begin{aligned}
-\textbf{e}_{n}(\textbf{x}) = z_{n} - g_{n}(\textbf{x}), \\
+\textbf{e}_{n}(\textbf{x}) = z_{n} - g_{n}(\textbf{x})
+\end{equation}
+\begin{equation}
 \mathit{error = observation - predicted \textnormal{ } observation}
-\end{aligned}
 \end{equation}
 
-Since observation noise between the IMU and camera $v_{n}$ are independent the covariance matrix is diagonal. Hence $W_{n} = E[\mathbf{e}_{n} \mathbf{e}_{n}^{T}]^{-1} = Q^{-1}$. The aim of least squares is to find the state vector $mathbf{x}$ that minimises the error function, hence the optimisation problem is posed as:
+Since observation noise between the IMU and camera $v_{n}$ are independent the covariance matrix is diagonal. Hence $W_{n} = E[\mathbf{e}_{n} \mathbf{e}_{n}^{T}]^{-1} = Q^{-1}$. The aim of least squares is to find the state vector $\mathbf{x}$ that minimises the error function, hence the optimisation problem is posed as:
 
 \begin{equation}
 \begin{aligned}
@@ -723,7 +742,7 @@ Since observation noise between the IMU and camera $v_{n}$ are independent the c
 
 If the error term $\mathbf{e}_{n}(\mathbf{x})$ was linear w.r.t $\mathbf{x}$ the solution would be a simple as setting the $\frac{\delta J(\mathbf{x})^{T}}{\delta \mathbf{x}}$ to zero and solving the respective simultaneous equations. However this is often not the case, and so the solution to the equation must be solved iteratively, with for example, gauss-newton formulation of the equations and a solver such as google-ceres.
 
-\subsubsection{Frame to Frame Matching}\label{BRISK_section}
+\subsection{Frame to Frame Matching}\label{BRISK_section}
 
 \paragraph{Keypoint Detection}
 
@@ -746,7 +765,6 @@ f(x,y) = \sum_{(x,y)\in W} (I_{x}(x,y) \Delta x + I_{y}(x,y) \Delta y )^{2}
 or in matrix form:
 
 \begin{equation}
-\begin{aligned}
 M = 
 \begin{bmatrix}
 \sum_{(x,y) \in W} I_{x}^{2} & \sum_{(x,y) \in W} I_{x}I_{y} \\
@@ -759,13 +777,13 @@ R^{T}
 0 & \lambda_{2}
 \end{bmatrix}
 R
-\\
+\end{equation}
+\begin{equation}
 f(x,y) = (\Delta x \textnormal{ } \Delta y) M 
 \begin{bmatrix}
 \Delta \mathbf{x} \\
 \Delta \mathbf{y}
 \end{bmatrix}
-\end{aligned}
 \end{equation}
 
 where M is the structure tensor (also commonly known as the Second Moment Matrix). The Harris corner response then is taken from the eigenvalues of M, intuitively since the gradient changes rapidly the second moment matrix eigenvalues are large in that direction Figure \ref{Harris}.
@@ -777,7 +795,7 @@ R = det(M) - \mathit{k}trace(M)^{2} = \lambda_{1}\lambda_{2} - \mathit{k}(\lambd
 \end{aligned}
 \end{equation}
 
-\noindent \begin{figure}[h!] 
+\noindent \begin{figure}[H] 
 	\includegraphics[width = 0.5\hsize]{figures/harris_region.jpg}
 	\includegraphics[width = 0.45\hsize]{figures/harris_result.jpg}
 	\caption{Left: Structure Tensor Eigenvalues, Right: Harris corner detection result \cite{opencv_harris_article} }
@@ -785,9 +803,9 @@ R = det(M) - \mathit{k}trace(M)^{2} = \lambda_{1}\lambda_{2} - \mathit{k}(\lambd
 \end{figure}
 
 \paragraph{Keypoint Matching}
-Binary descriptors use a sampling pattern to create pairs of points (lines). The algorithm then compares the two points ($p1,p2$) and if $p1 > p2$ a 1 is recorded and otherwise 0. This creates a binary string, that along with orientation representation describe a keypoint. When matching keypoints between images a simple, and fast $\sum XOR(img1,img2)$ reveals keypoint similarity from which a threshold can be used to determine matches.
+Binary descriptors use a sampling pattern to create pairs of points (lines). The algorithm then compares the two points ($p1,p2$) and if $p1 > p2$ a 1 is recorded and otherwise 0. This creates a binary string, that along with orientation representation describe a keypoint. When matching keypoints between images a simple, and fast $\sum XOR$ reveals keypoint similarity from which a threshold can be used to determine matches.
 
-\noindent \begin{figure}[h!] 
+\noindent \begin{figure}[H] 
 	\includegraphics[width = 0.7\hsize]{figures/brisk.jpg}
 	\includegraphics[width = 0.26\hsize]{figures/brisk.png}
 	\caption{Left: Brisk keypoint matching example, Right: Brisk Sampling Pattern \cite{BRISK} }
@@ -815,25 +833,31 @@ where $\textbf{z}^{i,j,k}$ denotes the measurement image coordinates.
 Therefore the kinematics of the IMU can be modelled as:
 
 \begin{equation}
-\begin{aligned}
 \label{imu_kin}
-_{W} \textbf{\.{r}}_{S} = \textbf{C}_{WS} \textnormal{ } _{s}\textbf{v}, \\
-\textbf{\.{q}}_{WS} = \frac{1}{2} \Omega(\tilde{_{S}\textbf{$\omega$}})\textbf{q}_{WS}, \\
-_{S}\textbf{\.{v}}= (_{S}\tilde{\textbf{a}} + \textbf{w}_{a} - \textbf{b}_{a}) + C_{SW} \textnormal{ } _{W}\textbf{g} - (_{S}\textbf{$\omega$}) \times _{S}\textbf{v}, \\
-\textbf{\.{b}}_{g} = \textbf{w}_{bg}, \\
-\textbf{\.{b}}_{a} = -\frac{1}{\tau}\textbf{b}_{a} + \textbf{w}_{ba}, \\
-\end{aligned}
+_{W} \textbf{\.{r}}_{S} = \textbf{C}_{WS} \textnormal{ } _{s}\textbf{v}
+\end{equation}
+\begin{equation}
+\textbf{\.{q}}_{WS} = \frac{1}{2} \Omega(\tilde{_{S}\textbf{$\omega$}})\textbf{q}_{WS}
+\end{equation}
+\begin{equation}
+_{S}\textbf{\.{v}}= (_{S}\tilde{\textbf{a}} + \textbf{w}_{a} - \textbf{b}_{a}) + C_{SW} \textnormal{ } _{W}\textbf{g} - (_{S}\textbf{$\omega$}) \times _{S}\textbf{v}
+\end{equation}
+\begin{equation}
+\textbf{\.{b}}_{g} = \textbf{w}_{bg}
+\end{equation}
+\begin{equation}
+\textbf{\.{b}}_{a} = -\frac{1}{\tau}\textbf{b}_{a} + \textbf{w}_{ba}
 \end{equation}
 
 where:
 \begin{equation}
-\begin{aligned}
 \Omega(\tilde{_{s}\textbf{$\omega$}}) = \begin{bmatrix}
 -_{S}\textbf{$\omega$}  \\[0.3em]
 0
-\end{bmatrix} ^{\oplus} \\
+\end{bmatrix} ^{\oplus}
+\end{equation}
+\begin{equation}
 _{S}\textbf{$\omega$} =  _{S}\tilde{\textbf{$\omega$}} + \textbf{w}_{g} - \textbf{b}_{g}
-\end{aligned}
 \end{equation}
 
 $_{W} \textbf{\.{r}}_{S}$ represents the position derivative likewise $_{S}\textbf{\.{v}}$ for velocity,  $_{S}\tilde{\textbf{a}}$ accelerometer measurements, $_{W}\textbf{g}$ earth's gravitational acceleration vector, and finally w:= [$w_{g}^{T},w_{a}^{T},w_{bg}^{T},w_{ba}^{T}$] are independent Gaussian white noise processes with zero mean.
@@ -949,11 +973,13 @@ Noting that all circulant matrices can be diagonalised by the Discrete Fourier T
 
 
 \begin{equation}
-\begin{aligned}
-\mathit{F}(\mathbf{z}) = \sqrt{n}F\mathbf{z} \\
-\hat{\mathbf{x}} = \mathit{F}(\mathbf{x}) \\
+\mathit{F}(\mathbf{z}) = \sqrt{n}F\mathbf{z}
+\end{equation}
+\begin{equation}
+\hat{\mathbf{x}} = \mathit{F}(\mathbf{x})
+\end{equation}
+\begin{equation}
 X = F diag(\hat{\mathbf{x}}) F^{H}
-\end{aligned}
 \end{equation}
 
 This is possible because the DFT is a linear operation. 
@@ -1118,8 +1144,7 @@ Hence the height of the object $z_{w,tl}-z_{w,bl}$ is obtained from:
 
 \begin{equation}
 \begin{aligned}
-z_{w,tl}-z_{w,bl} = r_{3} \mathbf{K}[:,1] - r_{3} \mathbf{K}[:,2]\\
-z_{w,tl}-z_{w,bl} = r_{3} (\mathbf{K}[:,1]- \mathbf{K}[:,2])
+z_{w,tl}-z_{w,bl} = r_{3} \mathbf{K}[:,1] - r_{3} \mathbf{K}[:,2] =  r_{3} (\mathbf{K}[:,1]- \mathbf{K}[:,2])
 \end{aligned}
 \end{equation}
 
@@ -1163,7 +1188,7 @@ The method must both track objects in the frame, determine which objects are no-
 
 \noindent \begin{figure}[h!]
 	\includegraphics[width = 1.0\hsize]{figures/roi_match.png}
-	\caption{ROI Old to New Frame Example.}
+	\caption{RoI Old to New Frame Example.}
 	\label{roi_match}
 \end{figure}
 
@@ -1176,18 +1201,18 @@ Since the bbox prediction is so fast for the KCF tracker; it can be used in conj
 
 
 \subsection{BRISK - Selector} \label{BRISK_matching}
-BRISK as described earlier in Section-\ref{BRISK_section} is a binary descriptor that can match keypoints across two photographs. This can be used also in the tracking section to match keypoints across ROIs, although not thoroughly accurate, it offers a method of matching ROIs regardless of location. This should help re-detect objects after periods of occlusion or overlapping with others that IOU would be unable to do. The process is simple to match the ROIs. First keypoints and descriptors are calculated for each ROI, these are then compared using the fast binary matching process of BRISK, then the Hamiltonian distance is calculated for each matching keypoint...
+BRISK as described earlier in Section-\ref{BRISK_section} is a binary descriptor that can match keypoints across two photographs. This can be used also in the tracking section to match keypoints across RoIs, although not thoroughly accurate, it offers a method of matching RoIs regardless of location. This should help re-detect objects after periods of occlusion or overlapping with others that IOU would be unable to do. The process is simple to match the RoIs. First keypoints and descriptors are calculated for each RoI, these are then compared using the fast binary matching process of BRISK, then the Hamiltonian distance is calculated for each matching keypoint...
 TODO : EXPAND THIS SECTION
 
 
 \subsection{Class Matching} \label{class_matching}
-An obvious additional requirement is the matching of classes between frames, as a person's ROI should not match to the ROI of a car in the next frame. Hence for each ROI, the class is stored for access by the next frame. This can both reduce expensive computation time of other metrics but provides an easy ROI comparison tool. It can be noted though that Mask RCNN is not perfect and often mis-classifies objects. It is, however, reliable enough to be assumed as correct.
+An obvious additional requirement is the matching of classes between frames, as a person's RoI should not match to the RoI of a car in the next frame. Hence for each RoI, the class is stored for access by the next frame. This can both reduce expensive computation time of other metrics but provides an easy RoI comparison tool. It can be noted though that Mask RCNN is not perfect and often mis-classifies objects. It is, however, reliable enough to be assumed as correct.
 
-\subsection{Kalman Filter ROI Matching} \label{kalman_matching}
+\subsection{Kalman Filter RoI Matching} \label{kalman_matching}
 
 A Kalman filter, developed by Rudolf E. Kalman has two main parts, a predictive step and an update. The predictive step tries to find a-priori estimates of the state for the next time-step by projecting forward the current state and error covariance estimates. This estimate is then updated using the measurements (camera) of the object location. The iterative process continues improving the Kalman filter estimates at each stage. 
 \newline \newline
-This was first tested with just a camera frame state i.e. using the [x, y, width, height] positions and distances in pixels of each ROI on the input image. It was quickly discovered that the model was not sufficiently robust as it did not take into account the bike movement. Hence the filter was unable to track objects efficiently. Hence, once the Okvis framework was added, the filter was converted into tracking world frame coordinates which is far more successful.
+This was first tested with just a camera frame state i.e. using the [x, y, width, height] positions and distances in pixels of each RoI on the input image. It was quickly discovered that the model was not sufficiently robust as it did not take into account the bike movement. Hence the filter was unable to track objects efficiently. Hence, once the Okvis framework was added, the filter was converted into tracking world frame coordinates which is far more successful.
 
 \subsubsection{Kalman Predictive Step}
 Assuming a linear system with Gaussian process, the state can be modelled as:
@@ -1206,7 +1231,7 @@ where $k$ is the time step, $\hat{X}_{k} \in \mathbb{R}^{n}$ is the state vector
 \end{aligned}
 \end{equation}
 
-where $(Cx,Cy)$ is the centre point of the bounding box of the object,$Cz$ is the median distance of the masked ROI, $w$ the width and $h$ the height. $Cx_{vel}$ describes the centre point velocity in the x direction, and $Cy_{vel},Cz_{vel},w_{vel},h_{vel}$ the y/z direction, w the width and h the height. $[Cx,Cy,w,h]$ describe the measurable variables of the system, and there are no controllable parameters in this system. From basic equations of motion, a general measurable parameter $\gamma$, and corresponding velocity  $\gamma_{vel}$ follows the update rule:
+where $(Cx,Cy)$ is the centre point of the bounding box of the object,$Cz$ is the median distance of the masked RoI, $w$ the width and $h$ the height. $Cx_{vel}$ describes the centre point velocity in the x direction, and $Cy_{vel},Cz_{vel},w_{vel},h_{vel}$ the y/z direction, w the width and h the height. $[Cx,Cy,w,h]$ describe the measurable variables of the system, and there are no controllable parameters in this system. From basic equations of motion, a general measurable parameter $\gamma$, and corresponding velocity  $\gamma_{vel}$ follows the update rule:
 
 \begin{equation}
 \begin{aligned}
@@ -1313,19 +1338,21 @@ P_{k}(+) = (I-K_{k}H_{k}) P_{k}(-)(I-K_{k}H_{k})^{T} + K_{k}R_{k}K_{k}^{T} \\
 
 where $K_{k}$ is the $n \times m$ Kalman gain matrix, $\hat{X}_{k}(+)$ is the posterior state estimate according to the actual measurement $Z_{k}$ and the predicted measurement $H_{k} \hat{X}_{k}(-)$ and $P_{k}(+)$ is the posterior state estimate error covariance.
 
-\subsubsection{Kalman Matching ROIS}
+\subsubsection{Kalman Matching RoIS}
 
-From one frame to another it can be assumed that a number of bounding boxes (ROIS) are consistent in both frames. Hence a metric to match a box from a prior frame to the current frame is required. Using the Kalman filter, a prediction of where the ROI is at time $k$ is easily obtained. But this does not give a likelihood measure of the boxes in the new frame. However, in the kalman update step $\tilde{y}_{k}$, the innovation residual, and $S_{k}$, the innovation covariance matrix are calculated. These can be used to determine the marginal likelihood of a newer ROI's $[Cx,Cy,w,h]$ given the kalman $P_{k}(-)$ and $\hat{X}_{k}(-)$. Skipping the formulation, the log-marginal likelihood is:
+From one frame to another it can be assumed that a number of bounding boxes (RoIS) are consistent in both frames. Hence a metric to match a box from a prior frame to the current frame is required. Using the Kalman filter, a prediction of where the RoI is at time $k$ is easily obtained. But this does not give a likelihood measure of the boxes in the new frame. However, in the kalman update step $\tilde{y}_{k}$, the innovation residual, and $S_{k}$, the innovation covariance matrix are calculated. These can be used to determine the marginal likelihood of a newer RoI's $[Cx,Cy,w,h]$ given the kalman $P_{k}(-)$ and $\hat{X}_{k}(-)$. Skipping the formulation, the log-marginal likelihood is:
 
 \begin{equation}
-\begin{aligned}
-l = log \textnormal{ } p(\mathbf{z}) \\
+l = log \textnormal{ } p(\mathbf{z})
+\end{equation}
+\begin{equation}
+\begin{cases}
 l^{(-1)} = 0 \\
 l^{(k)} = l^{(k-1)} - \frac{1}{2} (\tilde{y}_{k}^{T}S_{k}^{-1}\tilde{y}_{k} + \log |S_{k}| + d_{y}\log 2 \pi) 
-\end{aligned}
+\end{cases}
 \end{equation}
 
-where $d_{y}$ is the dimension of the measurement matrix. The part dependent on the new ROI is $\tilde{y}_{k}^{T}S_{k}^{-1}\tilde{y}_{k}$ as $S_{k}$, from Equation \ref{kalman_update_equs} does not involve $\tilde{y}_{k}$. Therefore the matching step can be performed by simply matching each $ROI_{old}$ in the old frame to the $ROI_{new}$ in the new frame that has the lowest scalar value from:
+where $d_{y}$ is the dimension of the measurement matrix. The part dependent on the new RoI is $\tilde{y}_{k}^{T}S_{k}^{-1}\tilde{y}_{k}$ as $S_{k}$, from Equation \ref{kalman_update_equs} does not involve $\tilde{y}_{k}$. Therefore the matching step can be performed by simply matching each $ROI_{old}$ in the old frame to the $ROI_{new}$ in the new frame that has the lowest scalar value from:
 
 \begin{equation}
 \begin{aligned}
@@ -1346,17 +1373,17 @@ K_{threshold}-M \quad \textnormal{\textit{ otherwise}}
 \end{equation}
 
 
-\subsection{ROI Lives}
+\subsection{RoI Lives}
 Each region of interest may be tracked from one frame to the next. However, if that object is occluded then it may not be spotted in the next frame. This, unless accounted for could lead to information loss regarding that object's state. Therefore a life system is in place whereby an object has a number of lives that are used when the object is not spotted in the next frame. These are decremented until 0 when the object is forgotten and no longer tracked.  
 
 
 \subsection{Combining Matching Methods} \label{matching_combining_methods}
 %TODO re-word this
-Taking the example provided in Figure \ref{roi_match}, there are three objects in the older frame and four in the new frame. BRISK (Section \ref{BRISK_matching}) is not reliable to match all objects from one frame to the next and sometimes cannot find matching keypoints between the same object in each frame (especially deformable objects such as people). Therefore, a system to combine methods is needed. For each $ROI_{old}$ and each $ROI_{new}$ the match metrics for each method (KCF,BRISK,Kalman) is calculated. This forms a matrix $matches \in \mathbb{R}^{new \times old \times methods}$ where $old,new$ are the number of ROIs in the old and new frames, and 
-$methods$ is the number of matching methods implemented (in this case two) but is designed to be easily extendible to more. The rules for the matching procedure are as follows:
+Taking the example provided in Figure \ref{roi_match}, there are three objects in the older frame and four in the new frame. BRISK (Section \ref{BRISK_matching}) is not reliable to match all objects from one frame to the next and sometimes cannot find matching keypoints between the same object in each frame (especially deformable objects such as people). Therefore, a system to combine methods is needed. For each $ROI_{old}$ and each $ROI_{new}$ the match metrics for each method (KCF,BRISK,Kalman) is calculated. This forms a matrix $matches \in \mathbb{R}^{new \times old \times methods}$ where $old,new$ are the number of RoIs in the old and new frames, and 
+$methods$ is the number of matching methods implemented (in this case two) but is designed to be easily extendible to more. The algorithm for matching RoIs is presented in the appendix, Algorithm \ref{alg:matchroi}.
+\newline
 
-
-After the matching process is complete, there are a number of extra steps that must take place before continuing to the next frame. For example, any oldROIs that are not detected in the new frame must have a life decremented and be added to the list of new frame ROIs with the relevant location and information.
+After the matching process is complete, there are a number of extra steps that must take place before continuing to the next frame. For example, any old RoIs that are not detected in the new frame must have a life decremented and be added to the list of new frame RoIs with the relevant location and information, Algorithm \ref{alg:not_det}. \newline
 
 \begin{algorithm}[H]
 	\DontPrintSemicolon
@@ -1366,33 +1393,33 @@ After the matching process is complete, there are a number of extra steps that m
 	\SetKwInOut{Output}{Output}
 	\underline{add\textunderscore old\textunderscore rois} $($old$\textunderscore$matched$,old$\textunderscore$frame,new$\textunderscore$frame)$\;
 	\Input{ \texttt{\\}
-		$old$\textunderscore$matched$ \tcp*[r]{A list of matched oldROIs, $old$\textunderscore$matched[i]$ matches to $new$\textunderscore$matched[i]$}
-		$old$\textunderscore$frame$ \tcp*[r]{ROIs as structures from the old frame}
-		$new$\textunderscore$frame$ \tcp*[r]{ROIs as structures from the new frame}
+		$old$\textunderscore$matched$ \tcp*[r]{A list of matched old RoIs, $old$\textunderscore$matched[i]$ matches to $new$\textunderscore$matched[i]$}
+		$old$\textunderscore$frame$ \tcp*[r]{RoIs as structures from the old frame}
+		$new$\textunderscore$frame$ \tcp*[r]{RoIs as structures from the new frame}
 	}
 	\Output{ \texttt{\\}
-		$new$\textunderscore$frame$ \tcp*[r]{An updated list of newROI objects}
+		$new$\textunderscore$frame$ \tcp*[r]{An updated list of new RoI objects}
 	}
 	
 	\texttt{\\}
-	\tcp{\textbf{Update newROIs to include undetected ROIs from old frame.}}
+	\tcp{\textbf{Update newROIs to include undetected RoIs from old frame.}}
 	\ForEach(\tcc*[f]{For every old roi not found in new frame}){$old \notin old$\textunderscore$matched$}{
 		$older = old$\textunderscore$frame[old]$ \tcc*[r]{Get olderROI object}
-		\uIf(\tcc*[f]{If the ROI has a life to spare}){$older.lives > 1$}{
+		\uIf(\tcc*[f]{If the RoI has a life to spare}){$older.lives > 1$}{
 			$older.lives$ -= $1$ \tcc*[r]{Decrement a life}
 			$update$\textunderscore$location(older,T_{CW})$  \tcc*[r]{Update camera/world location from Kalman prediction}
 			$update$\textunderscore$model(older,T_{CW})$  \tcc*[r]{Update pedestrian model from Kalman prediction}
-			$add$\textunderscore$information(new$\textunderscore$frame,older)$ \tcc*[r]{Append older ROI information to new frame} \tcc*[r]{(masks,lives,id,class,colour,briskKeypoints,briskDescriptors,KCFtracker)}
+			$add$\textunderscore$information(new$\textunderscore$frame,older)$ \tcc*[r]{Append older RoI information to new frame} \tcc*[r]{(masks,lives,id,class,colour,briskKeypoints,briskDescriptors,KCFtracker)}
 		}
 	}
 	\texttt{\\}
-	\caption{Algorithm to append oldROIs that aren't detected in new frame}
-	\label{alg:weights}
+	\caption{Algorithm to append old RoIs that aren't detected in new frame}
+	\label{alg:not_det}
 \end{algorithm}
 
+\newpage
 
-
-Then the matched ROIs pairs from the old and new frame must exchange relevant information in preparation for the next frame:
+Then the matched RoIs pairs from the old and new frame must exchange relevant information in preparation for the next frame, Algorithm \ref{alg:update_new}.
 
 \begin{algorithm}[H]
 	\DontPrintSemicolon
@@ -1404,32 +1431,32 @@ Then the matched ROIs pairs from the old and new frame must exchange relevant in
 	\Input{ \texttt{\\}
 		$old$\textunderscore$matched$ \tcp*[r]{A list of matched oldROIs, $old$\textunderscore$matched[i]$ matches to $new$\textunderscore$matched[i]$}
 		$new$\textunderscore$matched$ \tcp*[r]{A list of matched newROIs, $new$\textunderscore$matched[i]$ matches to $old$\textunderscore$matched[i]$}
-		$old$\textunderscore$frame$ \tcp*[r]{ROIs as structures from the old frame}
-		$new$\textunderscore$frame$ \tcp*[r]{ROIs as structures from the new frame}
+		$old$\textunderscore$frame$ \tcp*[r]{RoIs as structures from the old frame}
+		$new$\textunderscore$frame$ \tcp*[r]{RoIs as structures from the new frame}
 	}
 	\Output{ \texttt{\\}
 		$new$\textunderscore$frame$ \tcp*[r]{An updated list of newROI objects}
 	}
 	\texttt{\\}
-	\tcp{\textbf{Add older ROI details to matched new ROI}}
-	\ForEach(\tcc*[f]{For every matched old/new ROI pair}){$old,new \in old$\textunderscore$matched,new$\textunderscore$matched$}{
+	\tcp{\textbf{Add older RoI details to matched new ROoI}}
+	\ForEach(\tcc*[f]{For every matched old/new RoI pair}){$old,new \in old$\textunderscore$matched,new$\textunderscore$matched$}{
 		$older = oldROIs[old]$ \tcc*[r]{Get olderROI object}
 		$newer = newROIs[new]$ \tcc*[r]{Get newerROI object}
-		$newState = newer.worldPoint$ \tcc*[r]{Get new location of ROI}
+		$newState = newer.worldPoint$ \tcc*[r]{Get new location of RoI}
 		$older.kalman.correct(newState)$ \tcc*[r]{Update Kalman Filter with new location}
 		$older.model.add$\textunderscore$points(newState)$ \tcc*[r]{Add new points to movement model}
 		\uIf(\tcc*[f]{If lives < threshold}){$older.lives < lifeThreshold$}{
 			$older.lives$ += $1$
 		}
-		$update$\textunderscore$object(newer,older)$ \tcc*[r]{Update new ROI with older ROI information} \tcc*[r]{(Kalman Filter,lives,colour,id,model)}
+		$update$\textunderscore$object(newer,older)$ \tcc*[r]{Update new RoI with older RoI information} \tcc*[r]{(Kalman Filter,lives,colour,id,model)}
 	}
 	\texttt{\\}
 	\caption{Algorithm to update newROIs with matched oldROIs}
-	\label{alg:weights}
+	\label{alg:update_new}
 \end{algorithm}
 
 
-Finally any new ROIs that were not in the old frame need to be assigned an individual ID to be recognised over the next frames.
+Finally any new RoIs that were not in the old frame need to be assigned an individual ID to be recognised over the next frames, Algorithm \ref{alg:weights}. \newline
 
 \begin{algorithm}[H]
 	\DontPrintSemicolon
@@ -1441,26 +1468,26 @@ Finally any new ROIs that were not in the old frame need to be assigned an indiv
 	\Input{ \texttt{\\}
 		$old$\textunderscore$matched$ \tcp*[r]{A list of matched oldROIs, $old$\textunderscore$matched[i]$ matches to $new$\textunderscore$matched[i]$}
 		$new$\textunderscore$matched$ \tcp*[r]{A list of matched newROIs, $new$\textunderscore$matched[i]$ matches to $old$\textunderscore$matched[i]$}
-		$new$\textunderscore$frame$ \tcp*[r]{ROIs as structures from the new frame}
+		$new$\textunderscore$frame$ \tcp*[r]{RoIs as structures from the new frame}
 	}
 	\Output{ \texttt{\\}
 		$new$\textunderscore$frame$ \tcp*[r]{An updated list of newROI objects}
-	}
-	\texttt{\\}
-	\tcp{Note that if there are no objects in old frame $new$\textunderscore$frame.id$ = zeros}
-	$maxId = new$\textunderscore$frame.id.max()+1$ \tcc*[r]{Get current maximum ID + 1}
-	
-	\ForEach(\tcc*[f]{For every not-matched new ROI}){$new \notin new$\textunderscore$matched$}{
-		$newer = new$\textunderscore$frame[new]$ \tcc*[r]{Get newerROI object}
-		$newer.id = maxId$ \tcc*[r]{Assign new ID}
-		$maxId$ += $1$ \tcc*[r]{Increment the maximum ID}
 	}
 	\texttt{\\}
 	\caption{Algorithm to create new IDs for object in new frame}
 	\label{alg:weights}
 \end{algorithm}
 
+\newpage
 
+\tcp{Note that if there are no objects in old frame $new$\textunderscore$frame.id$ = zeros}
+$maxId = new$\textunderscore$frame.id.max()+1$ \tcc*[r]{Get current maximum ID + 1}
+
+\ForEach(\tcc*[f]{For every not-matched new RoI}){$new \notin new$\textunderscore$matched$}{
+$newer = new$\textunderscore$frame[new]$ \tcc*[r]{Get newerROI object}
+$newer.id = maxId$ \tcc*[r]{Assign new ID}
+$maxId$ += $1$ \tcc*[r]{Increment the maximum ID}
+}
 
 
 \section{Movement Prediction}
@@ -1513,10 +1540,10 @@ P_{k+ \Delta t}(-) = F_{k} P_{k- \Delta t}(+) F_{k}^{T} + Q_{k}
 However, for speed of computation an approximation can be used:
 
 \begin{equation}
-\begin{aligned}
-P_{k+ \mathit{n \textunderscore seconds}}(-) \approx F_{k + \mathit{n \textunderscore seconds}} P_{k- \Delta t}(+) F_{k + \mathit{n \textunderscore seconds}}^{T} + \frac{Q_{k} \times \mathit{n \textunderscore seconds}} {\Delta t} \\
+P_{k+ \mathit{n \textunderscore seconds}}(-) \approx F_{k + \mathit{n \textunderscore seconds}} P_{k- \Delta t}(+) F_{k + \mathit{n \textunderscore seconds}}^{T} + \frac{Q_{k} \times \mathit{n \textunderscore seconds}} {\Delta t}
+\end{equation}
+\begin{equation}
 radius = \sqrt{P_{k+ \mathit{n \textunderscore seconds}}(-)}
-\end{aligned}
 \label{cov_kalman_approx}
 \end{equation}
 
@@ -1538,15 +1565,17 @@ The main problem is to generalise the model to any world point. For example, the
 
 
 \begin{equation}
-\begin{aligned}
 X_{frame_{n}} = 
-\bigg [ [I_{1 \times 3} \quad 0]T^{-1}_{WC_{0}}T_{WC_{n}} \quad , \quad C_{ez}\bigg ]\\
+\bigg [ [I_{1 \times 3} \quad 0]T^{-1}_{WC_{0}}T_{WC_{n}} \quad , \quad C_{ez}\bigg ]
+\end{equation}
+\begin{equation}
 C_{ez} = (T_{WS} T_{SC})^{-1}
 \begin{bmatrix}
 0 & 0 & 0 & 1 & 0
-\end{bmatrix}^{T}\\
+\end{bmatrix}^{T}
+\end{equation}
+\begin{equation}
 y = r_{WC_{n+1}}
-\end{aligned}
 \label{pose_sequence}
 \end{equation}
 
@@ -1623,9 +1652,9 @@ Both the image and pose model appear to prefer higher learning rates around the 
 
 \noindent \begin{table}[h!]
 	\centering
-	\begin{tabular}{|p{3.0cm}|p{3.0cm}|p{3.0cm}|p{3.0cm}|}
+	\begin{tabular}{|p{1.0cm}|p{3.0cm}|p{3.0cm}|p{3.0cm}|}
 		\hline
-		\textbf{Best Performing}&\textbf{Learning Rate} & \textbf{Decay} &  \textbf{Validation Loss}       \\ \hline
+		\textbf{Rank}&\textbf{Learning Rate} & \textbf{Decay} &  \textbf{Validation Loss}       \\ \hline
 		1  & $10^{-3.5}$   &   0 & 0.11     \\ \hline
 		2  & $10^{-3}$   &   $10^{-6}$ & 0.14     \\ \hline
 		3  & $10^{-3.5}$    &    $10^{-5}$ & 0.19   \\ \hline
@@ -1639,9 +1668,9 @@ From experience, and logically it is preferable to take an optimal value with de
 
 \noindent \begin{table}[h!]
 	\centering
-	\begin{tabular}{|p{3.0cm}|p{3.0cm}|p{3.0cm}|p{3.0cm}|}
+	\begin{tabular}{|p{1.0cm}|p{3.0cm}|p{3.0cm}|p{3.0cm}|}
 		\hline
-		\textbf{Best Performing}&\textbf{Learning Rate} & \textbf{Decay} &  \textbf{Validation Loss}       \\ \hline
+		\textbf{Rank}&\textbf{Learning Rate} & \textbf{Decay} &  \textbf{Validation Loss}       \\ \hline
 		1  & $10^{-3}$   &  $10^{-5}$ & 0.91     \\ \hline
 		2  & $10^{-3}$   &   $10^{-6}$ & 2.11    \\ \hline
 		3  & $10^{-4}$    &    $10^{-6}$ & 2.20   \\ \hline
@@ -1660,7 +1689,7 @@ The images and pose model are first optimised with respect to learning rate and 
 
 \noindent \begin{figure}[h!]
 	\includegraphics[width = 0.5\hsize]{figures/pose_lstm1_lstm2_graph_.eps}
-	\includegraphics[width = 0.5\hsize]{figures/pose_lstm1_lstm2_graph_.eps}
+	\includegraphics[width = 0.5\hsize]{figures/opt_bayes_images_nn.eps}
 	\caption{Pose Layer Optimisation: Left, Images Network Optimisation: Right.}
 	\label{bayes_opt_fig}
 \end{figure}
@@ -1669,9 +1698,9 @@ The images and pose model are first optimised with respect to learning rate and 
 
 \noindent \begin{table}[h!]
 	\centering
-	\begin{tabular}{|p{3.0cm}|p{3.0cm}|p{3.0cm}|p{3.0cm}|}
+	\begin{tabular}{|p{1.0cm}|p{3.0cm}|p{3.0cm}|p{3.0cm}|}
 		\hline
-		\textbf{Best Performing}&\textbf{LSTM 1 Size} & \textbf{LSTM 2 Size} &  \textbf{Validation Loss}       \\ \hline
+		\textbf{Rank}&\textbf{LSTM 1 Size} & \textbf{LSTM 2 Size} &  \textbf{Validation Loss}       \\ \hline
 		1  & $2^{6.44} = 87$   &  $2^{6.25}=77$ & 0.42     \\ \hline
 		2  & $2^{6.04}=63$   &  $2^{5.7}=53$ & 0.43   \\ \hline
 		3  & $2^{2.03}=4$    & $2^{3.9}=15$ & 0.48   \\ \hline
@@ -1681,14 +1710,41 @@ The images and pose model are first optimised with respect to learning rate and 
 	\label{pose_bayes_table}
 \end{table}
 
-The best result from Table \ref{pose_bayes_table} was then taken forward as the final dimensions for the network, and is used in the complete model.
+The second best and best result are narrowly different, so the second best, and simpler model from Table \ref{pose_bayes_table} was then taken forward as the final dimensions for the network, and is used in the complete model.
 
 \paragraph{Images Model:}
-The images model is optimised in 3 dimensions, two involve the size of CNN layers and one is the number of layers in the network. The network has blocks of convolutional layers,optimising the number of layers determines whether there are one or two convolutional layers in each block. Simultaneously, the size of the layers in those blocks is also optimised.
+The images model is optimised in 3 dimensions, two involve the size of CNN layers and one is the number of layers in the network. The network has blocks of convolutional layers (Figure \ref{network_architecture}), optimising the number of layers determines whether there are one or two convolutional layers in each block. Simultaneously, the size of the layers in those blocks is also optimised.
+
+
+\noindent \begin{table}[h!]
+	\centering
+	\begin{tabular}{|p{1.0cm}|p{2.3cm}|p{2.3cm}|p{1.5cm}|p{1.5cm}|p{2.2cm}|}
+		\hline
+		\textbf{Rank}&\textbf{Block 1 Size} & \textbf{Block 2 Size} &  \textbf{Block 1 Layers}   &  \textbf{Block 2 Layers} &  \textbf{Validation Loss}     \\ \hline
+		1  & $2^{4.34} = 20$   &  $2^{5.0}=32$ & 1 & 1 & 0.1     \\ \hline
+		2  & $2^{3.57}=12$   &  $2^{5.0}=32$ & 2 & 2 & 0.11   \\ \hline
+		3  & $2^{5.0}=32$    & $2^{5.0}=32$ & 2 & 1 &  0.13   \\ \hline
+		
+	\end{tabular}
+	\caption{Images Model Bayesian Optimisation}
+	\label{images_bayes_table}
+\end{table}
+
+
+Interestingly the images model prefers a simpler setup with only one convolutional layer per block. This may be due to overfitting, but since extra layers are added when combined into the total model it is beneficial to keep the simpler architecture as it is likely to perform better. Hence the final model architecture is presented in Figure \ref{final_models}
+
+
+\subsubsection{Final Optimised Models}
+
+\noindent \begin{figure}[h!]
+	\includegraphics[width = 1.0\hsize]{figures/final_models.png}
+	\caption{Final Images Model: Left, Pose Model: Right.}
+	\label{final_models}
+\end{figure}
 
 
 \subsubsection{Total Model:}
-Both models discussed in this section can be trained separately to obtain predictions of the future pose. A naive estimation would take weighted predictions and sum for a final prediction result. The final layers of these networks however could infer details from each-other to inform the pose estimation. This can only be done in a branched network that uses both inputs effectively and concatenates the outputs for some final layers. The proposed model is graphed in Figure \ref{total_network_architecture}, it has two inputs tensors of the images and pose data and three output variables which is the predicted $[x,y,z]$.
+Both models discussed in this section can be trained separately to obtain predictions of the future pose. A naive estimation would take weighted predictions and sum for a final prediction result. The final layers of these networks however could infer details from each-other to inform the pose estimation. This can only be done in a branched network that uses both inputs effectively and concatenates the outputs for some final layers. The proposed model is graphed in Figure \ref{total_network_architecture}, it has two inputs tensors of the images plus pose data and three output variables which is the predicted $[x,y,z]$.
 
 \noindent \begin{figure}[h!]
 	\includegraphics[width = 1.0\hsize]{figures/final_model.png}
@@ -1697,6 +1753,19 @@ Both models discussed in this section can be trained separately to obtain predic
 \end{figure}
 
 \paragraph{Training Regime:}The network is large and so a careful training regime is required to ensure convergence to a reasonable minimum. The two initial models, the pose and RCNN images are first pre-trained to predict poses. These are the complete models described in Figure \ref{network_architecture}. Once this training process is complete the weights are used in the larger branched model. These layers are then frozen and the final dense layers are trained. Finally all layers are unfrozen and the whole model is trained with a lower learning rate to fine-tune the weights.
+
+
+For the final training, the frame gap was increased to $1s$ and hence there is a higher loss from the data. It is not excessive however with  a final loss of $1.8$ which equates to $1.3m$ uncertainty which is acceptable for future use. This uncertainty can be used in the next section to determine the possible locations of the bike in the future and detect if a collision is likely.
+
+
+\noindent \begin{figure}[h!]
+	\includegraphics[width = 1.0\hsize]{figures/total_model_training.png}
+	\caption{Complete Network Training.}
+	\label{total_training_curve}
+\end{figure}
+
+\paragraph{Summary}
+In this section a new model for cyclist movement prediction has been explored, the combination of images and pose data. This is expected to perform well with larger times between predictions. However, at smaller time gaps the model is too complex and overfits the data which means that a linear model often performs better on the validation set. It is therefore a balance between model complexity and the required time-frame of prediction. In this case a timeframe of c.1-2s is reasonable as the Mask-RCNN model cannot detect small objects that are further away with adequate accuracy and a bike can move at around 10m/s. This section has proven the ability of the model to predict accurately. Since models such as this are complex and require significant computational power it may be beneficial to join the image-segmentation network and prediction network. This would allow them to share some of the convolutional layers and reduce computational overhead but requires extensive modifications to Mask-RCNN. The outcome of this section is a reliable model that can be used in the next section for collision detection between moving objects and the cyclist. 
 
 \subsection{Collision Detection Module}
 The collision detection module takes the predicted paths from both the cyclist and object models (Sections \ref{bike_model},\ref{object_model}), and their respective uncertainties. It can then check the distance between the predicted points:
@@ -1725,11 +1794,12 @@ R_{k} = \sqrt{var_{k}}
 One problem is that when the Kalman filter is highly uncertain it may predict a potential collision when there is little likelihood of it occurring so a solution can be to look at the intersection over union of the two circles.
 
 \noindent \begin{figure}[h!]
-	\includegraphics[width = 1.0\hsize]{figures/points_intersecting_circles.png}
-	\caption{Intersecting Points on Circle \cite{circle_intersection_point}}
+	\includegraphics[width = 0.5\hsize]{figures/points_intersecting_circles.png}
+	\includegraphics[width = 0.5 \hsize]{figures/two_intersecting_circles.png}
+	\caption{Intersecting Points on Circle \cite{circle_intersection_point}, Right: Area of Two Intersecting Circles \cite{circle_intersection}}
 	\label{two_intersect_points}
+	\label{two_intersect_circles}
 \end{figure}
-
 
 \paragraph{Points of intersection}
 The first step to calculate where the circles overlap. This is detailed in figure \ref{two_intersect_points}, point can form a triangle in each circle between the y axis, x axis and a line of length $R_{o},R_{c}$ passing through the circle's origin.
@@ -1757,27 +1827,29 @@ y_{1,2} = \pm \sqrt{A_{r}^{2} - x^{2}}
 Transforming the values into unit vectors and solving for the final point locations gives:
 
 \begin{equation}
-\begin{aligned}
  \overrightarrow{e_{1}} = \frac{ \overrightarrow{B}- \overrightarrow{A}}{|  \overrightarrow{B} -  \overrightarrow{A} |} 
 = 
 \frac{1}{d}
 \begin{bmatrix}
 B_{x} - A_{x} \\
 B_{y} - A_{y}
-\end{bmatrix} \\
+\end{bmatrix} 
+\end{equation}
+\begin{equation}
 \overrightarrow{e_{2}} =
 rot(90) \overrightarrow{e_{1}} =
 \begin{bmatrix}
 0 & -1 \\
 1 & 0
 \end{bmatrix}
-\overrightarrow{e_{1}} \\
+\overrightarrow{e_{1}}
+\end{equation}
+\begin{equation}
 \overrightarrow{P_{1,2}} = \overrightarrow{A}+x \cdot \overrightarrow{e_{1}} \pm y \cdot \overrightarrow{e_{2}}
-\end{aligned}
 \label{inter_point_eq3}
 \end{equation}
 
-The final check is to detemine if one circle is within the other and hence there are no intersection points. This is given by checking that the distance is greater than the absolute difference between radii, i.e.
+The final check is to determine if one circle is within the other and hence there are no intersection points. This is given by checking that the distance is greater than the absolute difference between radii, i.e.
 
 
 \begin{equation}
@@ -1791,12 +1863,6 @@ dist < |B_{r} - A_{r}| = \textbf{Circle Inception}
 \paragraph{Area of Intersection}
 
 Given the equations for $x$ and $y$ shown in the last section. The angles $\theta_{A}$ and $\theta_{B}$ can be calculated. The idea for calculation is simple, the intersection area is the area of the segment minus the area of the triangle.
-
-\noindent \begin{figure}[h!]
-	\includegraphics[width = 1.0\hsize]{figures/two_intersecting_circles.png}
-	\caption{Area of Two Intersecting Circles \cite{circle_intersection}}
-	\label{two_intersect_circles}
-\end{figure}
 
 
 \begin{equation}
@@ -1829,7 +1895,7 @@ area = A_{r}^{2}sin^{-1} \big ( \frac{y}{A_{r}}) + B_{r}^{2}sin^{-1} \big ( \fra
 \end{equation}
 
 \paragraph{Intersection Over Union}
-In order to better understand the likelihood the circle approximate is used. This, although not exact as Gaussians are a bell shape is a fast and closed form approximate for the probability of collision. The IOU of the circles is the best measure, a higher IOU clearly means a more probably crash. It can be calculated from previous results by:
+In order to better understand the likelihood the circle approximate is used. This, although not exact as Gaussians are a bell shape is a fast and closed form approximate for the probability of collision. The IOU of the circles is the best measure, a higher IOU clearly means a more probably crash. It can be calculated from previous results:
 
 
 \begin{equation}
@@ -1838,6 +1904,10 @@ IOU = \frac{area_{intersection}}{ area_{c1} + area_{c2} - area_{intersection}}
 \end{aligned}
 \label{circle_area_eq1}
 \end{equation}
+
+\paragraph{Moving Objects}
+It is important to check that the object itself is moving. If the cyclist is heading towards a parked car it is less likely that the cyclist has not seen it or that the object will cross their path. So the final check is a simple threshold of the Kalman filter prediction. As part of the state, the velocity of the object is predicted which informs the collision detection module if the object in question is moving or not.
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Experimental Results}
@@ -1857,26 +1927,52 @@ In applying Mask-RCNN to the specific urban environment there have been a number
 
 \subsection{Cyclist Model}
 
+The cyclist model is effective as proven in Section \ref{bike_model}, however it currently requires a new model, with respective inputs and convolutional layers. This is both slow and memory intensive, the best solution would be to integrate the model into Mask-RCNN and share some of the convolutional layers. It is a significant modification however as Mask-RCNN does not use sequences of data so a novel architecture would need to be investigated.
+\newline \newline
+The other, far simpler solution is to make use of the Kalman filter mentioned in Section \ref{kalman_matching}, this is less complex and also faster than a neural network model. It does however have drawbacks in accuracy that the network does not, so implementation would be on a hardware specific basis. The faster the hardware, the more viable a complex model is.
 
 \subsection{Depth Camera}
 
-The intel realsense depth camera is typically used in indoor environments as it operates with a small laser. This, as is expected works less well in highly lit environments. The extent of the problem, however is often drastic and can cause okvis to perform poor estimations of pose and hence is unable to determine the bicycle location. An example of these images can be seen in Figure... . It could quite easily be solved, however, with the use of a stereo camera for depth perception. For example the realsense R... offers such capabilities which would mitigate the depth camera sensitivity to bright lighting conditions.
+The intel realsense depth camera is typically used in indoor environments as it operates with a small laser. This, as is expected works less well in highly lit environments. The extent of the problem, however is often drastic and can cause okvis to perform poor estimations of pose and hence is unable to determine the bicycle location. This problem could be eliminated completely by using a stereo camera system or by relying on GPs in bright lighting conditions.
+
+\subsection{Crash Sequence Evaluation}
+
+In order to determine the effectiveness of the system, it is important to know that the system will not produce numerous false positives and be an irritation to users, but also correctly activate when required. Therefore there are two sequences of images collected, one with a staged incident where the values have been tweaked to be more sensitive, and hence reduce the danger in conducting the experiment. The other sequence contains a parked car, which is detected but also determined to no be moving and hence of no danger to the rider.
+
+\noindent \begin{figure}[h!]
+	\includegraphics[width = 1.0\hsize]{figures/no_crash.png}
+	\caption{Parked Car Evaluation}
+	\label{mrcnn_fail}
+\end{figure}
+
+It is hard to get a sequence into the report but comparison to the staged crash shows that it is evident the car is detected but not deemed a threat to the cyclist. This is even though at some stage the cyclist is travelling directly towards the vehicle.
+
+\noindent \begin{figure}[h!]
+	\includegraphics[width = 1.0\hsize]{figures/no_crash.png}
+	\caption{Staged Crash}
+	\label{mrcnn_fail}
+\end{figure}
+
+
 
 \chapter{Conclusion}
 
-\subsection{Performance}
+\subsection{Contributions}
+
+In section \ref{Depth_approx}, it was stated how poor hardware accuracy with regards to depth estimates can be modified with prior knowledge of object sizes in segmented images. This both reduces depth outliers and provides the Kalman filter with less noisy data to track.
+
+Section \ref{kcf_kernels} discusses how to modify the KCF tracker (Section \ref{kcf_background}) for use in the multi-class case. This is then later used in combination with Brisk, class, and Kalman matching for object identification between each frame Section \ref{matching_combining_methods}.
+
+The final contributions of this report involve the tracking and prediction models for both objects (Section \ref{object_model}) and cyclists (Section \ref{bike_model}). The object model used a modification to a Kalman filter to get the predictions and uncertainties whilst a novel recurrent neural network architecture was developed for bike model prediction. The network in question learns from both image and pose data to predict the future bicycle state. From here the object collision module can use the states and uncertainties to calculate the intersection over union of the future states and determine if a collision is likely.
 
 \subsection{Future Work}
 
 \paragraph{Speed} It is clear that this product is much needed in the arsenal of a cycling commuter but in its current state it is not able to be implemented. The sub-real-time results are too slow for effective use. Therefore, with simpler updated hardware and software it may become less accurate but would be useful in the cycling environment until newer technology is available that can increase accuracy to the current level. Also a pure implementation in a faster language such as cpp could help with this, most of the functions used e.g. (Keras, numpy, Tensorflow) implement c sub-routines, but other parts of the code could equally be sped-up by being ported to c or cpp instead of running python.
 
-\paragraph{Object Detection} It is clear, at the time of writing, that the only real-time method of object detection that could be applicable to cycling is tiny-yolo REFF!!. This is a bounding box approach that runs at c. 80fps on a laptop gpu, and can now be used on a mobile. With this, however comes the deficit of being unable to segment the image like in Mask-RCNN for depth prediction. A lightweight version therefore could use the depth approximation developed in Section \ref{Depth_approx}. Although not perfect, combined with a 3d appreciated of the environment it could be effective, and most importantly fast enough for use. 
+\paragraph{Object Detection} It is clear, at the time of writing, that the only real-time method of object detection that could be applicable to cycling is tiny-yolo \cite{DBLP:journals/corr/RedmonDGF15}. This is a bounding box approach that runs at c. 80fps on a laptop gpu, and can now be used on a mobile. With this, however comes the deficit of being unable to segment the image like in Mask-RCNN for depth prediction. A lightweight version therefore could use the depth approximation developed in Section \ref{Depth_approx}. Although not perfect, combined with a 3d appreciated of the environment it could be effective, and most importantly fast enough for use. 
 
 \paragraph{SLAM} Although Okvis is effective, the poor quality depth camera images render it less reliable outside than in indoor environments. This would typically not be acceptable on a final system so perhaps incorporating GPS measurements as well as Okvis would be beneficial. Okvis is great for areas where there is no GPS available, such as tunnels, where lighting is also reduced. Okvis is capable of running from a single camera and so the removal of a depth stream would also not hinder it greatly, especially if a stereo camera system was employed instead.
 
-
-
-\newpage
 
 
 \chapter{Ethics}
@@ -2033,7 +2129,7 @@ The code developed is intended to offer a basis for an early warning system to c
 \chapter{Appendix}
 
 
-
+\subsection{RoI Matching Algorithm}
 \begin{algorithm}
 	\DontPrintSemicolon
 	\SetAlgoLined
@@ -2043,12 +2139,12 @@ The code developed is intended to offer a basis for an early warning system to c
 	\underline{match} $(old$\textunderscore$frame),new$\textunderscore$frame,[matching$\textunderscore$methods(oldROI,newROI))],matches,threshold)$\;
 	\Input{
 		\texttt{\\}
-		$old$\textunderscore$frame$ \tcp*[r]{ROIs as structures from the old frame}
-		$new$\textunderscore$frame$ \tcp*[r]{ROIs as structures from the new frame}
-		$[matching$\textunderscore$methods(oldROI,newROI)]$ \tcp*[r]{List of pointers to functions for matching ROIs}
+		$old$\textunderscore$frame$ \tcp*[r]{RoIs as structures from the old frame}
+		$new$\textunderscore$frame$ \tcp*[r]{RoIs as structures from the new frame}
+		$[matching$\textunderscore$methods(oldROI,newROI)]$ \tcp*[r]{List of pointers to functions for matching RoIs}
 		\tcp*[r]{(KCF,Kalman Filter,Brisk)}
 		$matches$ \tcp*[r]{A matrix of zeros $\in \mathbb{R}^{(methods,oldROIs,newROIs)}$}
-		$threshold$ \tcp*[r]{The minimum match score considered to denote an inter-frame ROI match}
+		$threshold$ \tcp*[r]{The minimum match score considered to denote an inter-frame RoI match}
 	}
 	\Output{
 		\texttt{\\}
@@ -2057,38 +2153,43 @@ The code developed is intended to offer a basis for an early warning system to c
 	}
 	\texttt{\\}
 	\tcp{Calculate score of match ($oldROI \to newROI$) for each $method,oldROI,newROI$}
-	\ForEach(\tcc*[f]{For every ROI in last frame}){$oldROI \in old$\textunderscore$frame$}{
-		\ForEach(\tcc*[f]{For every ROI in current frame}){$newROI \in new$\textunderscore$frame$}{
+	\ForEach(\tcc*[f]{For every RoI in last frame}){$oldROI \in old$\textunderscore$frame$}{
+		\ForEach(\tcc*[f]{For every RoI in current frame}){$newROI \in new$\textunderscore$frame$}{
 			\ForEach(\tcc*[f]{For each method}){$method \in matching$\textunderscore$methods(oldROI,newROI)$}{
 				$matches[method_{i},oldROI_{i},newROI_{i}] = matching$\textunderscore$methods(oldROI,newROI)$
 			}
 		}
 	}
-	\tcp{\textbf{Multiply along methods axis to produce one combined match matrix.}}
-	\ForEach(\tcc*[f]{For every method}){$method \in matching$\textunderscore$methods(oldROI,newROI)$}{
-		\uIf(\tcc*[f]{If method index is > 0}){$method_{i} > 0$}{
-			$matches[0,:,:] = mult(matches[0,:,:],matches[method_{i},:,:])$ \tcc*[r]{Multiply along axis}
-		}
-	}
+
 	
 	$matches = matches[0,:,:]$
-	\texttt{\\}
-	\tcp{\textbf{Match new and old ROIS.}}
-	max = matches.max() \texttt{\\}
-	\While(){$max > threshold \text{ and } len(new$\textunderscore$matched)<len(new$\textunderscore$frame$)}{
-		$old,new = matches.max()_{i,j}$ \tcc*[r]{Find index of max element}
-		\uIf(\tcc*[f]{If not already matched}){$old \notin old$\textunderscore$matched$ and $new \notin new$\textunderscore$matched$}{
-			$new$\textunderscore$matched.append(new)$ \tcc*[f]{Add new index to already matched list}
-			$old$\textunderscore$matched.append(old)$ \tcc*[f]{Add old index to already matched list}
-		}
-		\texttt{\\}
-		$matches[new,old] = -1$ \texttt{\\}
-		$max = matches.max()$
-	}
+	
 	\texttt{\\}
 	\caption{Algorithm to match old and new frames}
-	\label{alg:weights}
+	\label{alg:matchroi}
 \end{algorithm}
+
+\newpage
+	\tcp{\textbf{Multiply along methods axis to produce one combined match matrix.}}
+\ForEach(\tcc*[f]{For every method}){$method \in matching$\textunderscore$methods(oldROI,newROI)$}{
+	\uIf(\tcc*[f]{If method index is > 0}){$method_{i} > 0$}{
+		$matches[0,:,:] = mult(matches[0,:,:],matches[method_{i},:,:])$ \tcc*[r]{Multiply along axis}
+	}
+}
+
+\texttt{\\}
+\tcp{\textbf{Match new and old RoIs.}}
+max = matches.max() \texttt{\\}
+\While(){$max > threshold \text{ and } len(new$\textunderscore$matched)<len(new$\textunderscore$frame$)}{
+	$old,new = matches.max()_{i,j}$ \tcc*[r]{Find index of max element}
+	\uIf(\tcc*[f]{If not already matched}){$old \notin old$\textunderscore$matched$ and $new \notin new$\textunderscore$matched$}{
+		$new$\textunderscore$matched.append(new)$ \tcc*[f]{Add new index to already matched list}
+		$old$\textunderscore$matched.append(old)$ \tcc*[f]{Add old index to already matched list}
+	}
+	\texttt{\\}
+	$matches[new,old] = -1$ \texttt{\\}
+	$max = matches.max()$
+}
 
 
 %% bibliography
