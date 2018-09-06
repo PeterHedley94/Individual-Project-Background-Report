@@ -56,13 +56,13 @@
 \begin{abstract}
 Recently in the news, and as any London cyclist has experienced, there are numerous potentially fatal hazards on a morning commute. Cars turn directly in front of you, doors often open unexpectedly and pedestrians amble into the road taking a selfie. The project is aimed at detecting potential hazards through the use of an on-board camera, and alerting the cyclist and pedestrian/car to it. The problem requires computer vision techniques and SLAM algorithms for spacial understanding.
 \newline \newline
-This project investigates state-of-the-art methods in image segmentation, object tracking, and develops a novel architecture for cyclist path prediction. The results of which, although not realtime provide a solid foundation for future research in the area and suggests potential modifications to the system for that to become a reality.
+This project investigates state-of-the-art methods in image segmentation, object tracking, and develops a novel architecture for cyclist path prediction. The results of which, although not real-time provide a solid foundation for future research in the area and suggests potential modifications to the system for that to become a reality.
 \end{abstract}
 
 \cleardoublepage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section*{Acknowledgments}
-Many thanks to my supervisor Dr Stefan Leutenegger for his continued support throughout the process. As a student with less than a year of computer science experience this project would not have been possible without him.
+Many thanks to my supervisor Dr Stefan Leutenegger for his continued support throughout the process. As a student with less than a year of computer science experience, this project would not have been possible without him.
 \newline \newline
 Also thanks to the other students on my course who have helped with ideas about how the project should progress.
 
@@ -86,14 +86,14 @@ Also thanks to the other students on my course who have helped with ideas about 
 \chapter{Introduction}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-There were c. 18,500 cycling accidents and 3,500 deaths on British roads in 2016 \cite{DFT_fig}. Of these accidents 80\% occur during the day and driver/rider error accounts for 71\% of the total collisions \cite{DFT_fig2}. The most common place for a cycling incident is at a road junction with 75\% of collisions occurring there \cite{DFT_fig3}. With cycling becoming a more accepted form of transport, the need to protect and modify bikes with a comprehensive safety system is important.
+There were c. 18,500 cycling accidents and 3,500 deaths on British roads in 2016 \cite{DFT_fig}. Of these accidents, 80\% occur during the day and driver/rider error accounts for 71\% of the total collisions \cite{DFT_fig2}. The most common place for a cycling incident is at a road junction with 75\% of collisions occurring there \cite{DFT_fig3}. With cycling becoming a more accepted form of transport, the need to protect and modify bikes with a comprehensive safety system is important.
 
 \subsection{Road Map} The report develops a system for collision detection and is split into two main sections, object detection and understanding the 3D environment. The sections are developed simultaneously throughout the report and are discussed within the following chapters.
 
-\paragraph{Background} This chapter discusses the current research into the area of instance segmentation, recurrent networks, optimisation and SLAM. It first describes recent advances in computer vision relevant to the current state-of-the-art method Mask RCNN. Mask RCNN combines a number of advances in different fields, namely image classification, detection and segmentation. The chapter then continues with discussion around recurrent networks for path prediction, and methods of optimising these networks. Finally a brief discussion on SLAM and object tracking which are both highly active and voluminous fields of research in their own right.
+\paragraph{Background} This chapter discusses the current research into the area of instance segmentation, recurrent networks, optimisation, and SLAM. It first describes recent advances in computer vision relevant to the current state-of-the-art method Mask RCNN. Mask RCNN combines a number of advances in different fields, namely image classification, detection, and segmentation. The chapter then continues with discussion around recurrent networks for path prediction, and methods of optimising these networks. Finally a brief discussion on SLAM and object tracking which are both highly active and voluminous fields of research in their own right.
 
 \paragraph{Contribution}
-The contribution chapter discusses depth approximations when there is a depth camera failure, object tracking and prediction. In particular it discusses combining various tracking methods into a comprehensive system that both combines the advantages of the respective algorithms and mitigates their potential weaknesses. Once the ability to track objects is discussed, models for prediction of future locations are developed. This leads to a novel recurrent network to predict future bicycle locations from image, and pose data gathered from previous frames. Finally a method of combining these predictive models, and determining whether a collision is likely to occur is discussed in the latter part of the chapter. These sections all talk through the various modules required in the system which is described below in Figure \ref{software_soln1}
+The contribution chapter discusses depth approximations when there is a depth camera failure, object tracking, and prediction. In particular, it discusses combining various tracking methods into a comprehensive system that both combines the advantages of the respective algorithms and mitigates their potential weaknesses. Once the ability to track objects is discussed, models for prediction of future locations are developed. This leads to a novel recurrent network to predict future bicycle locations from image, and pose data gathered from previous frames. Finally, a method of combining these predictive models, and determining whether a collision is likely to occur is discussed in the latter part of the chapter. These sections all talk through the various modules required in the system which is described below in Figure \ref{software_soln1}
 
 
 \noindent \begin{figure}[h!]
@@ -104,13 +104,13 @@ The contribution chapter discusses depth approximations when there is a depth ca
 
 
 \paragraph{System Evaluation}
-This section describes the potential problems with the system, and includes an image sequence from a staged hazard. The final system can be seen to detect a crossing pedestrian and determine the collision is likely.
+This section describes the potential problems with the system and includes an image sequence from a staged hazard. The final system can be seen to detect a crossing pedestrian and determine the collision is likely.
 
 \paragraph{Conclusion}
 This chapter discusses and summarises the system, it also suggests further areas of research if the system is to be taken further.
 
 \paragraph{Ethics}
-The final section discusses any ethical issues within the project and contains a completed ethical checklist.
+The final section discusses any ethical issues within the project and contains a completed ethical check-list
 
 
 \newpage
@@ -120,14 +120,14 @@ The final section discusses any ethical issues within the project and contains a
 \chapter{Background}
 \section{Background, Computer Vision}\label{comp_vis_back}
 \subsection{Deep Learning Preliminaries} \label{dlp}
-Computer vision and its applications has been revolutionised recently by Deep Learning frameworks. These have led to super-human accuracy in image recognition, for example Inception v3 \cite{Szegedy_2016_CVPR}, release in 2016, reached a 3.46\% error rate on the ImageNet \cite{ILSVRC15} dataset. This is known as an image classification task; the photo contains one object in the dataset and that object generally occupies the majority of the frame. Similar networks are used with additional features for image detection and segmentation which are integral to detecting moving objects such as pedestrians and vehicles in an urban environment.
+Computer vision and its applications have been revolutionised recently by Deep Learning frameworks. These have led to super-human accuracy in image recognition, for example Inception v3 \cite{Szegedy_2016_CVPR}, released in 2016, reached a 3.46\% error rate on the ImageNet \cite{ILSVRC15} dataset. This is known as an image classification task; the photo contains one object in the dataset and that object generally occupies the majority of the frame. Similar networks are used with additional features for image detection and segmentation which are integral to detecting moving objects such as pedestrians and vehicles in an urban environment.
 \newline\newline
-The current state-of-the-art methods in computer vision use a form of neural network. These networks are characterised by a series of non-linear nodes that are organised in layers. At each layer the network learns progressively abstract and higher-level features of the image to be detected until the final (usually dense layer) which determines the predicted class. Therefore the 'depth' of a neural network often refers to the number of layers and hence the inherent complexity of features that a network can learn. This is, however, only a basic representation of the problem and some clever and shallower architectures are able to outperform deeper networks. It is important to note that the depth and width, more specifically the number of parameters in the model generally reduces speed of prediction and increases the memory required to store/load the model into RAM. This is of little consequence in most applications, however for the limited computational power that can be carried on a bicycle it will be of concern in this report.
+The current state-of-the-art methods in computer vision use a form of neural network. These networks are characterised by a series of non-linear nodes that are organised in layers. At each layer the network learns progressively abstract and higher-level features of the image to be detected until the final (usually dense layer) which determines the predicted class. Therefore the 'depth' of a neural network often refers to the number of layers and hence the inherent complexity of features that a network can learn. This is, however, only a basic representation of the problem and some clever and shallower architectures are able to outperform deeper networks. It is important to note that the depth and width, more specifically the number of parameters in the model generally reduces speed of prediction and increases the memory required to store/load the model into RAM. This is of little consequence in most applications, however, for the limited computational power that can be carried on a bicycle, it will be of concern in this report.
 
 \subsection{Convolutional Networks} \label{Cnn_section}
 A CNN generally contains convolutional, pooling, fully connected and normalisation layers. This form of network became particularly popular in computer vision after Geoffrey Hinton's 2012 paper \cite{GH_CNN}, with an ImageNet classification error of c.16\%, significantly lower than the state-of-the-art at the time which was 26\%. Convolutional networks use the assumption that each input is an image and therefore certain properties can be encoded into the architecture of the network. This allows a significant reduction in the number of tunable network parameters.
 \newline \newline
-A regular neural network, as mentioned earlier Section \ref{dlp}, contains a number of fully connected layers i.e. each neuron in a layer is connected to every neuron in the previous and next layers respectively. However convolutional neural networks are arranged in three dimensions: width, height, depth (Figure \ref{CNNvsNN}). In this architecture the neurons in a layer are only connected to some of the layer before, unlike in the fully connected case, this significantly reduces the number of parameters \cite{StanfordCS231_1}.
+A regular neural network, as mentioned earlier Section \ref{dlp}, contains a number of fully connected layers i.e. each neuron in a layer is connected to every neuron in the previous and next layers respectively. However convolutional neural networks are arranged in three dimensions: width, height, depth (Figure \ref{CNNvsNN}). In this architecture, the neurons in a layer are only connected to some of the layer before, unlike in the fully connected case, this significantly reduces the number of parameters \cite{StanfordCS231_1}.
 
 \noindent \begin{figure}[h!]
 	\includegraphics[width = 0.5\hsize]{./figures/neural_net2.jpeg}
@@ -137,7 +137,7 @@ A regular neural network, as mentioned earlier Section \ref{dlp}, contains a num
 \end{figure}
 
 \subsubsection{Convolutional Layers}
-A convolutional layer learns a set of filters, each filter is compact in size, say ($7 \times 7 \times 3$). This filter slides (convolves) over the image, then a dot product is taken between the filter values and the inputs to that filter (Figure \ref{CNN_filter}). The filter slides across with a respective stride, which is a hyperparameter, a stride of one equates to moving one pixel across at a time. A convolutional layer is therefore able to pick up features such as a corner, or higher level features such as the texture of fur. This process creates a 2D activation map containing the response of the filter at each position on the input volume. A number of filters are passed over and a number of activation maps are created, relating to the layer depth which is a tune-able hyperparameter.
+A convolutional layer learns a set of filters, each filter is compact in size, say ($7 \times 7 \times 3$). This filter slides (convolves) over the image, then a dot product is taken between the filter values and the inputs to that filter (Figure \ref{CNN_filter}). The filter slides across with a respective stride, which is a hyper-parameter, a stride of one equates to moving one pixel across at a time. A convolutional layer is therefore able to pick up features such as a corner, or higher level features such as the texture of fur. This process creates a 2D activation map containing the response of the filter at each position on the input volume. A number of filters are passed over and a number of activation maps are created, relating to the layer depth which is a tune-able hyper-parameter
 
 \noindent \begin{figure}[h!]
 	\includegraphics[width = 0.5\hsize]{./figures/conv_filter.jpg}
@@ -147,7 +147,7 @@ A convolutional layer learns a set of filters, each filter is compact in size, s
 \end{figure}
 
 \subsubsection{Pooling Layers}
-Pooling layers are used to reduce the number of parameters in a network. This is a much debated topic, Geoffrey Hinton's paper \cite{DBLP:journals/corr/abs-1710-09829} dicusses the problems of convolutional networks in his 2017 paper and especially focuses on the disadvantages of pooling layers. It is however a current, although fading, method of parameter reduction. For the purposes of optimising network architecture for smaller hardware such as is portable on a bike this is still a recognised and useful method.
+Pooling layers are used to reduce the number of parameters in a network. This is a much debated topic, Geoffrey Hinton's paper \cite{DBLP:journals/corr/abs-1710-09829} discusses the problems of convolutional networks in his 2017 paper and especially focuses on the disadvantages of pooling layers. It is , however, a current, although fading method of parameter reduction. For the purposes of optimising network architecture for smaller hardware such as is portable on a bike this is still a recognised and useful method.
 \newline \newline
 A pooling layer such as that depicted in (Figure \ref{CNN_filter}) passes a kernel over the input (much like in a convolutional layer) and at each spacial location it calculates a metric. For example, max pooling takes the largest value contained within the kernel grid at each consecutive spacial location. This process reduces the input size with respect to the kernel size and the implemented stride.
 
@@ -158,7 +158,7 @@ Although the aforementioned approach is valid it would be very slow, not only wo
 
 
 \subsubsection{R-CNN} \label{rcnn}
-R-CNN, proposed by Ross Girshick et al. \cite{DBLP:journals/corr/GirshickDDM13} in 2014, incorporates a region proposal method. This process produces 2000 proposals which are then passed through a large CNN, and each region is classified using class-specific linear SVMs. This process equates to a 53.7\% mean average precision (mAP) compared to 35.1\% by state-of-the-art methods at the time. In addition to this performance gain the system doesn't rely on far more complicated ensemble methods.
+R-CNN, proposed by Ross Girshick et al. \cite{DBLP:journals/corr/GirshickDDM13} in 2014, incorporates a region proposal method. This process produces 2000 proposals which are then passed through a large CNN, and each region is classified using class-specific linear SVMs. This process equates to a 53.7\% mean average precision (mAP) compared to 35.1\% by state-of-the-art methods at the time. In addition to this performance gain, the system doesn't rely on far more complicated ensemble methods.
 \newline \newline
 The region proposal method used is called selective search \cite{Uijlings2013}, this uses a fast segmentation algorithm by Felzenszwalb \cite{Felzenszwalb2004} followed by a greedy algorithm to iteratively group regions together using similarity metrics. The four metrics proposed in the paper are $s_{colour}$, $s_{texture}$, $s_{size}$, $s_{fill}$  the aim is to use a number of metrics to pick up the differences between regions during the growth period and also limit one region's growth at the expense of others (hence the size metric).
 
@@ -168,13 +168,13 @@ The region proposal method used is called selective search \cite{Uijlings2013}, 
 	\label{Selective_search}
 \end{figure}
 
-The results of the region proposal (Figure \ref{Selective_search}) are a series of windows that are likely to contain an object. These are then simply warped to $227 \times 227$ pixels to fit the input dimension's of the CNN network that follows, containing five convolutional layers and two fully connected layers. The output of the CNN is then fed as a 4096 dimensional feature vector to a set of trained SVMs, one for each class, that are used to score the likelihood for that class. This approach is slow at 13s/image on a GPU and 53s/image on a CPU, the separation of a CNN and SVM is peculiar and adds to this timescale. A later iteration of this method Fast-RCNN is discussed in Section \ref{Fast_RCNN}.
+The results of the region proposal (Figure \ref{Selective_search}) are a series of windows that are likely to contain an object. These are then simply warped to $227 \times 227$ pixels to fit the input dimension's of the CNN network that follows, containing five convolutional layers and two fully connected layers. The output of the CNN is then fed as a feature vector to a set of trained SVMs, one for each class, that is used to score the likelihood for that class. This approach is slow at 13s/image on a GPU and 53s/image on a CPU, the separation of a CNN and SVM is peculiar and adds to this time-scale A later iteration of this method Fast-RCNN is discussed in Section \ref{Fast_RCNN}.
 
 \subsubsection{Fast-RCNN} \label{Fast_RCNN}
 
 R-CNN performs a CNN forward pass for each region proposal and does not share computation between regions \cite{DBLP:journals/corr/Girshick15}. Spacial pyramid pooling networks (SPPnet) \cite{DBLP:journals/corr/HeZR014} are designed to mitigate this problem by creating a feature map (which is always the same shape) from an input image and then classifying each object proposal from a vector extracted from the shared feature map. This paper still uses a multiple-stage classification pipeline but is a marked improvement on R-CNN with regards to speed. 
 \newline \newline
-Fast-RCNN uses the SPPnet concept but also incorporates a single-stage pipeline. The process inputs an image and multiple RoIs into a fully convolutional network (Figure \ref{Fast_RNN_fig}). Each RoI is then pooled into a fixed-size feature map as in SPPnet and then mapped to a feature vector by fully connected layers. As can be seen in Figure \ref{Fast_RNN_fig} the network then branches into 2 separate outputs, one 4-point regression output of the bounding box location and a K-size classification output, where K is the number of object classes. The model therefore must contain a multi-task loss function that accounts for both bounding box and softmax loss (Equation \ref{multi-task_loss}).
+Fast-RCNN uses the SPPnet concept but also incorporates a single-stage pipeline. The process inputs an image and multiple RoIs into a fully convolutional network (Figure \ref{Fast_RNN_fig}). Each RoI is then pooled into a fixed-size feature map as in SPPnet and then mapped to a feature vector by fully connected layers. As can be seen in Figure \ref{Fast_RNN_fig} the network then branches into 2 separate outputs, one 4-point regression output of the bounding box location and a K-size classification output, where K is the number of object classes. The model , therefore, must contain a multi-task loss function that accounts for both bounding box and softmax loss (Equation \ref{multi-task_loss}).
 
 \begin{equation}
 \label{multi-task_loss}
@@ -206,12 +206,12 @@ is a $L_{1}$ loss. This architecture allows for fast training with the forward p
 	\label{Fast_RNN_fig}
 \end{figure}
 
-Figure \ref{Fast_RNN_fig} depicts the network architecture, this incorporates an RoI pooling layer which maps the convolutional feature map from an RoI (created by selective search) to a fixed extent feature map of a set $H \times W$, where $H$ and $W$ are layer hyperparameters. Each RoI is a rectangular window defined by a tuple of four elements ($r,c,h,w$), where ($r,c$) specify the top left corner and ($h,w$) the width. RoI max pooling then divides the RoI window into a grid and then max-pools each grid into the corresponding output cell. The size of the grid is proportionate to the RoI and so the output shape is constant regardless of RoI input size. 
+Figure \ref{Fast_RNN_fig} depicts the network architecture, this incorporates a RoI pooling layer which maps the convolutional feature map from an RoI (created by selective search) to a fixed extent feature map of a set $H \times W$, where $H$ and $W$ are layer hyper-parameters Each RoI is a rectangular window defined by a tuple of four elements ($r,c,h,w$), where ($r,c$) specify the top left corner and ($h,w$) the width. RoI max pooling then divides the RoI window into a grid and then max-pools each grid into the corresponding output cell. The size of the grid is proportionate to the RoI and so the output shape is constant regardless of RoI input size. 
 
 \subsubsection{Faster R-CNN} \label{Faster_rcnn}
 Although the previous method \cite{DBLP:journals/corr/Girshick15} removed the need for a multi-stage classification pipeline (CNN and SVM), it still relies on the selective search \cite{Uijlings2013} method for region proposal. This part is now the computational bottleneck that slows down the process. Faster R-CNN proposed by Ren et al. \cite{DBLP:journals/corr/RenHG015} seeks to alleviate this issue by combining region proposal into the CNN. The paper suggests the use of a region proposal network (RPN) to produce the RoIs used later in the network. 
 
-%TODO sort out grphic keep only (c)
+%TODO sort out graphic keep only (c)
 \noindent \begin{figure}[h!]
 	\includegraphics[width = 0.45\hsize]{./figures/faster.png}
 	\includegraphics[width = 0.45\hsize]{./figures/rpn_faster.jpg}
@@ -219,7 +219,7 @@ Although the previous method \cite{DBLP:journals/corr/Girshick15} removed the ne
 	\label{Faster_rnn_fig}
 \end{figure}
 
-The region proposal network (RPN) outputs a set of rectangular object proposals, each of these proposals has an objectiveness score i.e. how likely the network thinks the proposal contains an object. This part of the network comes after a number of convolutional layers (in this paper 5 or 13 such layers). The region proposals are then created off the feature map from these layers by sliding a smaller network of size $n \times n$ over the convolutional feature map (Figure \ref{Faster_rnn_fig}). At each sliding window location a number of region proposals are predicted simultaneously. These consist of 3 aspect ratios and 3 scales, therefore 9 total region predictions or anchors at each location. The network is then followed by two sibling $1 \times 1$ convolutional layers, one for $reg$ (region proposal) and one for $cls$ (probability of object or not). The $reg$ layer outputs 4$k$ results, which represents the encoding coordinates of the $k$ boxes and the $cls$ later scores the probability that there is an object or no object in each proposal, therefore cls has $2k$ outputs. This results in a convolutional layer output of depth 9.
+The region proposal network (RPN) outputs a set of rectangular object proposals, each of these proposals has an objectiveness score i.e. how likely the network thinks the proposal contains an object. This part of the network comes after a number of convolutional layers (in this paper 5 or 13 such layers). The region proposals are then created by sliding a smaller network of size $n \times n$ over the convolutional feature map (Figure \ref{Faster_rnn_fig}). At each sliding window location a number of region proposals are predicted simultaneously. These consist of 3 aspect ratios and 3 scales, therefore 9 total region predictions or anchors at each location. The network is then followed by two sibling $1 \times 1$ convolutional layers, one for $reg$ (region proposal) and one for $cls$ (probability of object or not). The $reg$ layer outputs 4$k$ results, which represents the encoding coordinates of the $k$ boxes and the $cls$ later scores the probability that there is an object or no object in each proposal, therefore cls has $2k$ outputs. This results in a convolutional layer output of depth 9.
 \newline \newline
 The loss for the network is calculated from two metrics, the output of the $reg$ layer is a binary, i.e. positive example, or not. A positive example is defined by how much the box overlaps with the ground truth box of the object and so an IoU (Intersection-over-union) overlap $> 0.7$ is considered a positive example and an IoU $< 0.3$ is considered a negative label. For the first positive case, if no positive examples are found, the boxes with highest IoU  are labelled positive. With this it follows that:
 
@@ -241,10 +241,10 @@ t_{w}^{*} = log(w^{*}/w_{a}), \quad t_{h}^{*} = log(h^{*}/h_{a})
 
 where $x$, $y$, $w$, and $h$ are the box centre coordinates plus width and height. Predicted box, and anchored box are denoted by $x$, $x_{a}$, $x^{*}$ (likewise for $y$, $w$, $h$).
 \newline \newline
-Finally after the regions have been proposed, c.6000 per image, some regions overlap with others, and so, to reduce redundancy non-maximum supression is used on their $cls$ score with an IoU threshold of 0.7 to leave around 2000 proposals per image. Non-maximum supression is a technique that sets all neighbouring areas to zero around a local maximum and hence only keeps the maximum value and suppresses the others.
+Finally after the regions have been proposed, c.6000 per image, some regions overlap with others, and so, to reduce redundancy non-maximum suppression is used on their $cls$ score with an IoU threshold of 0.7 to leave around 2000 proposals per image. Non-maximum suppression is a technique that sets all neighbouring areas to zero around a local maximum and hence only keeps the maximum value and suppresses the others.
 
 \subsection{Image Segmentation}\label{image_seg}
-Unlike the image detection problem described in Section \ref{Image_det}, this task aims to segment an image on a pixel-by-pixel basis into respective classes (Figure \ref{cityscapes_data}). A conventional classification network takes an image and outputs a prediction of which class the image is i.e. a vector of probabilities or a `score'. This process uses fully-connected layers to produce the final output vector which throws away important spacial information used in a segmentation task. Therefore Long et al. \cite{DBLP:journals/corr/LongSD14} propose converting these final layers to convolutional layers, maintaining the spacial information and creating a heatmap output (Figure \ref{cityscapes_data}).
+Unlike the image detection problem described in Section \ref{Image_det}, this task aims to segment an image on a pixel-by-pixel basis into respective classes (Figure \ref{cityscapes_data}). A conventional classification network takes an image and outputs a prediction of which class the image is i.e. a vector of probabilities or a `score'. This process uses fully-connected layers to produce the final output vector which throws away important spacial information used in a segmentation task. Therefore Long et al. \cite{DBLP:journals/corr/LongSD14} propose converting these final layers to convolutional layers, maintaining the spacial information and creating a heat-map output (Figure \ref{cityscapes_data}).
 
 \noindent \begin{figure}[h!]
 	\includegraphics[width = 0.5\hsize]{./figures/image_seg1.png}
@@ -253,9 +253,9 @@ Unlike the image detection problem described in Section \ref{Image_det}, this ta
 	\label{cityscapes_data}
 \end{figure}
 
-The heatmaps produced from the network then need to be upsampled from their respective dimensions to that of the output image. This process is essentially a reverse or deconvolution. Upsampling, therefore, with factor f is convolution with a fractional input stride of 1/f. Essentially each filter is placed on the output image and then multiplied by the input pixel. Hence the image increases in size depending on stride and kernel size as one pixel value is interpolated over a grid. The final problem therefore is how to choose the filter values, this can be done in a number of ways but the main accepted approach is to simply learn them as part of the tuning process.
+The heat-maps produced from the network then need to be up-sampled from their respective dimensions to that of the output image. This process is essentially a reverse or deconvolution. Up-sampling, therefore, with factor f is convolution with a fractional input stride of 1/f. Essentially each filter is placed on the output image and then multiplied by the input pixel. Hence the image increases in size depending on stride and kernel size as one pixel value is interpolated over a grid. The final problem therefore is how to choose the filter values, this can be done in a number of ways but the main accepted approach is to simply learn them as part of the tuning process.
 \newline \newline
-An important concept is that of patchwise training which feeds the network a number of patches from an input image (small patches surrounding objects of interest) instead of an entire input image. This both helps to balance the classes, ensures the input has enough variance, and is a correct representation of the input set. However, this paper argues that this can be done from a fully convolutional training regime with incorporating a DropConnect-like mask \cite{Wan:2013:RNN:3042817.3043055} between the output and the loss. A DropConnect mask is similar to the proposed regularisation technique of Dropout \cite{JMLR:v15:srivastava14a} except that it randomly sets the network weights to 0 rather than the activation functions. This, on the output layer (connected to the network loss) is found to have the same effect as patch-wise sampling in Long et al.'s paper.
+An important concept is that of patch-wise training which feeds the network a number of patches from an input image (small patches surrounding objects of interest) instead of an entire input image. This both helps to balance the classes, ensures the input has enough variance, and is a correct representation of the input set. However, this paper argues that this can be done from a fully convolutional training regime with incorporating a Drop-connect-like mask \cite{Wan:2013:RNN:3042817.3043055} between the output and the loss. A Drop-connect mask is similar to the proposed regularisation technique of Dropout \cite{JMLR:v15:srivastava14a} except that it randomly sets the network weights to 0 rather than the activation functions. This, on the output layer (connected to the network loss) is found to have the same effect as patch-wise sampling in Long et al.'s paper.
 \newline \newline
 Although conventional proven classification architectures performed to state-of-the-art when modified for segmentation (56.0 mean IU), Long at al. \cite{DBLP:journals/corr/LongSD14} go on to design a bespoke network that achieves 62.7 mean IU. Mean pixel intersection over union (Mean IU) is a standard performance metric where the mean is taken over all classes, including the background. The paper describes a network architecture that uses skips \cite{Bishop:2006:PRM:1162264}. Skips allow predictions from lower-level coarser layers to interact with finer, latter layer predictions. This lets the model make local predictions (finer) within the context of the global structure (coarser). This addition made for a marked increase in performance by simply up-sampling earlier layers and summing with latter layer outputs for a final image prediction.
 
@@ -357,7 +357,7 @@ The LSTM layer is highly effective at predicting sequences, it is used later wit
 In order to get the best network architecture, and hyper-parameters such as learning rate, it is possible to naively try combinations and record which performs the best. However, when trying to optimise networks efficiently it is better to provide a range of possible working parameters and optimise them in an informed and, more importantly, automated manner. Bayesian optimisation allows such a method and can quickly check the parameter space for a good combination to minimise the network loss. Bayesian optimisation uses an acquisition function which evaluates a Gaussian process. It is cheaper to evaluate a proxy function that approximates the true function rather than run the neural network. Hence it is a very fast and effective method of optimisation.
 
 \paragraph{Gaussian Processes:}
-In a typical regression sample, the aim is to determine the parameters to a function (or family of functions) that best describe some data. A Gaussian process involves making the assumption that a function can be described simply by an infinite number of points along a function $f(x) = [f_{1},f_{2},...f_{\infty}]$, a finite number of which are gaussian distributed. The aim is to then best approximate the relationship between these points via a covariance kernel $k(\cdot,\cdot)$ and a mean function $m(\cdot)$. A gaussian distribution is described by Equation \ref{gaus_dist} and a kernel function (Matern) by Equation \ref{matern}.
+In a typical regression sample, the aim is to determine the parameters to a function (or family of functions) that best describe some data. A Gaussian process involves making the assumption that a function can be described simply by an infinite number of points along a function $f(x) = [f_{1},f_{2},...f_{\infty}]$, a finite number of which are Gaussian distributed. The aim is to then best approximate the relationship between these points via a covariance kernel $k(\cdot,\cdot)$ and a mean function $m(\cdot)$. A Gaussian distribution is described by Equation \ref{gaus_dist} and a kernel function (Matern) by Equation \ref{matern}.
 
 \begin{equation}
 \begin{aligned}
@@ -376,7 +376,7 @@ k_{Mat,3/2}(x_{i},x_{j}) =
 \label{matern}
 \end{equation}
 
-where $\mathit{l}$ is a hyperparameter that describes the smoothness of the data and $\mathit{\sigma_{f}}$ the amplitude of the latent function. An example of a Matern kernel is given in Figure \ref{matern_kernel_fig}.
+where $\mathit{l}$ is a hyper-parameter that describes the smoothness of the data and $\mathit{\sigma_{f}}$ the amplitude of the latent function. An example of a Matern kernel is given in Figure \ref{matern_kernel_fig}.
 
 
 \noindent \begin{figure}[h!]
@@ -434,7 +434,7 @@ The lower confidence bound balances exploration of global minima by the covarian
 In order to detect collisions between the bike and obstacles the software must have an understanding of the global environment. The detection described in Section \ref{comp_vis_back} allows mapping, and tracking of dynamic objects in the frame, but distance, path prediction and eventually collision prediction rely strongly on an accurate understanding of 2.5-3D space.
 
 \subsection{Sensors}
-The sensors used in this project are an RGBD camera and an IMU. These are both available in the Intel Realsense Camera (ZR300, Figure \ref{realsense_camera}). This camera has a USB cable that both provides the power and sends camera information. An extension cable allows for a laptop to be attached to the camera, from a backpack whilst cycling. Potential problems with this setup are due to juddering of the bike on the road; this could cause tricky footage to analyse and data loss when the hard-drive is writing to disk. The latter issue can easily be solved by writing to an SSD while cycling.
+The sensors used in this project are an RGBD camera and an IMU. These are both available in the Intel Realsense Camera (ZR300, Figure \ref{realsense_camera}). This camera has a USB cable that both provides the power and sends camera information. An extension cable allows for a laptop to be attached to the camera, from a backpack whilst cycling. Potential problems with this set-up are due to juddering of the bike on the road; this could cause tricky footage to analyse and data loss when the hard-drive is writing to disk. The latter issue can easily be solved by writing to an SSD while cycling.
 
 \noindent \begin{figure}[h!]
 	\includegraphics[width = 1.0\hsize]{./figures/intel_realsense.jpg}
@@ -598,7 +598,6 @@ C_{WC}^{T} & -C_{WC}^{T}r_{WC} \\
 \end{equation}
 
 These transformation matrices must be determined from a SLAM algorithm such as OKVIS which is discussed in the following sections.
-
 \subsubsection{Camera to World Summary}
 
 \begin{algorithm}
@@ -705,7 +704,7 @@ In the case of the bicycle set-up, there is both an IMU, and a camera. These pro
 \end{figure}
 
 
-\subsubsection{Batch NonLinear Least Squares}
+\subsubsection{Batch Non-linear Least Squares}
 
 Given an error function for the camera and IMU in the form:
 
@@ -740,7 +739,7 @@ Since observation noise between the IMU and camera $v_{n}$ are independent the c
 \end{aligned}
 \end{equation}
 
-If the error term $\mathbf{e}_{n}(\mathbf{x})$ was linear w.r.t $\mathbf{x}$ the solution would be a simple as setting the $\frac{\delta J(\mathbf{x})^{T}}{\delta \mathbf{x}}$ to zero and solving the respective simultaneous equations. However this is often not the case, and so the solution to the equation must be solved iteratively, with for example, gauss-newton formulation of the equations and a solver such as google-ceres.
+If the error term $\mathbf{e}_{n}(\mathbf{x})$ was linear w.r.t $\mathbf{x}$ the solution would be as simple as setting the $\frac{\delta J(\mathbf{x})^{T}}{\delta \mathbf{x}}$ to zero and solving the respective simultaneous equations. However this is often not the case, and so the solution to the equation must be solved iteratively, with for example, gauss-newton formulation of the equations and a solver such as google-ceres.
 
 \subsection{Frame to Frame Matching}\label{BRISK_section}
 
@@ -1047,10 +1046,10 @@ The system consists of a number of modules, each responsible for a specific aspe
 
 \paragraph{Tracking Module}
 
-The tracking module takes the segmented image masks from Mask-RCNN, the passed-on depth image and Okvis pose output to determine the location of a detected object. The distance of an object is inferred from the depth camera, and masks which can then be converted into the world frame using the Okvis pose. From these outputs and a passed image, various features from objects can be matched from frame-to-frame. These features include global position, BRISK keypoints, and the KCF model of the object. Once the objects from the previous frame are correctly identified and new object added the object model can begin to predict an object's future movement.
+The tracking module takes the segmented image masks from Mask-RCNN, the passed-on depth image and Okvis pose output to determine the location of a detected object. The distance of an object is inferred from the depth camera, and masks which can then be converted into the world frame using the Okvis pose. From these outputs and a passed image, various features from objects can be matched from frame-to-frame. These features include global position, BRISK keypoints, and the KCF model of the object. Once the objects from the previous frame are correctly identified and the new object added the object model can begin to predict an object's future movement.
 
 \paragraph{Collision Module}
-The collision module takes predicted positions from the object models and cyclist models. It then determines whether there is a large likelihood of intersection between the cyclist and objects in the future. The idea of this is to then notify both the object (possibly a person or car) that they are about to collide and the cyclist, hopefully both parties, once aware of the unfolding situation can take preventive measures to avoid eachother.
+The collision module takes predicted positions from the object models and cyclist models. It then determines whether there is a large likelihood of intersection between the cyclist and objects in the future. The idea of this is to then notify both the object (possibly a person or car) that they are about to collide, and the cyclist, hopefully both parties, once aware of the unfolding situation can take preventive measures to avoid eachother.
 
 \paragraph{Limitations}
 Sadly the system currently cannot run in realtime due to Mask-RCNN, the current state of the art segmentation network taking c. 0.5s to predict an image. There is a future possibility of incorporating a simpler, and faster network such as YOLO which foregoes the advantage of segmentation (useful for depth approximation) but would run in real-time.
@@ -1067,7 +1066,7 @@ In order to get the depth measurement of an object, the mask output from Mask R-
 	\label{DCO}
 \end{figure}
 
-As can be seen from Figure \ref{DCO} the data is sparse and unreliable for objects at a distance. This is less so as the depth is scaled [0-255] for a picture and so some measurements seem less reliable than they are but it is still a challenge. Often when the depth measurements are incorrect an unfeasibly large value is returned > 50m. This is a real problem for tracking objects, not necessarily after a period of successful tracking as the value can be discarded as an outlier but on initialisation or after only a couple of data points. Not only is the depth incorrect but that problem is in both x and y when transformed to the world frame. Am example of this phenomenon is displayed in Figure \ref{bottle} where a bottle is tracked from frame to frame, which also demonstrates the ability of the tracking method to be non-cycling domain specific.
+As can be seen from Figure \ref{DCO} the data is sparse and unreliable for objects at a distance. This is less so as the depth is scaled [0-255] for a picture and so some measurements seem less reliable than they are but it is still a challenge. Often when the depth measurements are incorrect an infeasibly large value is returned > 50m. This is a real problem for tracking objects, not necessarily after a period of successful tracking as the value can be discarded as an outlier but on initialisation or after only a couple of data points. Not only is the depth incorrect but that problem is in both x and y when transformed to the world frame. An example of this phenomenon is displayed in Figure \ref{bottle} where a bottle is tracked from frame to frame, which also demonstrates the ability of the tracking method to be non-cycling domain specific.
 
 \noindent \begin{figure}[h!]
 	\includegraphics[width = 0.5\hsize]{figures/bottle2.jpg}
@@ -1201,12 +1200,11 @@ Since the bbox prediction is so fast for the KCF tracker; it can be used in conj
 
 
 \subsection{BRISK - Selector} \label{BRISK_matching}
-BRISK as described earlier in Section-\ref{BRISK_section} is a binary descriptor that can match keypoints across two photographs. This can be used also in the tracking section to match keypoints across RoIs, although not thoroughly accurate, it offers a method of matching RoIs regardless of location. This should help re-detect objects after periods of occlusion or overlapping with others that IOU would be unable to do. The process is simple to match the RoIs. First keypoints and descriptors are calculated for each RoI, these are then compared using the fast binary matching process of BRISK, then the Hamiltonian distance is calculated for each matching keypoint...
-TODO : EXPAND THIS SECTION
+BRISK as described earlier in Section-\ref{BRISK_section} is a binary descriptor that can match keypoints across two photographs. This can be used also in the tracking section to match keypoints across RoIs, although not thoroughly accurate, it offers a method of matching RoIs regardless of location. This should help re-detect objects after periods of occlusion or overlapping with others that IOU would be unable to do. The process is simple to match the RoIs. First keypoints and descriptors are calculated for each RoI, these are then compared using the fast binary matching process of BRISK. The number of matches in each RoI determines how well they match.
 
 
 \subsection{Class Matching} \label{class_matching}
-An obvious additional requirement is the matching of classes between frames, as a person's RoI should not match to the RoI of a car in the next frame. Hence for each RoI, the class is stored for access by the next frame. This can both reduce expensive computation time of other metrics but provides an easy RoI comparison tool. It can be noted though that Mask RCNN is not perfect and often mis-classifies objects. It is, however, reliable enough to be assumed as correct.
+An obvious additional requirement is the matching of classes between frames, as a person's RoI should not match to the RoI of a car in the next frame. Hence for each RoI, the class is stored for access by the next frame. This can both reduce expensive computation time of other metrics but provides an easy RoI comparison tool. It can be noted though that Mask RCNN is not perfect and often miss-classifies objects. It is, however, reliable enough to be assumed as correct.
 
 \subsection{Kalman Filter RoI Matching} \label{kalman_matching}
 
@@ -1261,7 +1259,7 @@ dist_{v} = 15 m/s \\
 \end{aligned}
 \end{equation}
 
-The variance in the process noise would also be expected to increase dependent on the type of object concerned and thus they are initialised differently for each respective object type. Also it is beneficial to not that the width and height are in pixel space and so would change a more rapidly, and so is scaled accordingly. The variance in process noise can't possibly be more than the movement of each object per frame so this is a good place to initialise the kalman filter.
+The variance in the process noise would also be expected to increase dependent on the type of object concerned and thus they are initialised differently for each respective object type. Also it is beneficial to note that the width and height are in pixel space and so would change more rapidly, and so is scaled accordingly. The variance in process noise can't possibly be more than the movement of each object per frame so this is a good place to initialise the kalman filter.
 
 \begin{equation}
 \begin{aligned}
@@ -1338,7 +1336,7 @@ P_{k}(+) = (I-K_{k}H_{k}) P_{k}(-)(I-K_{k}H_{k})^{T} + K_{k}R_{k}K_{k}^{T} \\
 
 where $K_{k}$ is the $n \times m$ Kalman gain matrix, $\hat{X}_{k}(+)$ is the posterior state estimate according to the actual measurement $Z_{k}$ and the predicted measurement $H_{k} \hat{X}_{k}(-)$ and $P_{k}(+)$ is the posterior state estimate error covariance.
 
-\subsubsection{Kalman Matching RoIS}
+\subsubsection{Kalman Matching RoIs}
 
 From one frame to another it can be assumed that a number of bounding boxes (RoIS) are consistent in both frames. Hence a metric to match a box from a prior frame to the current frame is required. Using the Kalman filter, a prediction of where the RoI is at time $k$ is easily obtained. But this does not give a likelihood measure of the boxes in the new frame. However, in the kalman update step $\tilde{y}_{k}$, the innovation residual, and $S_{k}$, the innovation covariance matrix are calculated. These can be used to determine the marginal likelihood of a newer RoI's $[Cx,Cy,w,h]$ given the kalman $P_{k}(-)$ and $\hat{X}_{k}(-)$. Skipping the formulation, the log-marginal likelihood is:
 
@@ -1374,13 +1372,13 @@ K_{threshold}-M \quad \textnormal{\textit{ otherwise}}
 
 
 \subsection{RoI Lives}
-Each region of interest may be tracked from one frame to the next. However, if that object is occluded then it may not be spotted in the next frame. This, unless accounted for could lead to information loss regarding that object's state. Therefore a life system is in place whereby an object has a number of lives that are used when the object is not spotted in the next frame. These are decremented until 0 when the object is forgotten and no longer tracked.  
+Each region of interest may be tracked from one frame to the next. However, if that object is occluded then it may not be spotted in the next frame. This, unless accounted for, could lead to information loss regarding that object's state. Therefore a life system is in place whereby an object has a number of lives that are used when the object is not spotted in the next frame. These are decremented until 0 when the object is forgotten and no longer tracked.  
 
 
 \subsection{Combining Matching Methods} \label{matching_combining_methods}
 %TODO re-word this
 Taking the example provided in Figure \ref{roi_match}, there are three objects in the older frame and four in the new frame. BRISK (Section \ref{BRISK_matching}) is not reliable to match all objects from one frame to the next and sometimes cannot find matching keypoints between the same object in each frame (especially deformable objects such as people). Therefore, a system to combine methods is needed. For each $ROI_{old}$ and each $ROI_{new}$ the match metrics for each method (KCF,BRISK,Kalman) is calculated. This forms a matrix $matches \in \mathbb{R}^{new \times old \times methods}$ where $old,new$ are the number of RoIs in the old and new frames, and 
-$methods$ is the number of matching methods implemented (in this case two) but is designed to be easily extendible to more. The algorithm for matching RoIs is presented in the appendix, Algorithm \ref{alg:matchroi}.
+$methods$ is the number of matching methods implemented (in this case two) but is designed to be easily extendable to more. The algorithm for matching RoIs is presented in the appendix, Algorithm \ref{alg:matchroi}.
 \newline
 
 After the matching process is complete, there are a number of extra steps that must take place before continuing to the next frame. For example, any old RoIs that are not detected in the new frame must have a life decremented and be added to the list of new frame RoIs with the relevant location and information, Algorithm \ref{alg:not_det}. \newline
@@ -1451,7 +1449,7 @@ Then the matched RoIs pairs from the old and new frame must exchange relevant in
 		$update$\textunderscore$object(newer,older)$ \tcc*[r]{Update new RoI with older RoI information} \tcc*[r]{(Kalman Filter,lives,colour,id,model)}
 	}
 	\texttt{\\}
-	\caption{Algorithm to update newROIs with matched oldROIs}
+	\caption{Algorithm to update new ROIs with matched old ROIs}
 	\label{alg:update_new}
 \end{algorithm}
 
@@ -1496,7 +1494,7 @@ Each object and the bike must be modelled from frame-to-frame and the subsequent
 
 
 \subsection{Datasets}
-The great advantage of the system is that for movement prediction it already has the core components required to create unlimited training data. All that is required is to cycle around and record the images and pose with Okvis. This can then be passed into the model for training. One caveat to this is that due to the poor depth camera readings outside, Okvis sometimes struggles to maintain the correct position and can drastically mis-predict the speed of the bicycle. This means that a number of runs are required to get a working dataset. Hence three main datasets were collected, a Blackfriars dataset which contains three runs of the route on separate days, an Imperial dataset (around Queen's Tower), and a dataset from walking around the Tate Modern.
+The great advantage of the system is that for movement prediction it already has the core components required to create unlimited training data. All that is required is to cycle around and record the images and pose with Okvis. This can then be passed into the model for training. One caveat to this is that due to the poor depth camera readings outside, Okvis sometimes struggles to maintain the correct position and can drastically miss-predict the speed of the bicycle. This means that a number of runs are required to get a working dataset. Hence three main datasets were collected, a Blackfriars dataset which contains three runs of the route on separate days, an Imperial dataset (around Queen's Tower), and a dataset from walking around the Tate Modern.
 
 
 \noindent \begin{figure}[h!]
@@ -1509,7 +1507,7 @@ The great advantage of the system is that for movement prediction it already has
 Although the Okvis paths look vastly different, the model is only interested in short segments and hence the variation is less than perceived in Figure \ref{blackfriars_maps}. The main problem with models is the ability to generalise, hence training on a limited, unbalanced dataset is tricky. So for the prediction it is assumed that someone is able to record their daily commute and train the model on that route. So the validation and test sets consist of a same route on a different day with the obvious varied lighting, traffic conditions, and traffic lights that come with the average daily commute variation.
 
 \subsection{Objects Prediction} \label{object_model}
-The objects are modelled by the Kalman filter from frame to frame and this provides a good estimate of both the direction and predicted position. Hence in a future position, say in 10 frames would simply be obtained from multiplying by a modified state-transition model.
+The objects are modelled by the Kalman filter from frame to frame and this provides a good estimate of both the direction and predicted position. Hence at a future position, say in 10 frames, would simply be obtained from multiplying by a modified state-transition model.
 
 \begin{equation}
 F_{k+\mathit{n \textunderscore seconds}} = 
@@ -1553,12 +1551,12 @@ This method then produces a predicted position and the uncertainty in that posit
 
 \subsection{Bike Model} \label{bike_model}
 
-The bike is deemed to be the most important model and can therefore predictions should take into account higher order features, for example the current state of the bicycle in the frame and perhaps external factors such as the surrounding environment. The problem is therefore split into two branches, one for sequence prediction of Okvis pose outputs and the other of predictions using image inputs.
+The bike is deemed to be the most important model and therefore predictions should take into account higher order features, for example the current state of the bicycle in the frame and perhaps external factors such as the surrounding environment. The problem is therefore split into two branches, one for sequence prediction of Okvis pose outputs and the other of predictions using image inputs.
 
 
 
 \paragraph{Okvis Sequence Inputs:}
-Since the model is required to learn a sequence a recurrent neural network is the obvious choice. This mimicks memory from one-frame to the next, providing $n$ previous frames to predict the $(n+1)th$ frame. The proposed architecture for this model, by no means fine-tuned but merely to provide a proof-of-concept is as follows:
+Since the model is required to learn a sequence a recurrent neural network is the obvious choice. This mimics memory from one-frame to the next, providing $n$ previous frames to predict the $(n+1)th$ frame. The proposed architecture for this model, by no means fine-tuned but merely to provide a proof-of-concept is as follows:
 
 \paragraph{Pose RNN Model:} \label{pose_model}
 The main problem is to generalise the model to any world point. For example, the bike could be at any location or offset from the world origin and thus a huge amount of data would be needed for learning if the world location was an input. Instead, the model simply learns the difference in camera frame between frames. Note however, things such as orientation can make a large difference, if the bike is at a big angle in the world frame it will be turning quickly. This information cannot be transferred from the difference between an original frame and the next in camera frame. Hence the tilt part of the transformation matrix is added to the camera frame position and orientation of the $n$th frame in the sequence from the perspective of the $0th$ frame in the sequence Equation \ref{pose_sequence}.
@@ -1664,7 +1662,7 @@ Both the image and pose model appear to prefer higher learning rates around the 
 	\label{image_lr_lr_decay_table}
 \end{table}
 
-From experience, and logically it is preferable to take an optimal value with decay for longer runs of the network. As the optimisation is performed over only 200 epochs often the lower learning rates with decay perform better in the long-run. Hence the parameter choice ranked no.2 in Table \ref{image_lr_lr_decay_table} is used for the final model. A part to note is that the loss function is mean squared error and so $0.11$ loss is roughly equivalent to $0.3m$. The pose model interestingly has a higher optimal loss than the images model, but this is likely due to the number of epochs and model complexity in using the same route for the test set (different days but same route). The pose model is simple and therefore can train much faster than the images model so it should be trained for longer for a fair comparison. The images model has more layers and thus may overfit the route whilst the pose model may perform better on unknown routes.
+From experience, and logically, it is preferable to take an optimal value with decay for longer runs of the network. As the optimisation is performed over only 200 epochs often the lower learning rates with decay perform better in the long-run. Hence the parameter choice ranked no.2 in Table \ref{image_lr_lr_decay_table} is used for the final model. A part to note is that the loss function is mean squared error and so $0.11$ loss is roughly equivalent to $0.3m$. The pose model interestingly has a higher optimal loss than the images model, but this is likely due to the number of epochs and model complexity in using the same route for the test set (different days but same route). The pose model is simple and therefore can train much faster than the images model so it should be trained for longer for a fair comparison. The images model has more layers and thus may over-fit the route whilst the pose model may perform better on unknown routes.
 
 \noindent \begin{table}[h!]
 	\centering
@@ -1683,7 +1681,7 @@ From experience, and logically it is preferable to take an optimal value with de
 The highest ranked parameters in Table \ref{pose_lr_lr_decay_table} are taken forwards to the next stage of the process, optimising the layer dimensions.
  
 \subsubsection{Bayesian Optimisation Layer Dimensions:}
-The images and pose model are first optimised with respect to learning rate and learning rate decay with a grid search. From there each is optimised with respect to layer dimensions via Bayesian Optimisation. It is questionable as to the order that this should occur in but it is inevitable cyclic so for simplicity learning rate and decay are optimised once as is layer size.
+The images and pose model are first optimised with respect to learning rate and learning rate decay with a grid search. From there each is optimised with respect to layer dimensions via Bayesian Optimisation. It is questionable as to the order that this should occur in but for simplicity learning rate and decay are optimised and then layer size.
 
 
 
@@ -1744,7 +1742,7 @@ Interestingly the images model prefers a simpler setup with only one convolution
 
 
 \subsubsection{Total Model:}
-Both models discussed in this section can be trained separately to obtain predictions of the future pose. A naive estimation would take weighted predictions and sum for a final prediction result. The final layers of these networks however could infer details from each-other to inform the pose estimation. This can only be done in a branched network that uses both inputs effectively and concatenates the outputs for some final layers. The proposed model is graphed in Figure \ref{total_network_architecture}, it has two inputs tensors of the images plus pose data and three output variables which is the predicted $[x,y,z]$.
+Both models discussed in this section can be trained separately to obtain predictions of the future pose. A naive estimation would take weighted predictions and sum for a final prediction result. The final layers of these networks however could infer details from each-other to inform the pose estimation. This can only be done in a branched network that uses both inputs effectively and concatenates the outputs for some final layers. The proposed model is graphed in Figure \ref{total_network_architecture}, it has two input tensors of the images plus pose data and three output variables which is the predicted $[x,y,z]$.
 
 \noindent \begin{figure}[h!]
 	\includegraphics[width = 1.0\hsize]{figures/final_model.png}
@@ -1765,9 +1763,9 @@ For the final training, the frame gap was increased to $1s$ and hence there is a
 \end{figure}
 
 \paragraph{Summary}
-In this section a new model for cyclist movement prediction has been explored, the combination of images and pose data. This is expected to perform well with larger times between predictions. However, at smaller time gaps the model is too complex and overfits the data which means that a linear model often performs better on the validation set. It is therefore a balance between model complexity and the required time-frame of prediction. In this case a timeframe of c.1-2s is reasonable as the Mask-RCNN model cannot detect small objects that are further away with adequate accuracy and a bike can move at around 10m/s. This section has proven the ability of the model to predict accurately. Since models such as this are complex and require significant computational power it may be beneficial to join the image-segmentation network and prediction network. This would allow them to share some of the convolutional layers and reduce computational overhead but requires extensive modifications to Mask-RCNN. The outcome of this section is a reliable model that can be used in the next section for collision detection between moving objects and the cyclist. 
+In this section a new model for cyclist movement prediction has been explored, the combination of images and pose data. This is expected to perform well with larger times between predictions. However, at smaller time gaps the model is too complex and over-fits the data which means that a linear model often performs better on the validation set. It is therefore a balance between model complexity and the required time-frame of prediction. In this case a timeframe of c.1-2s is reasonable as the Mask-RCNN model cannot detect small objects that are further away with adequate accuracy and a bike can move at around 10m/s. This section has proven the ability of the model to predict accurately. Since models such as this are complex and require significant computational power it may be beneficial to join the image-segmentation network and prediction network. This would allow them to share some of the convolutional layers and reduce computational overhead but requires extensive modifications to Mask-RCNN. The outcome of this section is a reliable model that can be used in the next section for collision detection between moving objects and the cyclist. 
 
-\subsection{Collision Detection Module}
+\subsection{Collision Detection Module} \label{coll_det}
 The collision detection module takes the predicted paths from both the cyclist and object models (Sections \ref{bike_model},\ref{object_model}), and their respective uncertainties. It can then check the distance between the predicted points:
 
 \begin{equation}
@@ -1802,7 +1800,7 @@ One problem is that when the Kalman filter is highly uncertain it may predict a 
 \end{figure}
 
 \paragraph{Points of intersection}
-The first step to calculate where the circles overlap. This is detailed in figure \ref{two_intersect_points}, point can form a triangle in each circle between the y axis, x axis and a line of length $R_{o},R_{c}$ passing through the circle's origin.
+The first step to calculate where the circles overlap. This is detailed in figure \ref{two_intersect_points}. An intersection point can form a triangle in each circle between the y axis, x axis and a line of length $R_{o},R_{c}$ passing through the circle's origin.
 
 
 \begin{equation}
@@ -1895,7 +1893,7 @@ area = A_{r}^{2}sin^{-1} \big ( \frac{y}{A_{r}}) + B_{r}^{2}sin^{-1} \big ( \fra
 \end{equation}
 
 \paragraph{Intersection Over Union}
-In order to better understand the likelihood the circle approximate is used. This, although not exact as Gaussians are a bell shape is a fast and closed form approximate for the probability of collision. The IOU of the circles is the best measure, a higher IOU clearly means a more probably crash. It can be calculated from previous results:
+In order to better understand the likelihood the circle approximate is used. This, although not exact as Gaussians are a bell shape, is a fast and closed form approximate for the probability of collision. The IOU of the circles is the best measure, a higher IOU clearly means a more probably crash. It can be calculated from previous results:
 
 
 \begin{equation}
@@ -1933,27 +1931,29 @@ The other, far simpler solution is to make use of the Kalman filter mentioned in
 
 \subsection{Depth Camera}
 
-The intel realsense depth camera is typically used in indoor environments as it operates with a small laser. This, as is expected works less well in highly lit environments. The extent of the problem, however is often drastic and can cause okvis to perform poor estimations of pose and hence is unable to determine the bicycle location. This problem could be eliminated completely by using a stereo camera system or by relying on GPs in bright lighting conditions.
+The Intel Realsense depth camera is typically used in indoor environments as it operates with a small laser. This, as is expected works less well in highly lit environments. The extent of the problem, however is often drastic and can cause Okvis to perform poor estimations of pose and hence is unable to determine the bicycle location. This problem could be eliminated completely by using a stereo camera system or by relying on GPs in bright lighting conditions.
 
 \subsection{Crash Sequence Evaluation}
 
 In order to determine the effectiveness of the system, it is important to know that the system will not produce numerous false positives and be an irritation to users, but also correctly activate when required. Therefore there are two sequences of images collected, one with a staged incident where the values have been tweaked to be more sensitive, and hence reduce the danger in conducting the experiment. The other sequence contains a parked car, which is detected but also determined to no be moving and hence of no danger to the rider.
 
 \noindent \begin{figure}[h!]
-	\includegraphics[width = 1.0\hsize]{figures/no_crash.png}
+	\includegraphics[width = 0.5\hsize,trim={0 8cm 0 0},clip]{figures/parked_seq_1.jpg}
+	\includegraphics[width = 0.5\hsize,trim={0 8cm 0 0},clip]{figures/parked_seq_2.jpg}
 	\caption{Parked Car Evaluation}
-	\label{mrcnn_fail}
+	\label{parked_car_seq}
 \end{figure}
 
-It is hard to get a sequence into the report but comparison to the staged crash shows that it is evident the car is detected but not deemed a threat to the cyclist. This is even though at some stage the cyclist is travelling directly towards the vehicle.
+It is hard to get a sequence into the report but comparison to the staged crash shows that it is evident the car is detected but not deemed a threat to the cyclist. A common problem with the system is the depth perception - this can often cause some objects to appear to move slightly as the depth measurements past around 10m are inconsistent. So a movement threshold approach is used, and slight movement cannot set off the alarm. The circles around the bike and the car represent the future positions, the centre is the predicted position and the radius the uncertainty. 
 
 \noindent \begin{figure}[h!]
-	\includegraphics[width = 1.0\hsize]{figures/no_crash.png}
-	\caption{Staged Crash}
-	\label{mrcnn_fail}
+	\includegraphics[width = 0.5\hsize,trim={0 8cm 0 0},clip]{figures/crash_seq_1.jpg}
+	\includegraphics[width = 0.5\hsize,trim={0 8cm 0 0},clip]{figures/crash_seq_2.jpg}
+	\caption{Left: Pedestrian First Detected, Right: System detects potential collision}
+	\label{staged_crash_seq}
 \end{figure}
 
-
+The values used in this experiment were tweaked to make it slightly more responsive. This is done simply by adjusting the IOU threshold of collision discussed in Section \ref{coll_det}. It was simply because it is hard to find a willing volunteer to be cycled at with enough speed and proximity to warrant a warning, so slower speeds and higher sensitivity was used. Both sequences can be found in the appendix (\ref{append_cr_seq},\ref{append_parked_seq}), it is clear that the system is not perfect but works effectively enough to alert a cyclist of oncoming danger. With real-time capability it could become a very useful tool for a modern city cyclist.
 
 \chapter{Conclusion}
 
@@ -2079,7 +2079,7 @@ The code developed is intended to offer a basis for an early warning system to c
 	\multicolumn{3}{|l|}{\cellcolor{green!25}\bf Section 8: DUAL USE} \\
 	\hline
 	
-	Does your project have the potential for military applications? & & \checkmark \\
+	Does your project have the potential for military applications? & \checkmark &  \\
 	\hline
 	
 	Does your project have an exclusive civilian application focus? & \checkmark & \\
@@ -2109,7 +2109,7 @@ The code developed is intended to offer a basis for an early warning system to c
 	\multicolumn{3}{|l|}{\cellcolor{green!25}\bf Section 10: LEGAL ISSUES} \\
 	\hline
 	
-	Will your project use or produce software for which there are copyright licensing implications? & \checkmark & \checkmark \\
+	Will your project use or produce software for which there are copyright licensing implications? & & \checkmark \\
 	\hline
 	
 	Will your project use or produce goods or information for which there are data protection, or other legal implications? & & \checkmark \\
@@ -2190,6 +2190,106 @@ max = matches.max() \texttt{\\}
 	$matches[new,old] = -1$ \texttt{\\}
 	$max = matches.max()$
 }
+
+\newpage
+\section{Crash Sequence} \label{append_cr_seq}
+\noindent \begin{figure}[h!]
+	\includegraphics[width = 0.24\hsize,trim={0 8cm 0 0},clip]{figures/541.jpg}
+	\includegraphics[width = 0.24\hsize,trim={0 8cm 0 0},clip]{figures/543.jpg}
+	\includegraphics[width = 0.24\hsize,trim={0 8cm 0 0},clip]{figures/545.jpg}
+	\includegraphics[width = 0.24\hsize,trim={0 8cm 0 0},clip]{figures/547.jpg}
+	
+	\includegraphics[width = 0.24\hsize,trim={0 8cm 0 0},clip]{figures/549.jpg}
+	\includegraphics[width = 0.24\hsize,trim={0 8cm 0 0},clip]{figures/551.jpg}
+	\includegraphics[width = 0.24\hsize,trim={0 8cm 0 0},clip]{figures/553.jpg}
+	\includegraphics[width = 0.24\hsize,trim={0 8cm 0 0},clip]{figures/555.jpg}
+	
+	\includegraphics[width = 0.24\hsize,trim={0 8cm 0 0},clip]{figures/557.jpg}
+	\includegraphics[width = 0.24\hsize,trim={0 8cm 0 0},clip]{figures/559.jpg}
+	\includegraphics[width = 0.24\hsize,trim={0 8cm 0 0},clip]{figures/561.jpg}
+	\includegraphics[width = 0.24\hsize,trim={0 8cm 0 0},clip]{figures/563.jpg}
+	
+	\includegraphics[width = 0.24\hsize,trim={0 8cm 0 0},clip]{figures/565.jpg}
+	\includegraphics[width = 0.24\hsize,trim={0 8cm 0 0},clip]{figures/567.jpg}
+	\includegraphics[width = 0.24\hsize,trim={0 8cm 0 0},clip]{figures/569.jpg}
+	\includegraphics[width = 0.24\hsize,trim={0 8cm 0 0},clip]{figures/571.jpg}
+	
+	\includegraphics[width = 0.24\hsize,trim={0 8cm 0 0},clip]{figures/573.jpg}
+	\includegraphics[width = 0.24\hsize,trim={0 8cm 0 0},clip]{figures/575.jpg}
+	\includegraphics[width = 0.24\hsize,trim={0 8cm 0 0},clip]{figures/577.jpg}
+	\includegraphics[width = 0.24\hsize,trim={0 8cm 0 0},clip]{figures/579.jpg}
+	
+	
+	\includegraphics[width = 0.24\hsize,trim={0 8cm 0 0},clip]{figures/581.jpg}	
+	\includegraphics[width = 0.24\hsize,trim={0 8cm 0 0},clip]{figures/583.jpg}
+	\includegraphics[width = 0.24\hsize,trim={0 8cm 0 0},clip]{figures/585.jpg}
+	\includegraphics[width = 0.24\hsize,trim={0 8cm 0 0},clip]{figures/587.jpg}
+	
+	
+	\includegraphics[width = 0.24\hsize,trim={0 8cm 0 0},clip]{figures/589.jpg}
+	\includegraphics[width = 0.24\hsize,trim={0 8cm 0 0},clip]{figures/591.jpg}
+	\includegraphics[width = 0.24\hsize,trim={0 8cm 0 0},clip]{figures/593.jpg}
+	\includegraphics[width = 0.24\hsize,trim={0 8cm 0 0},clip]{figures/595.jpg}
+	
+	\includegraphics[width = 0.24\hsize,trim={0 8cm 0 0},clip]{figures/597.jpg}
+	\includegraphics[width = 0.24\hsize,trim={0 8cm 0 0},clip]{figures/599.jpg}
+	\includegraphics[width = 0.24\hsize,trim={0 8cm 0 0},clip]{figures/601.jpg}
+	\includegraphics[width = 0.24\hsize,trim={0 8cm 0 0},clip]{figures/603.jpg}
+	
+	\caption{Staged Crash Sequence}
+	\label{st_cr_seq}
+\end{figure}
+
+
+
+\section{Parked Car Sequence} \label{append_parked_seq}
+\noindent \begin{figure}[h!]
+	\includegraphics[width = 0.24\hsize,trim={0 8cm 0 0},clip]{figures/car_seq/126.jpg}
+	\includegraphics[width = 0.24\hsize,trim={0 8cm 0 0},clip]{figures/car_seq/128.jpg}
+	\includegraphics[width = 0.24\hsize,trim={0 8cm 0 0},clip]{figures/car_seq/130.jpg}
+	\includegraphics[width = 0.24\hsize,trim={0 8cm 0 0},clip]{figures/car_seq/132.jpg}
+	
+	\includegraphics[width = 0.24\hsize,trim={0 8cm 0 0},clip]{figures/car_seq/134.jpg}
+	\includegraphics[width = 0.24\hsize,trim={0 8cm 0 0},clip]{figures/car_seq/136.jpg}
+	\includegraphics[width = 0.24\hsize,trim={0 8cm 0 0},clip]{figures/car_seq/138.jpg}
+	\includegraphics[width = 0.24\hsize,trim={0 8cm 0 0},clip]{figures/car_seq/140.jpg}
+	
+	\includegraphics[width = 0.24\hsize,trim={0 8cm 0 0},clip]{figures/car_seq/142.jpg}
+	\includegraphics[width = 0.24\hsize,trim={0 8cm 0 0},clip]{figures/car_seq/144.jpg}
+	\includegraphics[width = 0.24\hsize,trim={0 8cm 0 0},clip]{figures/car_seq/146.jpg}
+	\includegraphics[width = 0.24\hsize,trim={0 8cm 0 0},clip]{figures/car_seq/148.jpg}
+	
+	\includegraphics[width = 0.24\hsize,trim={0 8cm 0 0},clip]{figures/car_seq/150.jpg}
+	\includegraphics[width = 0.24\hsize,trim={0 8cm 0 0},clip]{figures/car_seq/152.jpg}
+	\includegraphics[width = 0.24\hsize,trim={0 8cm 0 0},clip]{figures/car_seq/154.jpg}
+	\includegraphics[width = 0.24\hsize,trim={0 8cm 0 0},clip]{figures/car_seq/156.jpg}
+	
+	\includegraphics[width = 0.24\hsize,trim={0 8cm 0 0},clip]{figures/car_seq/158.jpg}
+	\includegraphics[width = 0.24\hsize,trim={0 8cm 0 0},clip]{figures/car_seq/160.jpg}
+	\includegraphics[width = 0.24\hsize,trim={0 8cm 0 0},clip]{figures/car_seq/162.jpg}
+	\includegraphics[width = 0.24\hsize,trim={0 8cm 0 0},clip]{figures/car_seq/164.jpg}
+	
+	
+	\includegraphics[width = 0.24\hsize,trim={0 8cm 0 0},clip]{figures/car_seq/166.jpg}	
+	\includegraphics[width = 0.24\hsize,trim={0 8cm 0 0},clip]{figures/car_seq/168.jpg}
+	\includegraphics[width = 0.24\hsize,trim={0 8cm 0 0},clip]{figures/car_seq/170.jpg}
+	\includegraphics[width = 0.24\hsize,trim={0 8cm 0 0},clip]{figures/car_seq/172.jpg}
+	
+	
+	\includegraphics[width = 0.24\hsize,trim={0 8cm 0 0},clip]{figures/car_seq/174.jpg}
+	\includegraphics[width = 0.24\hsize,trim={0 8cm 0 0},clip]{figures/car_seq/176.jpg}
+	\includegraphics[width = 0.24\hsize,trim={0 8cm 0 0},clip]{figures/car_seq/178.jpg}
+	\includegraphics[width = 0.24\hsize,trim={0 8cm 0 0},clip]{figures/car_seq/180.jpg}
+	
+	\includegraphics[width = 0.24\hsize,trim={0 8cm 0 0},clip]{figures/car_seq/182.jpg}
+	\includegraphics[width = 0.24\hsize,trim={0 8cm 0 0},clip]{figures/car_seq/184.jpg}
+	\includegraphics[width = 0.24\hsize,trim={0 8cm 0 0},clip]{figures/car_seq/186.jpg}
+	\includegraphics[width = 0.24\hsize,trim={0 8cm 0 0},clip]{figures/car_seq/188.jpg}
+	
+	\caption{Parked Car Sequence}
+	\label{pk_seq}
+\end{figure}
+
 
 
 %% bibliography

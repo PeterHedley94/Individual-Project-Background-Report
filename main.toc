@@ -40,7 +40,7 @@
 \contentsline {subsection}{\numberline {2.2.4}World to Camera Frame}{18}{subsection.83}
 \contentsline {subsection}{\numberline {2.2.5}Bicycle States}{20}{subsection.86}
 \contentsline {subsection}{\numberline {2.2.6}The SLAM Problem}{20}{subsection.88}
-\contentsline {subsubsection}{Batch NonLinear Least Squares}{21}{section*.91}
+\contentsline {subsubsection}{Batch Non-linear Least Squares}{21}{section*.91}
 \contentsline {subsection}{\numberline {2.2.7}Frame to Frame Matching}{22}{subsection.97}
 \contentsline {paragraph}{Keypoint Detection}{22}{section*.98}
 \contentsline {paragraph}{Keypoint Matching}{23}{section*.105}
@@ -66,7 +66,7 @@
 \contentsline {subsubsection}{Kalman Predictive Step}{32}{section*.160}
 \contentsline {subsubsection}{Kalman Update Step}{33}{section*.167}
 \contentsline {subsubsection}{Kalman Equations}{33}{section*.171}
-\contentsline {subsubsection}{Kalman Matching RoIS}{34}{section*.174}
+\contentsline {subsubsection}{Kalman Matching RoIs}{34}{section*.174}
 \contentsline {subsection}{\numberline {3.3.5}RoI Lives}{34}{subsection.179}
 \contentsline {subsection}{\numberline {3.3.6}Combining Matching Methods}{35}{subsection.180}
 \contentsline {section}{\numberline {3.4}Movement Prediction}{37}{section.187}
@@ -107,3 +107,5 @@
 \contentsline {section}{\numberline {6.1}Ethics Checklist}{52}{section.260}
 \contentsline {chapter}{\numberline {7}Appendix}{55}{chapter.262}
 \contentsline {subsection}{\numberline {7.0.1}RoI Matching Algorithm}{55}{subsection.263}
+\contentsline {section}{\numberline {7.1}Crash Sequence}{57}{section.266}
+\contentsline {section}{\numberline {7.2}Parked Car Sequence}{58}{section.268}

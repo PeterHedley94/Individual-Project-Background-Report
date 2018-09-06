@@ -245,7 +245,7 @@
 \@writefile{lof}{\contentsline {figure}{\numberline {2.15}{\ignorespaces Left: Convergence in landmark uncertainty. Over time, standard deviations reduce monotonically to a lower bound \cite  {F_Durr_Pt1}. Right: Error between estimated and true landmarks is common.\relax }}{21}{figure.caption.90}}
 \@writefile{brf}{\backcite{F_Durr_Pt1}{{21}{2.15}{figure.caption.90}}}
 \newlabel{slam_prob_fig}{{2.15}{21}{Left: Convergence in landmark uncertainty. Over time, standard deviations reduce monotonically to a lower bound \cite {F_Durr_Pt1}. Right: Error between estimated and true landmarks is common.\relax }{figure.caption.90}{}}
-\@writefile{toc}{\contentsline {subsubsection}{Batch NonLinear Least Squares}{21}{section*.91}}
+\@writefile{toc}{\contentsline {subsubsection}{Batch Non-linear Least Squares}{21}{section*.91}}
 \citation{opencv_harris_article}
 \citation{opencv_harris_article}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.2.7}Frame to Frame Matching}{22}{subsection.97}}
@@ -323,13 +323,13 @@
 \@writefile{toc}{\contentsline {subsubsection}{Kalman Equations}{33}{section*.171}}
 \newlabel{Kalman_pred_eq}{{3.17}{33}{Kalman Equations}{equation.172}{}}
 \newlabel{kalman_update_equs}{{3.18}{34}{Kalman Equations}{equation.173}{}}
-\@writefile{toc}{\contentsline {subsubsection}{Kalman Matching RoIS}{34}{section*.174}}
+\@writefile{toc}{\contentsline {subsubsection}{Kalman Matching RoIs}{34}{section*.174}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.3.5}RoI Lives}{34}{subsection.179}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.3.6}Combining Matching Methods}{35}{subsection.180}}
 \newlabel{matching_combining_methods}{{3.3.6}{35}{Combining Matching Methods}{subsection.180}{}}
 \@writefile{loa}{\contentsline {algocf}{\numberline {4}{\ignorespaces Algorithm to append old RoIs that aren't detected in new frame\relax }}{35}{algocf.182}}
 \newlabel{alg:not_det}{{4}{35}{Combining Matching Methods}{algocf.182}{}}
-\@writefile{loa}{\contentsline {algocf}{\numberline {5}{\ignorespaces Algorithm to update newROIs with matched oldROIs\relax }}{36}{algocf.184}}
+\@writefile{loa}{\contentsline {algocf}{\numberline {5}{\ignorespaces Algorithm to update new ROIs with matched old ROIs\relax }}{36}{algocf.184}}
 \newlabel{alg:update_new}{{5}{36}{Combining Matching Methods}{algocf.184}{}}
 \@writefile{loa}{\contentsline {algocf}{\numberline {6}{\ignorespaces Algorithm to create new IDs for object in new frame\relax }}{36}{algocf.186}}
 \newlabel{alg:weights}{{6}{36}{Combining Matching Methods}{algocf.186}{}}
@@ -383,6 +383,7 @@
 \newlabel{total_training_curve}{{3.11}{44}{Complete Network Training.\relax }{figure.caption.222}{}}
 \@writefile{toc}{\contentsline {paragraph}{Summary}{44}{section*.223}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.4.4}Collision Detection Module}{44}{subsection.224}}
+\newlabel{coll_det}{{3.4.4}{44}{Collision Detection Module}{subsection.224}{}}
 \citation{circle_intersection_point}
 \citation{circle_intersection}
 \citation{circle_intersection_point}
@@ -418,9 +419,9 @@
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.1.3}Depth Camera}{48}{subsection.247}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.1.4}Crash Sequence Evaluation}{48}{subsection.248}}
 \@writefile{lof}{\contentsline {figure}{\numberline {4.2}{\ignorespaces Parked Car Evaluation\relax }}{48}{figure.caption.249}}
-\newlabel{mrcnn_fail}{{4.2}{48}{Parked Car Evaluation\relax }{figure.caption.249}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4.3}{\ignorespaces Staged Crash\relax }}{49}{figure.caption.250}}
-\newlabel{mrcnn_fail}{{4.3}{49}{Staged Crash\relax }{figure.caption.250}{}}
+\newlabel{parked_car_seq}{{4.2}{48}{Parked Car Evaluation\relax }{figure.caption.249}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.3}{\ignorespaces Left: Pedestrian First Detected, Right: System detects potential collision\relax }}{49}{figure.caption.250}}
+\newlabel{staged_crash_seq}{{4.3}{49}{Left: Pedestrian First Detected, Right: System detects potential collision\relax }{figure.caption.250}{}}
 \citation{DBLP:journals/corr/RedmonDGF15}
 \@writefile{toc}{\contentsline {chapter}{\numberline {5}Conclusion}{50}{chapter.251}}
 \@writefile{lof}{\addvspace {10\p@ }}
@@ -450,8 +451,16 @@
 \@writefile{toc}{\contentsline {subsection}{\numberline {7.0.1}RoI Matching Algorithm}{55}{subsection.263}}
 \@writefile{loa}{\contentsline {algocf}{\numberline {7}{\ignorespaces Algorithm to match old and new frames\relax }}{55}{algocf.265}}
 \newlabel{alg:matchroi}{{7}{55}{RoI Matching Algorithm}{algocf.265}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {7.1}Crash Sequence}{57}{section.266}}
+\newlabel{append_cr_seq}{{7.1}{57}{Crash Sequence}{section.266}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {7.1}{\ignorespaces Staged Crash Sequence\relax }}{57}{figure.caption.267}}
+\newlabel{st_cr_seq}{{7.1}{57}{Staged Crash Sequence\relax }{figure.caption.267}{}}
 \bibstyle{ieeetr}
 \bibdata{bibliography.bib}
+\@writefile{toc}{\contentsline {section}{\numberline {7.2}Parked Car Sequence}{58}{section.268}}
+\newlabel{append_parked_seq}{{7.2}{58}{Parked Car Sequence}{section.268}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {7.2}{\ignorespaces Parked Car Sequence\relax }}{58}{figure.caption.269}}
+\newlabel{pk_seq}{{7.2}{58}{Parked Car Sequence\relax }{figure.caption.269}{}}
 \bibcite{DFT_fig}{1}
 \bibcite{DFT_fig2}{2}
 \bibcite{DFT_fig3}{3}
