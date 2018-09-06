@@ -8,46 +8,49 @@
 \BOOKMARK [2][]{subsection.30}{2.1.4 Image Segmentation}{section.12}% 8
 \BOOKMARK [2][]{subsection.32}{2.1.5 Instance Segmentation}{section.12}% 9
 \BOOKMARK [2][]{subsection.36}{2.1.6 Recurrent Neural Networks \(RNN\):}{section.12}% 10
-\BOOKMARK [2][]{subsection.50}{2.1.7 Bayesian Optimisation of Layer Dimensions:}{section.12}% 11
-\BOOKMARK [1][]{section.59}{2.2 Background, SLAM}{chapter.11}% 12
-\BOOKMARK [2][]{subsection.60}{2.2.1 Sensors}{section.59}% 13
-\BOOKMARK [2][]{subsection.66}{2.2.2 Camera to World Frame}{section.59}% 14
-\BOOKMARK [2][]{subsection.74}{2.2.3 Projecting to World Frame}{section.59}% 15
-\BOOKMARK [2][]{subsection.83}{2.2.4 World to Camera Frame}{section.59}% 16
-\BOOKMARK [2][]{subsection.86}{2.2.5 Bicycle States}{section.59}% 17
-\BOOKMARK [2][]{subsection.88}{2.2.6 The SLAM Problem}{section.59}% 18
-\BOOKMARK [2][]{subsection.97}{2.2.7 Frame to Frame Matching}{section.59}% 19
-\BOOKMARK [1][]{section.121}{2.3 Background Object Tracking}{chapter.11}% 20
-\BOOKMARK [2][]{subsection.122}{2.3.1 Kernelised Correlation Filter}{section.121}% 21
-\BOOKMARK [0][]{chapter.137}{3 Contribution}{}% 22
-\BOOKMARK [1][]{section.138}{3.1 Software Solution}{chapter.137}% 23
-\BOOKMARK [1][]{section.143}{3.2 Depth Measurement Outlier Removal}{chapter.137}% 24
-\BOOKMARK [1][]{section.153}{3.3 Tracking Module}{chapter.137}% 25
-\BOOKMARK [2][]{subsection.155}{3.3.1 Kernelised Correlation Filter}{section.153}% 26
-\BOOKMARK [2][]{subsection.157}{3.3.2 BRISK - Selector}{section.153}% 27
-\BOOKMARK [2][]{subsection.158}{3.3.3 Class Matching}{section.153}% 28
-\BOOKMARK [2][]{subsection.159}{3.3.4 Kalman Filter RoI Matching}{section.153}% 29
-\BOOKMARK [2][]{subsection.179}{3.3.5 RoI Lives}{section.153}% 30
-\BOOKMARK [2][]{subsection.180}{3.3.6 Combining Matching Methods}{section.153}% 31
-\BOOKMARK [1][]{section.187}{3.4 Movement Prediction}{chapter.137}% 32
-\BOOKMARK [2][]{subsection.188}{3.4.1 Datasets}{section.187}% 33
-\BOOKMARK [2][]{subsection.190}{3.4.2 Objects Prediction}{section.187}% 34
-\BOOKMARK [2][]{subsection.196}{3.4.3 Bike Model}{section.187}% 35
-\BOOKMARK [2][]{subsection.224}{3.4.4 Collision Detection Module}{section.187}% 36
-\BOOKMARK [0][]{chapter.242}{4 Experimental Results}{}% 37
-\BOOKMARK [1][]{section.243}{4.1 System Evaluation}{chapter.242}% 38
-\BOOKMARK [2][]{subsection.244}{4.1.1 Mask-RCNN}{section.243}% 39
-\BOOKMARK [2][]{subsection.246}{4.1.2 Cyclist Model}{section.243}% 40
-\BOOKMARK [2][]{subsection.247}{4.1.3 Depth Camera}{section.243}% 41
-\BOOKMARK [2][]{subsection.248}{4.1.4 Crash Sequence Evaluation}{section.243}% 42
-\BOOKMARK [0][]{chapter.251}{5 Conclusion}{}% 43
-\BOOKMARK [1][]{subsection.252}{5.0.1 Contributions}{chapter.251}% 44
-\BOOKMARK [2][]{subsection.253}{5.0.2 Future Work}{subsection.252}% 45
-\BOOKMARK [0][]{chapter.257}{6 Ethics}{}% 46
-\BOOKMARK [1][]{subsection.258}{6.0.1 Modification for Military Purposes}{chapter.257}% 47
-\BOOKMARK [2][]{subsection.259}{6.0.2 Other Ethics Issues}{subsection.258}% 48
-\BOOKMARK [1][]{section.260}{6.1 Ethics Checklist}{chapter.257}% 49
-\BOOKMARK [0][]{chapter.262}{7 Appendix}{}% 50
-\BOOKMARK [1][]{subsection.263}{7.0.1 RoI Matching Algorithm}{chapter.262}% 51
-\BOOKMARK [1][]{section.266}{7.1 Crash Sequence}{chapter.262}% 52
-\BOOKMARK [1][]{section.268}{7.2 Parked Car Sequence}{chapter.262}% 53
+\BOOKMARK [2][]{subsection.51}{2.1.7 Bayesian Optimisation of Layer Dimensions:}{section.12}% 11
+\BOOKMARK [1][]{section.60}{2.2 Background, SLAM}{chapter.11}% 12
+\BOOKMARK [2][]{subsection.61}{2.2.1 Sensors}{section.60}% 13
+\BOOKMARK [2][]{subsection.67}{2.2.2 Camera to World Frame}{section.60}% 14
+\BOOKMARK [2][]{subsection.75}{2.2.3 Projecting to World Frame}{section.60}% 15
+\BOOKMARK [2][]{subsection.84}{2.2.4 World to Camera Frame}{section.60}% 16
+\BOOKMARK [2][]{subsection.87}{2.2.5 Bicycle States}{section.60}% 17
+\BOOKMARK [2][]{subsection.89}{2.2.6 The SLAM Problem}{section.60}% 18
+\BOOKMARK [2][]{subsection.92}{2.2.7 Frame to Frame Matching}{section.60}% 19
+\BOOKMARK [1][]{section.109}{2.3 Background Object Tracking}{chapter.11}% 20
+\BOOKMARK [2][]{subsection.110}{2.3.1 Kernelised Correlation Filter}{section.109}% 21
+\BOOKMARK [0][]{chapter.125}{3 Contribution}{}% 22
+\BOOKMARK [1][]{section.126}{3.1 Software Solution}{chapter.125}% 23
+\BOOKMARK [1][]{section.131}{3.2 Depth Measurement Outlier Removal}{chapter.125}% 24
+\BOOKMARK [1][]{section.141}{3.3 Tracking Module}{chapter.125}% 25
+\BOOKMARK [2][]{subsection.143}{3.3.1 Kernelised Correlation Filter}{section.141}% 26
+\BOOKMARK [2][]{subsection.145}{3.3.2 BRISK - Selector}{section.141}% 27
+\BOOKMARK [2][]{subsection.146}{3.3.3 Class Matching}{section.141}% 28
+\BOOKMARK [2][]{subsection.147}{3.3.4 Kalman Filter RoI Matching}{section.141}% 29
+\BOOKMARK [2][]{subsection.167}{3.3.5 RoI Lives}{section.141}% 30
+\BOOKMARK [2][]{subsection.168}{3.3.6 Combining Matching Methods}{section.141}% 31
+\BOOKMARK [1][]{section.175}{3.4 Movement Prediction}{chapter.125}% 32
+\BOOKMARK [2][]{subsection.176}{3.4.1 Datasets}{section.175}% 33
+\BOOKMARK [2][]{subsection.178}{3.4.2 Objects Prediction}{section.175}% 34
+\BOOKMARK [2][]{subsection.184}{3.4.3 Bike Model}{section.175}% 35
+\BOOKMARK [2][]{subsection.212}{3.4.4 Collision Detection Module}{section.175}% 36
+\BOOKMARK [0][]{chapter.231}{4 Experimental Results}{}% 37
+\BOOKMARK [1][]{section.232}{4.1 System Evaluation}{chapter.231}% 38
+\BOOKMARK [2][]{subsection.233}{4.1.1 Mask-RCNN}{section.232}% 39
+\BOOKMARK [2][]{subsection.235}{4.1.2 Cyclist Model}{section.232}% 40
+\BOOKMARK [2][]{subsection.236}{4.1.3 Depth Camera}{section.232}% 41
+\BOOKMARK [2][]{subsection.237}{4.1.4 Crash Sequence Evaluation}{section.232}% 42
+\BOOKMARK [0][]{chapter.240}{5 Conclusion}{}% 43
+\BOOKMARK [1][]{section.241}{5.1 Future Work}{chapter.240}% 44
+\BOOKMARK [2][]{subsection.242}{5.1.1 Speed}{section.241}% 45
+\BOOKMARK [2][]{subsection.243}{5.1.2 Object Detection}{section.241}% 46
+\BOOKMARK [2][]{subsection.244}{5.1.3 SLAM}{section.241}% 47
+\BOOKMARK [1][]{section.245}{5.2 Contributions}{chapter.240}% 48
+\BOOKMARK [0][]{chapter.247}{6 Ethics}{}% 49
+\BOOKMARK [1][]{subsection.248}{6.0.1 Modification for Military Purposes}{chapter.247}% 50
+\BOOKMARK [2][]{subsection.249}{6.0.2 Other Ethics Issues}{subsection.248}% 51
+\BOOKMARK [1][]{section.250}{6.1 Ethics Checklist}{chapter.247}% 52
+\BOOKMARK [0][]{chapter.252}{7 Appendix}{}% 53
+\BOOKMARK [1][]{subsection.253}{7.0.1 RoI Matching Algorithm}{chapter.252}% 54
+\BOOKMARK [1][]{section.256}{7.1 Crash Sequence}{chapter.252}% 55
+\BOOKMARK [1][]{section.258}{7.2 Parked Car Sequence}{chapter.252}% 56
